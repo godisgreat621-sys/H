@@ -43,15 +43,26 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .sync-dot.loading{background:var(--gold);animation:pulse .8s infinite alternate}
 @keyframes pulse{to{opacity:.3}}
 .wrap{flex:1;max-width:1000px;width:100%;margin:0 auto;padding:10px 18px}
-.tabs-nav{display:flex;gap:4px;margin-bottom:12px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+
+/* ── TABS NAV ── */
+.tabs-nav{display:flex;gap:4px;margin-bottom:12px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;align-items:center}
 .tabs-nav::-webkit-scrollbar{display:none}
-.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--sub);font-family:'Tajawal';font-size:12px;font-weight:700;padding:7px 14px;cursor:pointer;white-space:nowrap;transition:all .2s;margin-bottom:-1px}
-.tab-btn:hover{color:var(--gold-l)}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--sub);font-family:'Tajawal';font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;white-space:nowrap;transition:all .2s;margin-bottom:-1px;display:flex;align-items:center;gap:5px;position:relative;border-radius:6px 6px 0 0}
+.tab-btn:hover{color:var(--gold-l);background:var(--gold-bg)}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
-.tab-add{background:none;border:none;color:var(--gold-d);font-size:16px;cursor:pointer;padding:4px 8px;margin-bottom:-1px;transition:color .2s}
+.tab-btn.tab-dragging{opacity:.4}
+.tab-btn.tab-drag-over{border-right:2px solid var(--gold);background:var(--gold-bg)}
+/* rename + delete on hover */
+.tab-rename-btn,.tab-del-btn{display:none;background:none;border:none;cursor:pointer;font-size:10px;padding:1px 3px;border-radius:3px;line-height:1;color:var(--sub);transition:all .15s}
+.tab-rename-btn:hover{color:var(--gold)}
+.tab-del-btn:hover{color:#c0392b}
+.tab-btn:hover .tab-rename-btn,.tab-btn:hover .tab-del-btn{display:inline-flex}
+.tab-add{background:none;border:none;color:var(--gold-d);font-size:18px;cursor:pointer;padding:2px 8px;margin-bottom:-1px;transition:color .2s;line-height:1}
 .tab-add:hover{color:var(--gold)}
 .tab-pane{display:none}
 .tab-pane.active{display:block}
+
+/* ── CARDS GRID ── */
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-bottom:12px;min-height:50px;position:relative}
 .cards-grid.drag-over{background:rgba(212,168,67,.04);border-radius:var(--r);outline:1px dashed var(--gold-d)}
 .card{background:var(--bg-card);border-radius:var(--r);padding:14px 8px 12px;text-align:center;border:1px solid var(--border);text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;transition:border-color .22s,box-shadow .22s;position:relative;overflow:hidden;cursor:grab;user-select:none}
@@ -59,9 +70,12 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .card:hover{border-color:var(--gold-d);box-shadow:0 0 20px rgba(212,168,67,.15)}
 .card:hover::before{opacity:1}
 .card.dragging{opacity:.4;cursor:grabbing;transform:scale(.97)}
-.card-del{position:absolute;top:4px;left:4px;background:rgba(0,0,0,.7);border:1px solid #333;color:var(--sub);border-radius:4px;width:17px;height:17px;font-size:9px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .2s;z-index:10}
-.card:hover .card-del{display:flex}
-.card-del:hover{background:#8B2020;color:#fff;border-color:#8B2020}
+/* action buttons on card */
+.card-actions{position:absolute;top:3px;left:3px;display:none;gap:3px;z-index:10}
+.card:hover .card-actions{display:flex}
+.card-act-btn{background:rgba(0,0,0,.75);border:1px solid #333;color:var(--sub);border-radius:4px;width:18px;height:18px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.card-act-btn.edit:hover{background:#1a3a1a;color:#6f6;border-color:#3a5a3a}
+.card-act-btn.del:hover{background:#3a1a1a;color:#f66;border-color:#5a3a3a}
 .icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:#222;border:1px solid var(--border)}
 .card h2{font-size:11px;font-weight:900;color:var(--gold-l)}
 .drag-handle{position:absolute;top:4px;right:4px;color:var(--gold-d);font-size:10px;opacity:0;transition:opacity .2s;cursor:grab}
@@ -70,6 +84,16 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .add-card{background:transparent;border:1px dashed var(--gold-d);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--gold-d);font-family:'Tajawal';font-size:11px;font-weight:700;transition:all .2s;padding:14px 8px;min-height:88px}
 .add-card:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-bg)}
 .add-card .plus{font-size:20px}
+
+/* ── QUICK PASTE ZONE ── */
+.paste-zone{background:#111;border:1px dashed #3a3530;border-radius:8px;padding:7px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px;cursor:text;transition:border-color .2s}
+.paste-zone:focus-within{border-color:var(--gold-d)}
+.paste-inp{flex:1;background:none;border:none;color:var(--sub);font-family:'Tajawal';font-size:11px;outline:none}
+.paste-inp::placeholder{color:#4a4540}
+.paste-inp:focus::placeholder{color:#6a6560}
+.paste-hint{font-size:10px;color:#4a4540;white-space:nowrap}
+
+/* ── TASKS ── */
 .tasks-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:8px}
 .tasks-box h3{font-size:12px;font-weight:900;margin-bottom:7px;color:var(--gold);display:flex;align-items:center;gap:6px}
 .task-row{display:flex;gap:6px;margin-bottom:6px}
@@ -84,9 +108,11 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .t-txt.done{text-decoration:line-through;color:var(--sub)}
 .t-del{background:transparent;border:none;cursor:pointer;font-size:13px;color:var(--sub)}
 .t-del:hover{color:#c0392b}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s}
+
+/* ── MODALS ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.on{opacity:1;pointer-events:all}
-.mbox{background:#1C1C1C;border:1px solid var(--gold-d);border-radius:var(--r);padding:22px 24px;width:310px;box-shadow:0 0 40px rgba(212,168,67,.15);transform:translateY(10px);transition:transform .2s}
+.mbox{background:#1C1C1C;border:1px solid var(--gold-d);border-radius:var(--r);padding:22px 24px;width:340px;box-shadow:0 0 40px rgba(212,168,67,.15);transform:translateY(10px);transition:transform .2s}
 .overlay.on .mbox{transform:translateY(0)}
 .mbox h3{font-size:13px;font-weight:900;color:var(--gold);margin-bottom:14px}
 .mf{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
@@ -97,10 +123,16 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .mbtn{flex:1;padding:7px;border-radius:6px;font-family:'Tajawal';font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
 .mbtn.p{background:var(--gold);color:#111;border:none}.mbtn.p:hover{background:var(--gold-l)}
 .mbtn.s{background:transparent;color:var(--sub);border:1px solid var(--border)}.mbtn.s:hover{color:var(--text);border-color:var(--sub)}
-.emoji-grid{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;max-height:110px;overflow-y:auto}
-.emo{width:30px;height:30px;border-radius:5px;border:1px solid var(--border);background:#111;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.emo:hover,.emo.sel{border-color:var(--gold);background:var(--gold-bg)}
+
+/* ── EMOJI GRID – bigger ── */
+.emoji-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;padding:2px}
+.emo{width:40px;height:40px;border-radius:7px;border:1px solid var(--border);background:#111;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.emo:hover,.emo.sel{border-color:var(--gold);background:var(--gold-bg);transform:scale(1.1)}
+
 .footer{text-align:center;padding:7px;font-size:10.5px;color:var(--gold-d);border-top:1px solid var(--border);background:var(--bg-card)}
+
+/* ── TAB RENAME INLINE INPUT ── */
+.tab-rename-inp{background:#111;border:1px solid var(--gold-d);color:var(--gold);border-radius:4px;padding:2px 7px;font-family:'Tajawal';font-size:12px;font-weight:700;outline:none;width:90px}
 </style>
 </head>
 <body>
@@ -148,9 +180,10 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 
 <div class="footer">✦ محمد النمري ✦ المركز الرقمي الموحد ✦</div>
 
+<!-- CARD MODAL (add + edit) -->
 <div class="overlay" id="cardModal">
   <div class="mbox">
-    <h3>➕ إضافة كرت</h3>
+    <h3 id="cardModalTitle">➕ إضافة كرت</h3>
     <div class="mf"><label>الاسم</label><input id="mName" placeholder="مثال: نتفليكس"></div>
     <div class="mf"><label>الرابط</label><input id="mUrl" placeholder="https://..."></div>
     <div class="mf"><label>الأيقونة</label><div class="emoji-grid" id="emojiGrid"></div></div>
@@ -161,6 +194,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
+<!-- TAB MODAL -->
 <div class="overlay" id="tabModal">
   <div class="mbox">
     <h3>➕ تبويب جديد</h3>
@@ -176,7 +210,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 // ══════════════════════════════════════════
 //  CONFIG
 // ══════════════════════════════════════════
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz5E3n47yZqUZCJiblLP-8cy8aRmuMM9G5ZZ7atcqyu0K8vxGlRM_B0HTQJ8eP1r5U/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx_T6TYQhyk20h7YwS1sfvvZ0d1AR0RUY32pohhfDwaGL8SAcLMzRjnorheZBWsOpM/exec';
 
 // ══════════════════════════════════════════
 //  PRAYER TIMES
@@ -274,37 +308,20 @@ function updateCountdown(now) {
 }
 
 // ══════════════════════════════════════════
-//  GOOGLE SHEETS SYNC
-//  الحل: JSONP للقراءة — يتجاوز CORS تماماً
-//        fetch no-cors للكتابة — يصل للسيرفر بدون قراءة الرد
+//  SHEETS SYNC
 // ══════════════════════════════════════════
 function setSyncStatus(state, msg) {
   document.getElementById('syncDot').className = 'sync-dot ' + state;
   document.getElementById('syncMsg').textContent = msg;
 }
 
-// JSONP: يحقن script tag بدلاً من fetch — الوحيد الذي يتجاوز CORS مع Apps Script
 function jsonpFetch(url) {
   return new Promise((resolve, reject) => {
     const cbName = '__cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
     const script = document.createElement('script');
-
-    const timer = setTimeout(() => {
-      cleanup();
-      reject(new Error('JSONP timeout'));
-    }, 12000);
-
-    window[cbName] = (data) => {
-      cleanup();
-      resolve(data);
-    };
-
-    function cleanup() {
-      clearTimeout(timer);
-      delete window[cbName];
-      script.parentNode && script.parentNode.removeChild(script);
-    }
-
+    const timer = setTimeout(() => { cleanup(); reject(new Error('JSONP timeout')); }, 12000);
+    window[cbName] = (data) => { cleanup(); resolve(data); };
+    function cleanup() { clearTimeout(timer); delete window[cbName]; script.parentNode && script.parentNode.removeChild(script); }
     const sep = url.includes('?') ? '&' : '?';
     script.src = `${url}${sep}callback=${cbName}`;
     script.onerror = () => { cleanup(); reject(new Error('script load error')); };
@@ -316,10 +333,8 @@ async function pushToSheets(data) {
   if (!SHEETS_URL) return;
   setSyncStatus('loading', 'جاري الحفظ...');
   try {
-    // no-cors: الطلب يصل للسيرفر، نعرف أنه نجح إذا لم يرمِ error
     await fetch(SHEETS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'save', payload: data })
     });
@@ -331,18 +346,13 @@ async function pushToSheets(data) {
 }
 
 async function pullFromSheets() {
-  if (!SHEETS_URL) {
-    setSyncStatus('', 'غير متصل بـ Sheets');
-    return null;
-  }
+  if (!SHEETS_URL) { setSyncStatus('', 'غير متصل بـ Sheets'); return null; }
   setSyncStatus('loading', 'جاري التحميل من Sheets...');
   try {
-    // JSONP يحل مشكلة CORS نهائياً مع Google Apps Script
     const d = await jsonpFetch(SHEETS_URL + '?action=load');
     setSyncStatus('ok', 'متصل بـ Google Sheets ✓');
     return d;
   } catch(e) {
-    console.warn('JSONP failed, trying fetch...', e.message);
     try {
       const res = await fetch(SHEETS_URL + '?action=load');
       const d = await res.json();
@@ -359,9 +369,9 @@ function buildSavePayload() { return { tabs, tasks }; }
 function triggerSave() { saveTabs(); pushToSheets(buildSavePayload()); }
 
 // ══════════════════════════════════════════
-//  TABS
+//  TABS DATA
 // ══════════════════════════════════════════
-const EMOJIS = ['🌐','📱','💻','🎮','🎵','🎬','📺','🛒','📰','🔗','💡','🏆','📧','🗓️','🔐','💰','📦','🌙','☁️','🔔','🛠️','📡','🎯','🌟','🤖','🔮','✨','▶️','💬','✈️','🌍','🪪','💾','🎨','⚙️','🚀','🧩','📌','🎭','🖼️','✏️','🏠','📊','📅','🏅'];
+const EMOJIS = ['🌐','📱','💻','🎮','🎵','🎬','📺','🛒','📰','🔗','💡','🏆','📧','🗓️','🔐','💰','📦','🌙','☁️','🔔','🛠️','📡','🎯','🌟','🤖','🔮','✨','▶️','💬','✈️','🌍','🪪','💾','🎨','⚙️','🚀','🧩','📌','🎭','🖼️','✏️','🏠','📊','📅','🏅','🔑','🧠','🗺️','🎪','🌈','⚡','🔥','💎','🏔️','🎸','🎤','🕹️','🧪','🔭','🛸'];
 
 const DEFAULT_TABS = [
   { id:'work', label:'العمل', cards:[
@@ -401,9 +411,12 @@ const DEFAULT_TABS = [
 let tabs = [];
 let activeTab = null;
 let currentCardTab = null;
+let currentEditCardId = null; // null = add mode, string = edit mode
 let selEmoji = '🌐';
 let dragCardId = null;
 let dragFromTab = null;
+// tab drag state
+let dragTabId = null;
 
 function loadTabs() {
   const saved = localStorage.getItem('mnm_tabs_v4');
@@ -412,24 +425,152 @@ function loadTabs() {
 }
 function saveTabs() { localStorage.setItem('mnm_tabs_v4', JSON.stringify(tabs)); }
 
+// ══════════════════════════════════════════
+//  RENDER TABS
+// ══════════════════════════════════════════
 function renderTabs() {
   const nav = document.getElementById('tabsNav');
   const content = document.getElementById('tabsContent');
   if (!activeTab || !tabs.find(t => t.id === activeTab)) activeTab = tabs[0]?.id;
-  nav.innerHTML = tabs.map(t =>
-    `<button class="tab-btn ${t.id===activeTab?'active':''}" onclick="switchTab('${t.id}')">${t.label}</button>`
-  ).join('') + `<button class="tab-add" onclick="openTabModal()" title="تبويب جديد">＋</button>`;
+
+  nav.innerHTML = '';
+  tabs.forEach(tab => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (tab.id === activeTab ? ' active' : '');
+    btn.setAttribute('data-tab-id', tab.id);
+    btn.draggable = true;
+    btn.innerHTML = `
+      <span class="tab-label-txt">${tab.label}</span>
+      <button class="tab-rename-btn" title="تعديل الاسم" onclick="startRenameTab('${tab.id}',event)">✎</button>
+      ${tabs.length > 1 ? `<button class="tab-del-btn" title="حذف القسم" onclick="deleteTab('${tab.id}',event)">✕</button>` : ''}
+    `;
+    btn.addEventListener('click', e => {
+      if (e.target.classList.contains('tab-rename-btn') || e.target.classList.contains('tab-del-btn')) return;
+      if (e.target.classList.contains('tab-rename-inp')) return;
+      switchTab(tab.id);
+    });
+    // tab drag events
+    btn.addEventListener('dragstart', e => {
+      dragTabId = tab.id;
+      btn.classList.add('tab-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', 'tab:' + tab.id);
+    });
+    btn.addEventListener('dragend', () => {
+      btn.classList.remove('tab-dragging');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-drag-over'));
+      dragTabId = null;
+    });
+    btn.addEventListener('dragover', e => {
+      if (!dragTabId || dragTabId === tab.id) return;
+      e.preventDefault();
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-drag-over'));
+      btn.classList.add('tab-drag-over');
+    });
+    btn.addEventListener('drop', e => {
+      e.preventDefault();
+      btn.classList.remove('tab-drag-over');
+      if (!dragTabId || dragTabId === tab.id) return;
+      const fromIdx = tabs.findIndex(t => t.id === dragTabId);
+      const toIdx   = tabs.findIndex(t => t.id === tab.id);
+      if (fromIdx < 0 || toIdx < 0) return;
+      const [moved] = tabs.splice(fromIdx, 1);
+      tabs.splice(toIdx, 0, moved);
+      triggerSave();
+      renderTabs();
+    });
+    nav.appendChild(btn);
+  });
+
+  const addBtn = document.createElement('button');
+  addBtn.className = 'tab-add';
+  addBtn.title = 'تبويب جديد';
+  addBtn.textContent = '＋';
+  addBtn.onclick = openTabModal;
+  nav.appendChild(addBtn);
+
+  // Render panes
   content.innerHTML = tabs.map(t =>
     `<div class="tab-pane ${t.id===activeTab?'active':''}" id="pane-${t.id}">
+       <div class="paste-zone" id="paste-zone-${t.id}">
+         <span style="font-size:14px;color:var(--gold-d)">⚡</span>
+         <input class="paste-inp" id="paste-inp-${t.id}" placeholder="الصق رابطاً هنا لإضافة كرت سريع..." autocomplete="off" spellcheck="false">
+         <span class="paste-hint">Ctrl+V أو اكتب واضغط Enter</span>
+       </div>
        <div class="cards-grid" id="grid-${t.id}"
          ondragover="onGridDragOver(event,'${t.id}')"
          ondrop="onGridDrop(event,'${t.id}')"
          ondragleave="onGridDragLeave(event,'${t.id}')"></div>
      </div>`
   ).join('');
-  tabs.forEach(t => fillGrid(t));
+
+  tabs.forEach(t => {
+    fillGrid(t);
+    setupPasteZone(t.id);
+  });
 }
 
+// ══════════════════════════════════════════
+//  QUICK PASTE ZONE
+// ══════════════════════════════════════════
+function setupPasteZone(tabId) {
+  const inp = document.getElementById(`paste-inp-${tabId}`);
+  if (!inp) return;
+
+  // Detect paste event
+  inp.addEventListener('paste', e => {
+    setTimeout(() => {
+      const val = inp.value.trim();
+      if (val) quickAddFromPaste(tabId, val, inp);
+    }, 10);
+  });
+
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const val = inp.value.trim();
+      if (val) quickAddFromPaste(tabId, val, inp);
+    }
+  });
+}
+
+function quickAddFromPaste(tabId, raw, inp) {
+  let url = raw;
+  if (!url.startsWith('http')) url = 'https://' + url;
+
+  // Try to extract a readable name from URL
+  let name = '🔗 رابط جديد';
+  try {
+    const u = new URL(url);
+    name = u.hostname.replace(/^www\./, '');
+  } catch(e) {}
+
+  // Add card immediately with auto-detected name
+  const tab = tabs.find(t => t.id === tabId);
+  if (!tab) return;
+  const newCard = { id: Date.now(), name, url, emoji: '🔗' };
+  tab.cards.push(newCard);
+  triggerSave();
+  fillGrid(tab);
+  inp.value = '';
+
+  // Flash feedback
+  const zone = document.getElementById(`paste-zone-${tabId}`);
+  if (zone) {
+    zone.style.borderColor = 'var(--gold)';
+    zone.style.background = 'rgba(212,168,67,0.06)';
+    setTimeout(() => {
+      zone.style.borderColor = '';
+      zone.style.background = '';
+    }, 800);
+  }
+
+  // Immediately open edit modal for the new card so user can refine name+emoji
+  openCardModal(tabId, newCard.id);
+}
+
+// ══════════════════════════════════════════
+//  FILL GRID
+// ══════════════════════════════════════════
 function fillGrid(tab) {
   const grid = document.getElementById(`grid-${tab.id}`);
   if (!grid) return;
@@ -438,7 +579,7 @@ function fillGrid(tab) {
   const btn = document.createElement('button');
   btn.className = 'add-card';
   btn.innerHTML = `<span class="plus">＋</span>أضف`;
-  btn.onclick = () => openCardModal(tab.id);
+  btn.onclick = () => openCardModal(tab.id, null);
   grid.appendChild(btn);
 }
 
@@ -452,7 +593,10 @@ function createCardEl(card, tabId) {
   a.draggable = true;
   a.innerHTML = `
     <span class="drag-handle">⠿</span>
-    <button class="card-del" onclick="delCard('${card.id}','${tabId}',event)">✕</button>
+    <div class="card-actions">
+      <button class="card-act-btn edit" title="تعديل" onclick="editCard('${card.id}','${tabId}',event)">✎</button>
+      <button class="card-act-btn del" title="حذف" onclick="delCard('${card.id}','${tabId}',event)">✕</button>
+    </div>
     <div class="icon">${card.emoji}</div>
     <h2>${card.name}</h2>`;
   a.addEventListener('dragstart', e => {
@@ -470,6 +614,9 @@ function createCardEl(card, tabId) {
   return a;
 }
 
+// ══════════════════════════════════════════
+//  CARD DRAG & DROP
+// ══════════════════════════════════════════
 function onGridDragOver(e, tabId) {
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
@@ -524,33 +671,95 @@ function getDragAfterElement(grid, x) {
   }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
+// ══════════════════════════════════════════
+//  TAB ACTIONS
+// ══════════════════════════════════════════
 function switchTab(id) {
   activeTab = id;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.getElementById('tabsNav').querySelectorAll('.tab-btn').forEach(b => {
-    if (b.getAttribute('onclick') === `switchTab('${id}')`) b.classList.add('active');
-  });
+  const btn = document.querySelector(`.tab-btn[data-tab-id="${id}"]`);
+  if (btn) btn.classList.add('active');
   document.getElementById(`pane-${id}`)?.classList.add('active');
 }
 
-function delCard(cardId, tabId, e) {
-  e.preventDefault(); e.stopPropagation();
-  if (!confirm('حذف هذا الكرت؟')) return;
-  const tab = tabs.find(t => t.id === tabId);
-  if (tab) tab.cards = tab.cards.filter(c => String(c.id) !== String(cardId));
-  triggerSave(); fillGrid(tab);
+function startRenameTab(tabId, e) {
+  e.stopPropagation();
+  const btn = document.querySelector(`.tab-btn[data-tab-id="${tabId}"]`);
+  if (!btn) return;
+  const labelSpan = btn.querySelector('.tab-label-txt');
+  const oldName = labelSpan.textContent;
+  const inp = document.createElement('input');
+  inp.className = 'tab-rename-inp';
+  inp.value = oldName;
+  labelSpan.replaceWith(inp);
+  inp.focus(); inp.select();
+
+  const commit = () => {
+    const newName = inp.value.trim() || oldName;
+    const tab = tabs.find(t => t.id === tabId);
+    if (tab) { tab.label = newName; triggerSave(); }
+    renderTabs();
+  };
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', e2 => {
+    if (e2.key === 'Enter') { inp.blur(); }
+    if (e2.key === 'Escape') { inp.value = oldName; inp.blur(); }
+    e2.stopPropagation();
+  });
 }
 
-function openCardModal(tabId) {
-  currentCardTab = tabId; selEmoji = '🌐';
-  document.getElementById('mName').value = '';
-  document.getElementById('mUrl').value = '';
+function deleteTab(tabId, e) {
+  e.stopPropagation();
+  const tab = tabs.find(t => t.id === tabId);
+  if (!tab) return;
+  if (!confirm(`حذف قسم "${tab.label}" وجميع كروته؟`)) return;
+  tabs = tabs.filter(t => t.id !== tabId);
+  if (activeTab === tabId) activeTab = tabs[0]?.id || null;
+  triggerSave();
+  renderTabs();
+}
+
+// ══════════════════════════════════════════
+//  CARD MODAL — ADD + EDIT
+// ══════════════════════════════════════════
+function openCardModal(tabId, cardId) {
+  currentCardTab = tabId;
+  currentEditCardId = cardId || null;
+  selEmoji = '🌐';
+
+  if (cardId) {
+    // EDIT MODE
+    document.getElementById('cardModalTitle').textContent = '✎ تعديل الكرت';
+    const tab = tabs.find(t => t.id === tabId);
+    const card = tab?.cards.find(c => String(c.id) === String(cardId));
+    if (card) {
+      document.getElementById('mName').value = card.name;
+      document.getElementById('mUrl').value = card.url;
+      selEmoji = card.emoji || '🌐';
+    }
+  } else {
+    // ADD MODE
+    document.getElementById('cardModalTitle').textContent = '➕ إضافة كرت';
+    document.getElementById('mName').value = '';
+    document.getElementById('mUrl').value = '';
+    selEmoji = '🌐';
+  }
+
   buildEmojiGrid();
   document.getElementById('cardModal').classList.add('on');
   document.getElementById('mName').focus();
 }
-function closeCardModal() { document.getElementById('cardModal').classList.remove('on'); }
+
+function editCard(cardId, tabId, e) {
+  e.preventDefault(); e.stopPropagation();
+  openCardModal(tabId, cardId);
+}
+
+function closeCardModal() {
+  document.getElementById('cardModal').classList.remove('on');
+  currentEditCardId = null;
+}
 document.getElementById('cardModal').addEventListener('click', e => {
   if (e.target === document.getElementById('cardModal')) closeCardModal();
 });
@@ -565,16 +774,38 @@ function pickEmoji(em, el) {
   document.querySelectorAll('.emo').forEach(e => e.classList.remove('sel'));
   el.classList.add('sel');
 }
+
 function saveCard() {
   const name = document.getElementById('mName').value.trim();
   let url = document.getElementById('mUrl').value.trim();
   if (!name || !url) { alert('يرجى تعبئة الاسم والرابط'); return; }
   if (!url.startsWith('http')) url = 'https://' + url;
   const tab = tabs.find(t => t.id === currentCardTab);
-  if (tab) tab.cards.push({ id: Date.now(), name, url, emoji: selEmoji });
+  if (!tab) return;
+
+  if (currentEditCardId) {
+    // UPDATE existing
+    const card = tab.cards.find(c => String(c.id) === String(currentEditCardId));
+    if (card) { card.name = name; card.url = url; card.emoji = selEmoji; }
+  } else {
+    // NEW card
+    tab.cards.push({ id: Date.now(), name, url, emoji: selEmoji });
+  }
+
   triggerSave(); closeCardModal(); fillGrid(tab);
 }
 
+function delCard(cardId, tabId, e) {
+  e.preventDefault(); e.stopPropagation();
+  if (!confirm('حذف هذا الكرت؟')) return;
+  const tab = tabs.find(t => t.id === tabId);
+  if (tab) tab.cards = tab.cards.filter(c => String(c.id) !== String(cardId));
+  triggerSave(); fillGrid(tab);
+}
+
+// ══════════════════════════════════════════
+//  TAB MODAL
+// ══════════════════════════════════════════
 function openTabModal() {
   document.getElementById('tName').value = '';
   document.getElementById('tabModal').classList.add('on');
@@ -631,6 +862,20 @@ function renderTasks() {
 document.getElementById('taskInp')?.addEventListener('keypress', e => { if(e.key==='Enter') addTask(); });
 
 // ══════════════════════════════════════════
+//  KEYBOARD SHORTCUTS
+// ══════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeCardModal();
+    closeTabModal();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    // If card modal is open, save it
+    if (document.getElementById('cardModal').classList.contains('on')) saveCard();
+  }
+});
+
+// ══════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════
 setInterval(tick, 1000);
@@ -639,7 +884,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   tick();
   loadTabs();
 
-  // حاول تحميل البيانات من Sheets أولاً
   if (SHEETS_URL) {
     const remote = await pullFromSheets();
     if (remote && remote.tabs && remote.tabs.length > 0) {
