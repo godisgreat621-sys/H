@@ -17,6 +17,7 @@
 body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl;display:flex;flex-direction:column}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold-d);border-radius:4px}
 
+/* HERO */
 .hero{background:var(--bg-card);text-align:center;padding:12px 20px 10px;border-bottom:1px solid var(--border);border-radius:0 0 var(--r) var(--r);box-shadow:var(--sh);position:relative}
 .hero::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent)}
 .brand{font-size:26px;font-weight:900;background:linear-gradient(135deg,var(--gold-l),var(--gold),var(--gold-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px}
@@ -26,6 +27,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .live-date{font-size:10.5px;font-weight:700;color:#5A9E6A;border-right:1px solid var(--border);padding-right:12px}
 .live-hijri{font-size:10.5px;font-weight:700;color:#B07055;border-right:1px solid var(--border);padding-right:12px}
 
+/* PRAYER */
 .prayer-bar{background:#111;border:1px solid var(--border);padding:8px 14px;border-radius:8px;max-width:820px;margin:0 auto}
 .prayers-row{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:nowrap}
 .prayer-lbl{font-size:10.5px;font-weight:900;color:var(--gold-d);white-space:nowrap}
@@ -39,6 +41,15 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .bar-bg{width:160px;height:4px;background:var(--border);border-radius:10px;overflow:hidden}
 .bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-d),var(--gold));border-radius:10px;transition:width .5s ease}
 
+/* SYNC STATUS */
+.sync-bar{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:6px 0 0;font-size:10px;color:var(--sub)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#555;transition:background .3s}
+.sync-dot.ok{background:#4CAF50}
+.sync-dot.err{background:#c0392b}
+.sync-dot.loading{background:var(--gold);animation:pulse .8s infinite alternate}
+@keyframes pulse{to{opacity:.3}}
+
+/* WRAP */
 .wrap{flex:1;max-width:1000px;width:100%;margin:0 auto;padding:10px 18px}
 
 /* TABS */
@@ -52,14 +63,17 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .tab-pane{display:none}
 .tab-pane.active{display:block}
 
-/* CARDS */
+/* CARDS GRID */
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-bottom:12px;min-height:50px;position:relative}
 .cards-grid.drag-over{background:rgba(212,168,67,.04);border-radius:var(--r);outline:1px dashed var(--gold-d)}
+
+/* CARD */
 .card{background:var(--bg-card);border-radius:var(--r);padding:14px 8px 12px;text-align:center;border:1px solid var(--border);text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;transition:border-color .22s,box-shadow .22s;position:relative;overflow:hidden;cursor:grab;user-select:none}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold-d);opacity:0;transition:opacity .3s}
 .card:hover{border-color:var(--gold-d);box-shadow:0 0 20px rgba(212,168,67,.15)}
 .card:hover::before{opacity:1}
-.card.dragging{opacity:.4;cursor:grabbing}
+.card.dragging{opacity:.4;cursor:grabbing;transform:scale(.97)}
+.card.drag-ghost{opacity:.2}
 .card-del{position:absolute;top:4px;left:4px;background:rgba(0,0,0,.7);border:1px solid #333;color:var(--sub);border-radius:4px;width:17px;height:17px;font-size:9px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .2s;z-index:10}
 .card:hover .card-del{display:flex}
 .card-del:hover{background:#8B2020;color:#fff;border-color:#8B2020}
@@ -67,14 +81,18 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .card h2{font-size:11px;font-weight:900;color:var(--gold-l)}
 .drag-handle{position:absolute;top:4px;right:4px;color:var(--gold-d);font-size:10px;opacity:0;transition:opacity .2s;cursor:grab}
 .card:hover .drag-handle{opacity:1}
-.drop-placeholder{border:2px dashed var(--gold-d);border-radius:var(--r);background:var(--gold-bg);min-height:88px}
+
+/* DROP PLACEHOLDER */
+.drop-placeholder{border:2px dashed var(--gold-d);border-radius:var(--r);background:var(--gold-bg);min-height:88px;transition:all .15s}
+
+/* ADD CARD */
 .add-card{background:transparent;border:1px dashed var(--gold-d);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--gold-d);font-family:'Tajawal';font-size:11px;font-weight:700;transition:all .2s;padding:14px 8px;min-height:88px}
 .add-card:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-bg)}
 .add-card .plus{font-size:20px}
 
 /* TASKS */
 .tasks-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:8px}
-.tasks-box h3{font-size:12px;font-weight:900;margin-bottom:7px;color:var(--gold)}
+.tasks-box h3{font-size:12px;font-weight:900;margin-bottom:7px;color:var(--gold);display:flex;align-items:center;gap:6px}
 .task-row{display:flex;gap:6px;margin-bottom:6px}
 .task-inp{flex:1;border:1px solid var(--border);background:#111;color:var(--text);border-radius:6px;padding:6px 12px;font-family:'Tajawal';font-size:11.5px;outline:none;transition:border-color .2s}
 .task-inp:focus{border-color:var(--gold-d)}
@@ -88,7 +106,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .t-del{background:transparent;border:none;cursor:pointer;font-size:13px;color:var(--sub)}
 .t-del:hover{color:#c0392b}
 
-/* MODALS */
+/* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.on{opacity:1;pointer-events:all}
 .mbox{background:#1C1C1C;border:1px solid var(--gold-d);border-radius:var(--r);padding:22px 24px;width:310px;box-shadow:0 0 40px rgba(212,168,67,.15);transform:translateY(10px);transition:transform .2s}
@@ -105,6 +123,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .emoji-grid{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;max-height:110px;overflow-y:auto}
 .emo{width:30px;height:30px;border-radius:5px;border:1px solid var(--border);background:#111;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .emo:hover,.emo.sel{border-color:var(--gold);background:var(--gold-bg)}
+
 .footer{text-align:center;padding:7px;font-size:10.5px;color:var(--gold-d);border-top:1px solid var(--border);background:var(--bg-card)}
 </style>
 </head>
@@ -128,13 +147,17 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
       <div class="pi" id="pCard-isha">العشاء <span id="pt-isha">--:--</span></div>
     </div>
     <div class="countdown-row">
-      <div class="cd-text" id="cdText">جاري الحساب...</div>
+      <div class="cd-text" id="cdText">جاري التحميل...</div>
       <div class="bar-bg"><div class="bar-fill" id="barFill"></div></div>
     </div>
   </div>
 </div>
 
 <div class="wrap">
+  <div class="sync-bar">
+    <span id="syncMsg">غير متصل بـ Google Sheets</span>
+    <div class="sync-dot" id="syncDot"></div>
+  </div>
   <div class="tabs-nav" id="tabsNav"></div>
   <div id="tabsContent"></div>
   <div class="tasks-box">
@@ -149,6 +172,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 
 <div class="footer">✦ محمد النمري ✦ المركز الرقمي الموحد ✦</div>
 
+<!-- CARD MODAL -->
 <div class="overlay" id="cardModal">
   <div class="mbox">
     <h3>➕ إضافة كرت</h3>
@@ -162,6 +186,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
+<!-- TAB MODAL -->
 <div class="overlay" id="tabModal">
   <div class="mbox">
     <h3>➕ تبويب جديد</h3>
@@ -175,392 +200,457 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 
 <script>
 // ══════════════════════════════════════════
-//  PRAYER TIMES — خوارزمية أم القرى (بدون API)
-//  مكة المكرمة: 21.3891°N، 39.8579°E، UTC+3
+//  CONFIG — ضع هنا رابط الـ Apps Script بعد النشر
 // ══════════════════════════════════════════
-const LAT = 21.3891, LNG = 39.8579, TZ = 3;
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx_T6TYQhyk20h7YwS1sfvvZ0d1AR0RUY32pohhfDwaGL8SAcLMzRjnorheZBWsOpM/exec';
 
-function toRad(d){ return d*Math.PI/180; }
-function toDeg(r){ return r*180/Math.PI; }
-function fixAngle(a){ return a - 360*Math.floor(a/360); }
-function fixHour(a){ return a - 24*Math.floor(a/24); }
+// ══════════════════════════════════════════
+//  PRAYER TIMES
+// ══════════════════════════════════════════
+let PRAYERS = [];
 
-function julianDay(Y,M,D){
-  if(M<=2){Y--;M+=12;}
-  const A=Math.floor(Y/100), B=2-A+Math.floor(A/4);
-  return Math.floor(365.25*(Y+4716))+Math.floor(30.6001*(M+1))+D+B-1524.5;
+async function fetchPrayers() {
+  try {
+    const now = new Date();
+    const url = `https://api.aladhan.com/v1/timings/${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}?latitude=21.3891&longitude=39.8579&method=4`;
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.code !== 200) throw new Error();
+    const T = d.data.timings;
+    const raw = { fajr:T.Fajr, dhuhr:T.Dhuhr, asr:T.Asr, maghrib:T.Maghrib, isha:T.Isha };
+    localStorage.setItem('p_cache', JSON.stringify(raw));
+    const now2 = new Date();
+    localStorage.setItem('p_date', `${now2.getFullYear()}-${now2.getMonth()}-${now2.getDate()}`);
+    applyPrayerData(raw);
+  } catch(e) {
+    const raw = JSON.parse(localStorage.getItem('p_cache') || 'null');
+    if (raw) applyPrayerData(raw);
+  }
 }
 
-function sunEquation(jd){
-  const D=jd-2451545.0;
-  const g=fixAngle(357.529+0.98560028*D);
-  const q=fixAngle(280.459+0.98564736*D);
-  const L=fixAngle(q+1.915*Math.sin(toRad(g))+0.020*Math.sin(toRad(2*g)));
-  const e=23.439-0.00000036*D;
-  const RA=toDeg(Math.atan2(Math.cos(toRad(e))*Math.sin(toRad(L)),Math.cos(toRad(L))))/15;
-  return {
-    decl: toDeg(Math.asin(Math.sin(toRad(e))*Math.sin(toRad(L)))),
-    eqT:  q/15 - fixHour(RA)
+function applyPrayerData(raw) {
+  // nextWindow = approximate hours until NEXT prayer (used for progress bar)
+  const meta = {
+    fajr:    { name:'الفجر',   nextWindow: 8   },
+    dhuhr:   { name:'الظهر',   nextWindow: 3.3 },
+    asr:     { name:'العصر',   nextWindow: 3.3 },
+    maghrib: { name:'المغرب',  nextWindow: 1.5 },
+    isha:    { name:'العشاء',  nextWindow: 7.6 }
   };
-}
+  PRAYERS = Object.entries(raw).map(([key, str]) => {
+    const [h, m] = str.split(':').map(Number);
+    return { key, name: meta[key].name, nextWindow: meta[key].nextWindow,
+             h24: str, totalSec: h*3600 + m*60 };
+  }).sort((a,b) => a.totalSec - b.totalSec);
 
-function calcPrayers(Y,M,D){
-  const jd = julianDay(Y,M,D);
-  const {decl,eqT} = sunEquation(jd);
-  const transit = 12 + TZ - LNG/15 - eqT;
-
-  function ha(angle){
-    const cosH=(Math.sin(toRad(angle))-Math.sin(toRad(LAT))*Math.sin(toRad(decl)))
-              /(Math.cos(toRad(LAT))*Math.cos(toRad(decl)));
-    return Math.abs(cosH)>1 ? NaN : toDeg(Math.acos(cosH))/15;
-  }
-
-  // Asr: Shafi'i — shadow multiplier=1
-  const asrElev = -toDeg(Math.atan(1/(1+Math.tan(toRad(Math.abs(LAT-decl))))));
-  const asrHa   = ha(asrElev);
-
-  const fajrH    = transit - ha(-18.5);          // أم القرى 18.5°
-  const dhuhrH   = transit;
-  const asrH     = transit + asrHa;
-  const maghribH = transit + ha(-0.833);
-  const ishaH    = maghribH + 1.5;               // أم القرى: 90 دقيقة بعد المغرب
-
-  function hToDate(h){
-    const hf = ((h%24)+24)%24;
-    const hh = Math.floor(hf);
-    const mm = Math.round((hf-hh)*60);
-    // إنشاء Date بالتوقيت المحلي للجهاز لكن بقيم ساعة مكة
-    // نحوّل من توقيت مكة (UTC+3) إلى UTC ثم إلى Date
-    return new Date(Date.UTC(Y,M-1,D,hh-TZ,mm,0));
-  }
-
-  return {
-    fajr:    hToDate(fajrH),
-    dhuhr:   hToDate(dhuhrH),
-    asr:     hToDate(asrH),
-    maghrib: hToDate(maghribH),
-    isha:    hToDate(ishaH),
+  const fmt = str => {
+    const [h,m] = str.split(':').map(Number);
+    const ap = h>=12?'م':'ص'; const h12 = h%12||12;
+    return `${h12<10?'0'+h12:h12}:${m<10?'0'+m:m} ${ap}`;
   };
+  PRAYERS.forEach(p => {
+    const el = document.getElementById(`pt-${p.key}`);
+    if (el) el.textContent = fmt(p.h24);
+  });
 }
 
-const PRAYER_KEYS  = ['fajr','dhuhr','asr','maghrib','isha'];
-const PRAYER_NAMES = {fajr:'الفجر',dhuhr:'الظهر',asr:'العصر',maghrib:'المغرب',isha:'العشاء'};
-
-let todayPT=null, tomorrowPT=null, lastPrayerDay=-1;
-
-function ensurePrayers(){
+function needsPrayerRefetch() {
   const now = new Date();
-  const day = now.getUTCDate()+now.getUTCMonth()*31+now.getUTCFullYear()*400;
-  if(day===lastPrayerDay) return;
-  lastPrayerDay=day;
-
-  // تاريخ مكة الحالي
-  const mk = new Date(now.getTime()+TZ*3600000);
-  const Y=mk.getUTCFullYear(), M=mk.getUTCMonth()+1, D=mk.getUTCDate();
-  todayPT = calcPrayers(Y,M,D);
-
-  const tom = new Date(mk.getTime()+86400000);
-  tomorrowPT = calcPrayers(tom.getUTCFullYear(),tom.getUTCMonth()+1,tom.getUTCDate());
-
-  // عرض الأوقات
-  for(const k of PRAYER_KEYS){
-    const el=document.getElementById('pt-'+k);
-    if(!el||!todayPT[k]) continue;
-    const t=todayPT[k];
-    // عرض بتوقيت مكة
-    const mkMs = t.getTime()+TZ*3600000;
-    const mkD  = new Date(mkMs);
-    const hh=mkD.getUTCHours(), mm=mkD.getUTCMinutes();
-    const ap=hh>=12?'م':'ص', h12=hh%12||12;
-    el.textContent=`${h12<10?'0'+h12:h12}:${mm<10?'0'+mm:mm} ${ap}`;
-  }
+  return localStorage.getItem('p_date') !== `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
 }
 
-function updatePrayerCountdown(){
-  if(!todayPT) return;
+// ══════════════════════════════════════════
+//  CLOCK + COUNTDOWN
+// ══════════════════════════════════════════
+function tick() {
   const now = new Date();
-  document.querySelectorAll('.pi').forEach(el=>el.classList.remove('next'));
+  let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+  const ap = h>=12?'م':'ص'; h=h%12||12;
+  const p = n => n<10?'0'+n:n;
+  document.getElementById('liveTime').textContent = `${p(h)}:${p(m)}:${p(s)} ${ap}`;
+  document.getElementById('liveDate').textContent = now.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('liveHijri').textContent = now.toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric',month:'long',day:'numeric'});
+  if (PRAYERS.length) updateCountdown(now);
+}
 
-  // أوجد الصلاة القادمة
-  let nextKey=null, minDiff=Infinity;
-  for(const k of PRAYER_KEYS){
-    const diff=todayPT[k]-now;
-    if(diff>0&&diff<minDiff){minDiff=diff;nextKey=k;}
+function updateCountdown(now) {
+  const nowSec = now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds();
+  document.querySelectorAll('.pi').forEach(el => el.classList.remove('next'));
+
+  // Find next prayer
+  let next = null, diffSec = Infinity;
+  for (const p of PRAYERS) {
+    const d = p.totalSec - nowSec;
+    if (d > 0 && d < diffSec) { diffSec = d; next = p; }
+  }
+  // After Isha → next is Fajr tomorrow
+  if (!next) {
+    next = PRAYERS[0]; // fajr
+    diffSec = (86400 - nowSec) + next.totalSec;
   }
 
-  let prevTime;
-  if(!nextKey){
-    // كل صلوات اليوم انتهت → الفجر غداً
-    nextKey='fajr';
-    minDiff=tomorrowPT.fajr-now;
-    prevTime=todayPT.isha;
-  } else {
-    const idx=PRAYER_KEYS.indexOf(nextKey);
-    prevTime = idx===0
-      ? new Date(todayPT.fajr.getTime()-( (todayPT.isha.getTime()-todayPT.fajr.getTime()) ))
-      : todayPT[PRAYER_KEYS[idx-1]];
-  }
+  document.getElementById(`pCard-${next.key}`)?.classList.add('next');
 
-  document.getElementById('pCard-'+nextKey)?.classList.add('next');
+  const hrs  = Math.floor(diffSec / 3600);
+  const mins = Math.floor((diffSec % 3600) / 60);
+  const secs = diffSec % 60;
+  const p2 = n => n < 10 ? '0'+n : n;
+  document.getElementById('cdText').innerHTML =
+    `متبقي على صلاة ${next.name}: <span>${p2(hrs)}:${p2(mins)}:${p2(secs)}</span>`;
 
-  const ts=Math.floor(minDiff/1000);
-  const p2=n=>String(n).padStart(2,'0');
-  document.getElementById('cdText').innerHTML=
-    `متبقي على صلاة ${PRAYER_NAMES[nextKey]}: <span>${p2(Math.floor(ts/3600))}:${p2(Math.floor(ts%3600/60))}:${p2(ts%60)}</span>`;
+  // ── PROGRESS BAR ──
+  // Use nextWindow of the PREVIOUS prayer = total window leading to this prayer
+  const idx = PRAYERS.findIndex(p => p.key === next.key);
+  const prevIdx = idx === 0 ? PRAYERS.length - 1 : idx - 1;
+  const prev = PRAYERS[prevIdx];
 
-  // شريط التقدم: من الصلاة السابقة إلى القادمة
-  const nextTime = nextKey==='fajr'&&!PRAYER_KEYS.some(k=>todayPT[k]>now)
-    ? tomorrowPT.fajr : todayPT[nextKey];
-  const windowMs = nextTime-prevTime;
-  const elapsed  = windowMs-minDiff;
-  document.getElementById('barFill').style.width=
-    Math.min(100,Math.max(0,(elapsed/windowMs)*100))+'%';
+  // Total window in ms (nextWindow of the PREV prayer = how long we wait after it)
+  const totalWindowMs = prev.nextWindow * 3600 * 1000;
+  const remainMs = diffSec * 1000;
+  const elapsedMs = totalWindowMs - remainMs;
+
+  let progress = (elapsedMs / totalWindowMs) * 100;
+  if (progress < 0) progress = 0;
+  if (progress > 100) progress = 100;
+
+  document.getElementById('barFill').style.width = `${progress}%`;
 }
 
 // ══════════════════════════════════════════
-//  CLOCK
+//  GOOGLE SHEETS SYNC
 // ══════════════════════════════════════════
-function tick(){
-  ensurePrayers();
-  updatePrayerCountdown();
-  const now=new Date();
-  let h=now.getHours(),m=now.getMinutes(),s=now.getSeconds();
-  const ap=h>=12?'م':'ص'; h=h%12||12;
-  const p=n=>String(n).padStart(2,'0');
-  document.getElementById('liveTime').textContent=`${p(h)}:${p(m)}:${p(s)} ${ap}`;
-  document.getElementById('liveDate').textContent=now.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  document.getElementById('liveHijri').textContent=now.toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric',month:'long',day:'numeric'});
+function setSyncStatus(state, msg) {
+  const dot = document.getElementById('syncDot');
+  const txt = document.getElementById('syncMsg');
+  dot.className = 'sync-dot ' + state;
+  txt.textContent = msg;
+}
+
+async function pushToSheets(data) {
+  if (!SHEETS_URL) return;
+  setSyncStatus('loading', 'جاري الحفظ...');
+  try {
+    await fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'save', payload: data })
+    });
+    setSyncStatus('ok', 'تم الحفظ في Google Sheets ✓');
+    setTimeout(() => setSyncStatus('ok', 'متصل بـ Google Sheets'), 2000);
+  } catch(e) {
+    setSyncStatus('err', 'فشل الحفظ — سيتم المحاولة لاحقاً');
+  }
+}
+
+async function pullFromSheets() {
+  if (!SHEETS_URL) { setSyncStatus('', 'غير متصل — أضف رابط Sheets في الإعدادات'); return null; }
+  setSyncStatus('loading', 'جاري التحميل من Sheets...');
+  try {
+    const res = await fetch(SHEETS_URL + '?action=load', { mode: 'cors' });
+    const d = await res.json();
+    setSyncStatus('ok', 'متصل بـ Google Sheets');
+    return d;
+  } catch(e) {
+    setSyncStatus('err', 'تعذّر الاتصال — يعمل من التخزين المحلي');
+    return null;
+  }
+}
+
+function buildSavePayload() {
+  return { tabs, tasks };
+}
+
+function triggerSave() {
+  saveTabs();
+  pushToSheets(buildSavePayload());
 }
 
 // ══════════════════════════════════════════
-//  TABS & CARDS
+//  TABS
 // ══════════════════════════════════════════
-const EMOJIS=['🌐','📱','💻','🎮','🎵','🎬','📺','🛒','📰','🔗','💡','🏆','📧','🗓️','🔐','💰','📦','🌙','☁️','🔔','🛠️','📡','🎯','🌟','🤖','🔮','✨','▶️','💬','✈️','🌍','🪪','💾','🎨','⚙️','🚀','🧩','📌','🎭','🖼️','✏️','🏠','📊','📅','🏅'];
+const EMOJIS = ['🌐','📱','💻','🎮','🎵','🎬','📺','🛒','📰','🔗','💡','🏆','📧','🗓️','🔐','💰','📦','🌙','☁️','🔔','🛠️','📡','🎯','🌟','🤖','🔮','✨','▶️','💬','✈️','🌍','🪪','💾','🎨','⚙️','🚀','🧩','📌','🎭','🖼️','✏️','🏠','📊','📅','🏅'];
 
-const DEFAULT_TABS=[
-  {id:'work',label:'العمل',cards:[
-    {id:'kababi',name:'كبابجي',   emoji:'🏠',url:'https://home-m6kn.vercel.app/'},
-    {id:'zad',   name:'داش زاد', emoji:'📊',url:'https://zad-dashboard-v1.vercel.app/'},
-    {id:'github',name:'GitHub',   emoji:'⚙️',url:'https://github.com'},
-    {id:'vercel',name:'Vercel',   emoji:'🚀',url:'https://vercel.com/'},
+const DEFAULT_TABS = [
+  { id:'work',     label:'العمل',             cards:[
+    {id:'kababi',name:'كبابجي',    emoji:'🏠',url:'https://home-m6kn.vercel.app/'},
+    {id:'zad',   name:'داش زاد',  emoji:'📊',url:'https://zad-dashboard-v1.vercel.app/'},
+    {id:'github',name:'GitHub',    emoji:'⚙️',url:'https://github.com'},
+    {id:'vercel',name:'Vercel',    emoji:'🚀',url:'https://vercel.com/'},
   ]},
-  {id:'personal',label:'شخصي',cards:[
+  { id:'personal', label:'شخصي',              cards:[
     {id:'ana',name:'أنا',emoji:'📅',url:'https://yom-lac.vercel.app/'},
   ]},
-  {id:'ai',label:'الذكاء الاصطناعي',cards:[
+  { id:'ai',       label:'الذكاء الاصطناعي', cards:[
     {id:'chatgpt',name:'ChatGPT',emoji:'🤖',url:'https://chatgpt.com/'},
     {id:'claude', name:'Claude', emoji:'🔮',url:'https://claude.ai/'},
     {id:'gemini', name:'Gemini', emoji:'✨',url:'https://gemini.google.com/'},
   ]},
-  {id:'social',label:'التواصل',cards:[
-    {id:'wa',name:'واتساب',   emoji:'💬',url:'https://web.whatsapp.com/'},
-    {id:'tg',name:'تيليجرام', emoji:'✈️',url:'https://web.telegram.org/a/'},
-    {id:'yt',name:'يوتيوب',   emoji:'▶️',url:'https://www.youtube.com/'},
+  { id:'social',   label:'التواصل',           cards:[
+    {id:'wa',name:'واتساب',  emoji:'💬',url:'https://web.whatsapp.com/'},
+    {id:'tg',name:'تيليجرام',emoji:'✈️',url:'https://web.telegram.org/a/'},
+    {id:'yt',name:'يوتيوب',  emoji:'▶️',url:'https://www.youtube.com/'},
   ]},
-  {id:'tools',label:'أدوات',cards:[
+  { id:'tools',    label:'أدوات',             cards:[
     {id:'translate',name:'ترجمة',       emoji:'🌍',url:'https://translate.google.com/?hl=ar'},
     {id:'drive',    name:'درايف',        emoji:'💾',url:'https://drive.google.com'},
     {id:'absher',   name:'أبشر',         emoji:'🪪',url:'https://www.absher.sa'},
     {id:'chrome',   name:'إضافات كروم', emoji:'🧩',url:'https://chromewebstore.google.com/category/extensions'},
   ]},
-  {id:'design',label:'التصميم',cards:[
-    {id:'canva',    name:'كانفا',    emoji:'🎨',url:'https://www.canva.com/ar_eg/'},
-    {id:'freepik',  name:'Freepik',  emoji:'🎭',url:'https://www.freepik.com/'},
-    {id:'pinterest',name:'بينترست', emoji:'📌',url:'https://www.pinterest.com/'},
-    {id:'pngwing',  name:'PNGWing',  emoji:'🖼️',url:'https://www.pngwing.com/'},
-    {id:'vecteezy', name:'Vecteezy', emoji:'✏️',url:'https://www.vecteezy.com'},
+  { id:'design',   label:'التصميم',           cards:[
+    {id:'canva',    name:'كانفا',   emoji:'🎨',url:'https://www.canva.com/ar_eg/'},
+    {id:'freepik',  name:'Freepik', emoji:'🎭',url:'https://www.freepik.com/'},
+    {id:'pinterest',name:'بينترست',emoji:'📌',url:'https://www.pinterest.com/'},
+    {id:'pngwing',  name:'PNGWing', emoji:'🖼️',url:'https://www.pngwing.com/'},
+    {id:'vecteezy', name:'Vecteezy',emoji:'✏️',url:'https://www.vecteezy.com'},
   ]},
 ];
 
-let tabs=[], activeTab=null, currentCardTab=null, selEmoji='🌐';
-let dragCardId=null, dragFromTab=null;
+let tabs = [];
+let activeTab = null;
+let currentCardTab = null;
+let selEmoji = '🌐';
 
-function loadTabs(){
-  const s=localStorage.getItem('mnm_tabs_v5');
-  tabs=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_TABS));
+// Drag state
+let dragCardId = null;
+let dragFromTab = null;
+
+function loadTabs() {
+  const saved = localStorage.getItem('mnm_tabs_v4');
+  tabs = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_TABS));
+  if (!saved) saveTabs();
 }
-function saveTabs(){ localStorage.setItem('mnm_tabs_v5',JSON.stringify(tabs)); }
+function saveTabs() { localStorage.setItem('mnm_tabs_v4', JSON.stringify(tabs)); }
 
-function renderTabs(){
-  if(!activeTab||!tabs.find(t=>t.id===activeTab)) activeTab=tabs[0]?.id;
-  const nav=document.getElementById('tabsNav');
-  nav.innerHTML=tabs.map(t=>
+function renderTabs() {
+  const nav = document.getElementById('tabsNav');
+  const content = document.getElementById('tabsContent');
+  if (!activeTab || !tabs.find(t => t.id === activeTab)) activeTab = tabs[0]?.id;
+
+  nav.innerHTML = tabs.map(t =>
     `<button class="tab-btn ${t.id===activeTab?'active':''}" onclick="switchTab('${t.id}')">${t.label}</button>`
-  ).join('')+`<button class="tab-add" onclick="openTabModal()" title="تبويب جديد">＋</button>`;
+  ).join('') + `<button class="tab-add" onclick="openTabModal()" title="تبويب جديد">＋</button>`;
 
-  document.getElementById('tabsContent').innerHTML=tabs.map(t=>
+  content.innerHTML = tabs.map(t =>
     `<div class="tab-pane ${t.id===activeTab?'active':''}" id="pane-${t.id}">
-       <div class="cards-grid" id="grid-${t.id}"
+       <div class="cards-grid" id="grid-${t.id}" 
          ondragover="onGridDragOver(event,'${t.id}')"
          ondrop="onGridDrop(event,'${t.id}')"
          ondragleave="onGridDragLeave(event,'${t.id}')"></div>
      </div>`
   ).join('');
 
-  tabs.forEach(t=>fillGrid(t));
+  tabs.forEach(t => fillGrid(t));
 }
 
-function fillGrid(tab){
-  const grid=document.getElementById('grid-'+tab.id);
-  if(!grid) return;
-  grid.innerHTML='';
-  tab.cards.forEach(c=>grid.appendChild(createCardEl(c,tab.id)));
-  const btn=document.createElement('button');
-  btn.className='add-card';
-  btn.innerHTML='<span class="plus">＋</span>أضف';
-  btn.onclick=()=>openCardModal(tab.id);
+function fillGrid(tab) {
+  const grid = document.getElementById(`grid-${tab.id}`);
+  if (!grid) return;
+  grid.innerHTML = '';
+  tab.cards.forEach(card => grid.appendChild(createCardEl(card, tab.id)));
+  const btn = document.createElement('button');
+  btn.className = 'add-card';
+  btn.innerHTML = `<span class="plus">＋</span>أضف`;
+  btn.onclick = () => openCardModal(tab.id);
   grid.appendChild(btn);
 }
 
-function createCardEl(card,tabId){
-  const a=document.createElement('a');
-  a.href=card.url; a.target='_blank'; a.className='card';
-  a.setAttribute('data-card-id',card.id);
-  a.draggable=true;
-  a.innerHTML=`<span class="drag-handle">⠿</span>
+function createCardEl(card, tabId) {
+  const a = document.createElement('a');
+  a.href = card.url;
+  a.target = '_blank';
+  a.className = 'card';
+  a.setAttribute('data-card-id', card.id);
+  a.setAttribute('data-tab-id', tabId);
+  a.draggable = true;
+  a.innerHTML = `
+    <span class="drag-handle">⠿</span>
     <button class="card-del" onclick="delCard('${card.id}','${tabId}',event)">✕</button>
     <div class="icon">${card.emoji}</div>
     <h2>${card.name}</h2>`;
-  a.addEventListener('dragstart',e=>{
-    dragCardId=card.id; dragFromTab=tabId;
+
+  // Drag events
+  a.addEventListener('dragstart', e => {
+    dragCardId = card.id;
+    dragFromTab = tabId;
     a.classList.add('dragging');
-    e.dataTransfer.effectAllowed='move';
-    e.dataTransfer.setData('text/plain',card.id);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', card.id);
   });
-  a.addEventListener('dragend',()=>{
+  a.addEventListener('dragend', () => {
     a.classList.remove('dragging');
-    document.querySelectorAll('.drop-placeholder').forEach(p=>p.remove());
-    document.querySelectorAll('.cards-grid').forEach(g=>g.classList.remove('drag-over'));
+    document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
+    document.querySelectorAll('.cards-grid').forEach(g => g.classList.remove('drag-over'));
   });
+
+  // Prevent link navigation on drag
+  a.addEventListener('click', e => { if (a.classList.contains('dragging')) e.preventDefault(); });
+
   return a;
 }
 
-function onGridDragOver(e,tabId){
-  e.preventDefault(); e.dataTransfer.dropEffect='move';
-  const grid=document.getElementById('grid-'+tabId);
-  grid.classList.add('drag-over');
-  const afterEl=getDragAfterElement(grid,e.clientX);
-  let ph=document.querySelector('.drop-placeholder');
-  if(!ph){ph=document.createElement('div');ph.className='drop-placeholder';}
-  if(afterEl==null) grid.insertBefore(ph,grid.querySelector('.add-card'));
-  else grid.insertBefore(ph,afterEl);
-}
-function onGridDragLeave(e,tabId){
-  const grid=document.getElementById('grid-'+tabId);
-  if(!grid.contains(e.relatedTarget)){
-    grid.classList.remove('drag-over');
-    document.querySelectorAll('.drop-placeholder').forEach(p=>p.remove());
-  }
-}
-function onGridDrop(e,toTabId){
+// Grid drag events
+function onGridDragOver(e, tabId) {
   e.preventDefault();
-  document.querySelectorAll('.drop-placeholder').forEach(p=>p.remove());
-  document.querySelectorAll('.cards-grid').forEach(g=>g.classList.remove('drag-over'));
-  if(!dragCardId) return;
-  const fromTab=tabs.find(t=>t.id===dragFromTab);
-  const toTab=tabs.find(t=>t.id===toTabId);
-  if(!fromTab||!toTab) return;
-  const ci=fromTab.cards.findIndex(c=>String(c.id)===String(dragCardId));
-  if(ci===-1) return;
-  const [card]=fromTab.cards.splice(ci,1);
-  const grid=document.getElementById('grid-'+toTabId);
-  const afterEl=getDragAfterElement(grid,e.clientX);
-  if(!afterEl||afterEl.classList.contains('add-card')) toTab.cards.push(card);
-  else{
-    const ai=toTab.cards.findIndex(c=>String(c.id)===afterEl.getAttribute('data-card-id'));
-    toTab.cards.splice(ai,0,card);
+  e.dataTransfer.dropEffect = 'move';
+  const grid = document.getElementById(`grid-${tabId}`);
+  grid.classList.add('drag-over');
+
+  // Find insertion point
+  const afterEl = getDragAfterElement(grid, e.clientX);
+  const placeholder = document.querySelector('.drop-placeholder');
+  const ph = placeholder || (() => {
+    const d = document.createElement('div');
+    d.className = 'drop-placeholder';
+    return d;
+  })();
+  if (afterEl == null) grid.insertBefore(ph, grid.querySelector('.add-card'));
+  else grid.insertBefore(ph, afterEl);
+}
+
+function onGridDragLeave(e, tabId) {
+  const grid = document.getElementById(`grid-${tabId}`);
+  if (!grid.contains(e.relatedTarget)) {
+    grid.classList.remove('drag-over');
+    document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
   }
-  dragCardId=null; dragFromTab=null;
-  saveTabs(); fillGrid(fromTab);
-  if(fromTab.id!==toTab.id) fillGrid(toTab);
-}
-function getDragAfterElement(grid,x){
-  const cards=[...grid.querySelectorAll('.card:not(.dragging)')];
-  return cards.reduce((cl,ch)=>{
-    const box=ch.getBoundingClientRect();
-    const offset=x-box.right+box.width/2;
-    return offset<0&&offset>cl.offset?{offset,element:ch}:cl;
-  },{offset:Number.NEGATIVE_INFINITY}).element;
 }
 
-function switchTab(id){
-  activeTab=id;
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelector(`.tab-btn[onclick="switchTab('${id}')"]`)?.classList.add('active');
-  document.getElementById('pane-'+id)?.classList.add('active');
+function onGridDrop(e, toTabId) {
+  e.preventDefault();
+  document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
+  document.querySelectorAll('.cards-grid').forEach(g => g.classList.remove('drag-over'));
+  if (!dragCardId) return;
+
+  const fromTab = tabs.find(t => t.id === dragFromTab);
+  const toTab   = tabs.find(t => t.id === toTabId);
+  if (!fromTab || !toTab) return;
+
+  const cardIdx = fromTab.cards.findIndex(c => String(c.id) === String(dragCardId));
+  if (cardIdx === -1) return;
+  const [card] = fromTab.cards.splice(cardIdx, 1);
+
+  // Find drop position in toTab
+  const grid = document.getElementById(`grid-${toTabId}`);
+  const afterEl = getDragAfterElement(grid, e.clientX);
+  if (afterEl == null || afterEl.classList.contains('add-card')) {
+    toTab.cards.push(card);
+  } else {
+    const afterId = afterEl.getAttribute('data-card-id');
+    const afterIdx = toTab.cards.findIndex(c => String(c.id) === String(afterId));
+    toTab.cards.splice(afterIdx, 0, card);
+  }
+
+  dragCardId = null; dragFromTab = null;
+  triggerSave();
+  fillGrid(fromTab);
+  if (fromTab.id !== toTab.id) fillGrid(toTab);
 }
 
-function delCard(cardId,tabId,e){
+function getDragAfterElement(grid, x) {
+  const cards = [...grid.querySelectorAll('.card:not(.dragging)')];
+  return cards.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    // RTL: measure from right edge
+    const offset = x - box.right + box.width / 2;
+    if (offset < 0 && offset > closest.offset) return { offset, element: child };
+    return closest;
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function switchTab(id) {
+  activeTab = id;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  // Re-render nav to update active
+  const nav = document.getElementById('tabsNav');
+  nav.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.getAttribute('onclick') === `switchTab('${id}')`) b.classList.add('active');
+  });
+  document.getElementById(`pane-${id}`)?.classList.add('active');
+}
+
+function delCard(cardId, tabId, e) {
   e.preventDefault(); e.stopPropagation();
-  if(!confirm('حذف هذا الكرت؟')) return;
-  const tab=tabs.find(t=>t.id===tabId);
-  if(tab){tab.cards=tab.cards.filter(c=>String(c.id)!==String(cardId));saveTabs();fillGrid(tab);}
+  if (!confirm('حذف هذا الكرت؟')) return;
+  const tab = tabs.find(t => t.id === tabId);
+  if (tab) tab.cards = tab.cards.filter(c => String(c.id) !== String(cardId));
+  triggerSave(); fillGrid(tab);
 }
 
-// Card Modal
-function openCardModal(tabId){
-  currentCardTab=tabId; selEmoji='🌐';
-  document.getElementById('mName').value=''; document.getElementById('mUrl').value='';
-  document.getElementById('emojiGrid').innerHTML=EMOJIS.map(em=>
+// ── Card Modal
+function openCardModal(tabId) {
+  currentCardTab = tabId; selEmoji = '🌐';
+  document.getElementById('mName').value = '';
+  document.getElementById('mUrl').value = '';
+  buildEmojiGrid();
+  document.getElementById('cardModal').classList.add('on');
+  document.getElementById('mName').focus();
+}
+function closeCardModal() { document.getElementById('cardModal').classList.remove('on'); }
+document.getElementById('cardModal').addEventListener('click', e => { if(e.target===document.getElementById('cardModal')) closeCardModal(); });
+
+function buildEmojiGrid() {
+  document.getElementById('emojiGrid').innerHTML = EMOJIS.map(em =>
     `<div class="emo ${em===selEmoji?'sel':''}" onclick="pickEmoji('${em}',this)">${em}</div>`
   ).join('');
-  document.getElementById('cardModal').classList.add('on');
-  setTimeout(()=>document.getElementById('mName').focus(),80);
 }
-function closeCardModal(){ document.getElementById('cardModal').classList.remove('on'); }
-document.getElementById('cardModal').addEventListener('click',e=>{if(e.target===document.getElementById('cardModal'))closeCardModal();});
-function pickEmoji(em,el){
-  selEmoji=em;
-  document.querySelectorAll('.emo').forEach(e=>e.classList.remove('sel'));
+function pickEmoji(em, el) {
+  selEmoji = em;
+  document.querySelectorAll('.emo').forEach(e => e.classList.remove('sel'));
   el.classList.add('sel');
 }
-function saveCard(){
-  const name=document.getElementById('mName').value.trim();
-  let url=document.getElementById('mUrl').value.trim();
-  if(!name||!url){alert('يرجى تعبئة الاسم والرابط');return;}
-  if(!url.startsWith('http')) url='https://'+url;
-  const tab=tabs.find(t=>t.id===currentCardTab);
-  if(tab){tab.cards.push({id:Date.now(),name,url,emoji:selEmoji});saveTabs();closeCardModal();fillGrid(tab);}
+function saveCard() {
+  const name = document.getElementById('mName').value.trim();
+  let url = document.getElementById('mUrl').value.trim();
+  if (!name || !url) { alert('يرجى تعبئة الاسم والرابط'); return; }
+  if (!url.startsWith('http')) url = 'https://' + url;
+  const tab = tabs.find(t => t.id === currentCardTab);
+  if (tab) tab.cards.push({ id: Date.now(), name, url, emoji: selEmoji });
+  triggerSave(); closeCardModal(); fillGrid(tab);
 }
-document.getElementById('mName').addEventListener('keypress',e=>{if(e.key==='Enter')document.getElementById('mUrl').focus();});
-document.getElementById('mUrl').addEventListener('keypress',e=>{if(e.key==='Enter')saveCard();});
 
-// Tab Modal
-function openTabModal(){
-  document.getElementById('tName').value='';
+// ── Tab Modal
+function openTabModal() {
+  document.getElementById('tName').value = '';
   document.getElementById('tabModal').classList.add('on');
-  setTimeout(()=>document.getElementById('tName').focus(),80);
+  document.getElementById('tName').focus();
 }
-function closeTabModal(){ document.getElementById('tabModal').classList.remove('on'); }
-document.getElementById('tabModal').addEventListener('click',e=>{if(e.target===document.getElementById('tabModal'))closeTabModal();});
-function saveTab(){
-  const name=document.getElementById('tName').value.trim();
-  if(!name) return;
-  const id='tab_'+Date.now();
-  tabs.push({id,label:name,cards:[]});
-  saveTabs(); closeTabModal(); renderTabs(); switchTab(id);
+function closeTabModal() { document.getElementById('tabModal').classList.remove('on'); }
+document.getElementById('tabModal').addEventListener('click', e => { if(e.target===document.getElementById('tabModal')) closeTabModal(); });
+function saveTab() {
+  const name = document.getElementById('tName').value.trim();
+  if (!name) return;
+  const id = 'tab_' + Date.now();
+  tabs.push({ id, label: name, cards: [] });
+  triggerSave(); closeTabModal(); renderTabs(); switchTab(id);
 }
-document.getElementById('tName').addEventListener('keypress',e=>{if(e.key==='Enter')saveTab();});
 
 // ══════════════════════════════════════════
 //  TASKS
 // ══════════════════════════════════════════
-let tasks=JSON.parse(localStorage.getItem('mnm_tasks')||'[]');
-function saveTasks(){ localStorage.setItem('mnm_tasks',JSON.stringify(tasks)); }
-function addTask(){
-  const inp=document.getElementById('taskInp');
-  const txt=inp.value.trim(); if(!txt) return;
-  tasks.push({id:Date.now(),text:txt,done:false});
-  inp.value=''; saveTasks(); renderTasks();
+let tasks = JSON.parse(localStorage.getItem('mnm_tasks') || '[]');
+function saveTasks() { localStorage.setItem('mnm_tasks', JSON.stringify(tasks)); }
+function addTask() {
+  const inp = document.getElementById('taskInp');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  tasks.push({ id: Date.now(), text: txt, done: false });
+  inp.value = ''; triggerSave(); renderTasks();
 }
-function toggleTask(id){ tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t); saveTasks(); renderTasks(); }
-function delTask(id){ tasks=tasks.filter(t=>t.id!==id); saveTasks(); renderTasks(); }
-function renderTasks(){
-  const el=document.getElementById('tasksList');
-  if(!el) return;
-  if(!tasks.length){el.innerHTML='<li style="text-align:center;padding:6px;color:var(--sub);font-size:11px;">✦ لا توجد مهام حالياً</li>';return;}
-  el.innerHTML=tasks.map(t=>`
+function toggleTask(id) {
+  tasks = tasks.map(t => t.id===id?{...t,done:!t.done}:t);
+  saveTasks(); renderTasks();
+}
+function delTask(id) {
+  tasks = tasks.filter(t => t.id!==id);
+  saveTasks(); renderTasks();
+}
+function renderTasks() {
+  const el = document.getElementById('tasksList');
+  if (!el) return;
+  if (!tasks.length) { el.innerHTML='<li style="text-align:center;padding:6px;color:var(--sub);font-size:11px;">✦ لا توجد مهام حالياً</li>'; return; }
+  el.innerHTML = tasks.map(t=>`
     <li class="task-li">
       <div class="task-li-r">
         <input type="checkbox" class="t-cb" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
@@ -569,15 +659,67 @@ function renderTasks(){
       <button class="t-del" onclick="delTask(${t.id})">✕</button>
     </li>`).join('');
 }
-document.getElementById('taskInp')?.addEventListener('keypress',e=>{if(e.key==='Enter')addTask();});
+document.getElementById('taskInp')?.addEventListener('keypress', e => { if(e.key==='Enter') addTask(); });
+
+// ══════════════════════════════════════════
+//  SHEETS URL SETUP (first visit prompt)
+// ══════════════════════════════════════════
+function checkSheetsSetup() {
+  if (!SHEETS_URL) {
+    // Show a subtle prompt after 2s if no URL configured
+    setTimeout(() => {
+      const msg = document.getElementById('syncMsg');
+      msg.style.cursor = 'pointer';
+      msg.title = 'انقر لإضافة رابط Google Sheets';
+      msg.onclick = () => {
+        const url = prompt('الصق رابط نشر Apps Script هنا (من Google Sheets):\n\nاتبع الإرشادات في ملف apps-script.gs');
+        if (url && url.startsWith('https://')) {
+          localStorage.setItem('mnm_sheets_url', url);
+          location.reload();
+        }
+      };
+    }, 2000);
+  }
+}
 
 // ══════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════
-window.addEventListener('DOMContentLoaded',()=>{
-  loadTabs(); renderTabs(); renderTasks();
+setInterval(tick, 1000);
+
+window.addEventListener('DOMContentLoaded', async () => {
   tick();
-  setInterval(tick,1000);
+  loadTabs();
+
+  // Try loading from Sheets first, fallback to localStorage
+  if (SHEETS_URL) {
+    const remote = await pullFromSheets();
+    if (remote && remote.tabs) {
+      tabs = remote.tabs;
+      saveTabs();
+    }
+    if (remote && remote.tasks) {
+      tasks = remote.tasks;
+      saveTasks();
+    }
+  }
+
+  renderTabs();
+  renderTasks();
+
+
+  // Prayer times
+  if (needsPrayerRefetch()) {
+    await fetchPrayers();
+  } else {
+    const raw = JSON.parse(localStorage.getItem('p_cache')||'null');
+    if (raw) applyPrayerData(raw);
+  }
+
+  // Midnight prayer refresh
+  const now = new Date();
+  const msToMidnight = new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,1,0) - now;
+  setTimeout(async () => { await fetchPrayers(); }, msToMidnight);
 });
 </script>
 </body>
