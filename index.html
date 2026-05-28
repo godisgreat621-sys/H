@@ -130,6 +130,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .ctx-item:hover{background:var(--gold-bg);color:var(--gold-l)}
 .ctx-item.danger:hover{background:rgba(180,40,40,.15);color:#f77}
 .ctx-item .ctx-icon{font-size:13px;width:16px;text-align:center}
+.ctx-item.ctx-has-sub::after{content:'◂';margin-right:auto;padding-right:0;padding-left:6px;opacity:.5;font-size:10px}
 .ctx-sep{height:1px;background:var(--border);margin:3px 6px}
 .footer{text-align:center;padding:7px;font-size:10.5px;color:var(--gold-d);border-top:1px solid var(--border);background:var(--bg-card)}
 
@@ -630,8 +631,12 @@ function createCardEl(card, tabId) {
   });
   a.addEventListener('click', e => { if (a.classList.contains('dragging')) e.preventDefault(); });
   a.addEventListener('contextmenu', e => {
+    const moveItems = tabs
+      .filter(t => t.id !== tabId)
+      .map(t => ({ icon:'📂', label:'نقل إلى: ' + t.label, action:{ type:'moveCard', cardId:card.id, fromTabId:tabId, toTabId:t.id } }));
     showCtx(e, [
       { icon:'✎', label:'تعديل الكرت',  action:{ type:'editCard', cardId:card.id, tabId } },
+      { icon:'📂', label:'تغيير القسم ▸', action:{ type:'moveCardMenu', cardId:card.id, tabId }, submenu: moveItems },
       'sep',
       { icon:'✕', label:'حذف الكرت',   action:{ type:'delCard',  cardId:card.id, tabId }, danger:true },
     ]);
@@ -941,15 +946,44 @@ window.addEventListener('DOMContentLoaded', async () => {
 // ══════════════════════════════════════════
 let ctxTarget = null;
 
-function showCtx(e, items) {
+function showCtx(e, items, isSubmenu) {
   e.preventDefault();
   e.stopPropagation();
   const menu = document.getElementById('ctxMenu');
   menu.innerHTML = items.map(item => {
     if (item === 'sep') return '<div class="ctx-sep"></div>';
+    if (item.submenu) {
+      return `<div class="ctx-item ctx-has-sub" data-sub='${JSON.stringify(item.submenu)}'>`
+        + `<span class="ctx-icon">${item.icon}</span>${item.label}</div>`;
+    }
     return `<div class="ctx-item ${item.danger?'danger':''}" onclick="ctxAction(${JSON.stringify(item.action)})">`
       + `<span class="ctx-icon">${item.icon}</span>${item.label}</div>`;
   }).join('');
+
+  // submenu hover
+  menu.querySelectorAll('.ctx-has-sub').forEach(el => {
+    el.addEventListener('mouseenter', ev => {
+      document.getElementById('ctxSubMenu') && document.getElementById('ctxSubMenu').remove();
+      const sub = document.createElement('div');
+      sub.id = 'ctxSubMenu';
+      sub.className = 'ctx-menu open';
+      sub.style.position = 'fixed';
+      const subItems = JSON.parse(el.dataset.sub);
+      sub.innerHTML = subItems.map(si =>
+        `<div class="ctx-item" onclick="ctxAction(${JSON.stringify(si.action)})">`
+        + `<span class="ctx-icon">${si.icon}</span>${si.label}</div>`
+      ).join('');
+      document.body.appendChild(sub);
+      const r = el.getBoundingClientRect();
+      const vw = window.innerWidth, vh = window.innerHeight;
+      let sx = r.left - sub.offsetWidth - 4;
+      if (sx < 4) sx = r.right + 4;
+      let sy = r.top;
+      if (sy + sub.offsetHeight > vh - 8) sy = vh - sub.offsetHeight - 8;
+      sub.style.left = sx + 'px';
+      sub.style.top  = sy + 'px';
+    });
+  });
 
   menu.classList.remove('open');
   document.body.appendChild(menu);
@@ -969,17 +1003,30 @@ function showCtx(e, items) {
 function hideCtx() {
   const menu = document.getElementById('ctxMenu');
   menu.classList.remove('open');
+  document.getElementById('ctxSubMenu') && document.getElementById('ctxSubMenu').remove();
   ctxTarget = null;
 }
 
 function ctxAction(action) {
   hideCtx();
-  const { type, cardId, tabId } = action;
+  const { type, cardId, tabId, fromTabId, toTabId } = action;
   if (type === 'editCard')   openCardModal(tabId, cardId);
   if (type === 'delCard')    delCard(cardId, tabId, { preventDefault(){}, stopPropagation(){} });
   if (type === 'renameTab')  startRenameTab(tabId, { stopPropagation(){} });
   if (type === 'delTab')     deleteTab(tabId, { stopPropagation(){} });
   if (type === 'addCard')    openCardModal(tabId, null);
+  if (type === 'moveCard') {
+    const from = tabs.find(t => t.id === fromTabId);
+    const to   = tabs.find(t => t.id === toTabId);
+    if (!from || !to) return;
+    const idx = from.cards.findIndex(c => String(c.id) === String(cardId));
+    if (idx === -1) return;
+    const [card] = from.cards.splice(idx, 1);
+    to.cards.push(card);
+    triggerSave();
+    fillGrid(from);
+    fillGrid(to);
+  }
 }
 
 document.addEventListener('click', e => {
