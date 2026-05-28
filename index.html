@@ -53,9 +53,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .tab-btn.tab-dragging{opacity:.4}
 .tab-btn.tab-drag-over{border-right:2px solid var(--gold);background:var(--gold-bg)}
 /* rename + delete on hover */
-.tab-del-btn{display:none;background:none;border:none;cursor:pointer;font-size:10px;padding:1px 3px;border-radius:3px;line-height:1;color:var(--sub);transition:all .15s}
-.tab-del-btn:hover{color:#c0392b}
-.tab-btn:hover .tab-del-btn{display:inline-flex}
+.tab-del-btn{display:none}
 .tab-add{background:none;border:none;color:var(--gold-d);font-size:18px;cursor:pointer;padding:2px 8px;margin-bottom:-1px;transition:color .2s;line-height:1}
 .tab-add:hover{color:var(--gold)}
 .tab-pane{display:none}
@@ -70,11 +68,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .card:hover::before{opacity:1}
 .card.dragging{opacity:.4;cursor:grabbing;transform:scale(.97)}
 /* action buttons on card */
-.card-actions{position:absolute;top:3px;left:3px;display:none;gap:3px;z-index:10}
-.card:hover .card-actions{display:flex}
-.card-act-btn{background:rgba(0,0,0,.75);border:1px solid #333;color:var(--sub);border-radius:4px;width:18px;height:18px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.card-act-btn.edit:hover{background:#1a3a1a;color:#6f6;border-color:#3a5a3a}
-.card-act-btn.del:hover{background:#3a1a1a;color:#f66;border-color:#5a3a3a}
+.card-actions{display:none}
 .icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:#222;border:1px solid var(--border)}
 .card h2{font-size:11px;font-weight:900;color:var(--gold-l)}
 .drag-handle{position:absolute;top:4px;right:4px;color:var(--gold-d);font-size:10px;opacity:0;transition:opacity .2s;cursor:grab}
@@ -128,6 +122,15 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .emo{width:40px;height:40px;border-radius:7px;border:1px solid var(--border);background:#111;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
 .emo:hover,.emo.sel{border-color:var(--gold);background:var(--gold-bg);transform:scale(1.1)}
 
+
+/* ── CONTEXT MENU ── */
+.ctx-menu{position:fixed;background:#1e1c18;border:1px solid var(--gold-d);border-radius:8px;padding:4px;min-width:150px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:9999;opacity:0;transform:scale(.95);pointer-events:none;transition:opacity .12s,transform .12s;transform-origin:top right}
+.ctx-menu.open{opacity:1;transform:scale(1);pointer-events:all}
+.ctx-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;color:var(--sub);transition:all .15s;white-space:nowrap}
+.ctx-item:hover{background:var(--gold-bg);color:var(--gold-l)}
+.ctx-item.danger:hover{background:rgba(180,40,40,.15);color:#f77}
+.ctx-item .ctx-icon{font-size:13px;width:16px;text-align:center}
+.ctx-sep{height:1px;background:var(--border);margin:3px 6px}
 .footer{text-align:center;padding:7px;font-size:10.5px;color:var(--gold-d);border-top:1px solid var(--border);background:var(--bg-card)}
 
 /* ── TAB RENAME INLINE INPUT ── */
@@ -482,6 +485,18 @@ function renderTabs() {
       triggerSave();
       renderTabs();
     });
+    btn.addEventListener('contextmenu', e => {
+      e.stopPropagation();
+      const items = [
+        { icon:'✎', label:'تعديل الاسم', action:{ type:'renameTab', tabId:tab.id } },
+        { icon:'➕', label:'إضافة كرت',  action:{ type:'addCard',   tabId:tab.id } },
+      ];
+      if (tabs.length > 1) {
+        items.push('sep');
+        items.push({ icon:'✕', label:'حذف القسم', action:{ type:'delTab', tabId:tab.id }, danger:true });
+      }
+      showCtx(e, items);
+    });
     nav.appendChild(btn);
   });
 
@@ -614,6 +629,13 @@ function createCardEl(card, tabId) {
     document.querySelectorAll('.cards-grid').forEach(g => g.classList.remove('drag-over'));
   });
   a.addEventListener('click', e => { if (a.classList.contains('dragging')) e.preventDefault(); });
+  a.addEventListener('contextmenu', e => {
+    showCtx(e, [
+      { icon:'✎', label:'تعديل الكرت',  action:{ type:'editCard', cardId:card.id, tabId } },
+      'sep',
+      { icon:'✕', label:'حذف الكرت',   action:{ type:'delCard',  cardId:card.id, tabId }, danger:true },
+    ]);
+  });
   return a;
 }
 
@@ -913,6 +935,62 @@ window.addEventListener('DOMContentLoaded', async () => {
   const msToMidnight = new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,1,0) - now;
   setTimeout(async () => { await fetchPrayers(); }, msToMidnight);
 });
+
+// ══════════════════════════════════════════
+//  CONTEXT MENU
+// ══════════════════════════════════════════
+let ctxTarget = null;
+
+function showCtx(e, items) {
+  e.preventDefault();
+  e.stopPropagation();
+  const menu = document.getElementById('ctxMenu');
+  menu.innerHTML = items.map(item => {
+    if (item === 'sep') return '<div class="ctx-sep"></div>';
+    return `<div class="ctx-item ${item.danger?'danger':''}" onclick="ctxAction(${JSON.stringify(item.action)})">`
+      + `<span class="ctx-icon">${item.icon}</span>${item.label}</div>`;
+  }).join('');
+
+  menu.classList.remove('open');
+  document.body.appendChild(menu);
+
+  // Position
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let x = e.clientX, y = e.clientY;
+  menu.style.left = '0'; menu.style.top = '0';
+  menu.classList.add('open');
+  const mw = menu.offsetWidth, mh = menu.offsetHeight;
+  if (x + mw > vw - 8) x = vw - mw - 8;
+  if (y + mh > vh - 8) y = vh - mh - 8;
+  menu.style.left = x + 'px';
+  menu.style.top  = y + 'px';
+}
+
+function hideCtx() {
+  const menu = document.getElementById('ctxMenu');
+  menu.classList.remove('open');
+  ctxTarget = null;
+}
+
+function ctxAction(action) {
+  hideCtx();
+  const { type, cardId, tabId } = action;
+  if (type === 'editCard')   openCardModal(tabId, cardId);
+  if (type === 'delCard')    delCard(cardId, tabId, { preventDefault(){}, stopPropagation(){} });
+  if (type === 'renameTab')  startRenameTab(tabId, { stopPropagation(){} });
+  if (type === 'delTab')     deleteTab(tabId, { stopPropagation(){} });
+  if (type === 'addCard')    openCardModal(tabId, null);
+}
+
+document.addEventListener('click', e => {
+  if (!document.getElementById('ctxMenu').contains(e.target)) hideCtx();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideCtx(); });
+
 </script>
+
+<!-- CONTEXT MENU -->
+<div id="ctxMenu" class="ctx-menu"></div>
+
 </body>
 </html>
