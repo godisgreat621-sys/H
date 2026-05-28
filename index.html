@@ -38,13 +38,10 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-d),var(--gold));border-radius:10px;transition:width .5s ease}
 .sync-bar{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:6px 0 0;font-size:10px;color:var(--sub)}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:#555;transition:background .3s}
-.sync-dot.ok{background:#4CAF50}
-.sync-dot.err{background:#c0392b}
+.sync-dot.ok{background:#4CAF50}.sync-dot.err{background:#c0392b}
 .sync-dot.loading{background:var(--gold);animation:pulse .8s infinite alternate}
 @keyframes pulse{to{opacity:.3}}
 .wrap{flex:1;max-width:1000px;width:100%;margin:0 auto;padding:10px 18px}
-
-/* ── TABS NAV ── */
 .tabs-nav{display:flex;gap:4px;margin-bottom:12px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;align-items:center}
 .tabs-nav::-webkit-scrollbar{display:none}
 .tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--sub);font-family:'Tajawal';font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;white-space:nowrap;transition:all .2s;margin-bottom:-1px;display:flex;align-items:center;gap:5px;position:relative;border-radius:6px 6px 0 0}
@@ -52,13 +49,9 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-btn.tab-dragging{opacity:.4}
 .tab-btn.tab-drag-over{border-right:2px solid var(--gold);background:var(--gold-bg)}
-.tab-del-btn{display:none}
 .tab-add{background:none;border:none;color:var(--gold-d);font-size:18px;cursor:pointer;padding:2px 8px;margin-bottom:-1px;transition:color .2s;line-height:1}
 .tab-add:hover{color:var(--gold)}
-.tab-pane{display:none}
-.tab-pane.active{display:block}
-
-/* ── CARDS GRID ── */
+.tab-pane{display:none}.tab-pane.active{display:block}
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-bottom:12px;min-height:50px;position:relative}
 .cards-grid.drag-over{background:rgba(212,168,67,.04);border-radius:var(--r);outline:1px dashed var(--gold-d)}
 .card{background:var(--bg-card);border-radius:var(--r);padding:14px 8px 12px;text-align:center;border:1px solid var(--border);text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;transition:border-color .22s,box-shadow .22s;position:relative;overflow:hidden;cursor:grab;user-select:none}
@@ -66,7 +59,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .card:hover{border-color:var(--gold-d);box-shadow:0 0 20px rgba(212,168,67,.15)}
 .card:hover::before{opacity:1}
 .card.dragging{opacity:.4;cursor:grabbing;transform:scale(.97)}
-.card-actions{display:none}
 .icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:#222;border:1px solid var(--border)}
 .card h2{font-size:11px;font-weight:900;color:var(--gold-l)}
 .drag-handle{position:absolute;top:4px;right:4px;color:var(--gold-d);font-size:10px;opacity:0;transition:opacity .2s;cursor:grab}
@@ -75,16 +67,10 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .add-card{background:transparent;border:1px dashed var(--gold-d);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--gold-d);font-family:'Tajawal';font-size:11px;font-weight:700;transition:all .2s;padding:14px 8px;min-height:88px}
 .add-card:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-bg)}
 .add-card .plus{font-size:20px}
-
-/* ── QUICK PASTE ZONE ── */
 .paste-zone{background:#111;border:1px dashed #3a3530;border-radius:8px;padding:7px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px;cursor:text;transition:border-color .2s}
 .paste-zone:focus-within{border-color:var(--gold-d)}
 .paste-inp{flex:1;background:none;border:none;color:var(--sub);font-family:'Tajawal';font-size:11px;outline:none}
 .paste-inp::placeholder{color:#4a4540}
-.paste-inp:focus::placeholder{color:#6a6560}
-.paste-hint{font-size:10px;color:#4a4540;white-space:nowrap}
-
-/* ── TASKS ── */
 .tasks-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:8px}
 .tasks-box h3{font-size:12px;font-weight:900;margin-bottom:7px;color:var(--gold);display:flex;align-items:center;gap:6px}
 .task-row{display:flex;gap:6px;margin-bottom:6px}
@@ -99,8 +85,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .t-txt.done{text-decoration:line-through;color:var(--sub)}
 .t-del{background:transparent;border:none;cursor:pointer;font-size:13px;color:var(--sub)}
 .t-del:hover{color:#c0392b}
-
-/* ── MODALS ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.on{opacity:1;pointer-events:all}
 .mbox{background:#1C1C1C;border:1px solid var(--gold-d);border-radius:var(--r);padding:22px 24px;width:340px;box-shadow:0 0 40px rgba(212,168,67,.15);transform:translateY(10px);transition:transform .2s}
@@ -114,25 +98,18 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .mbtn{flex:1;padding:7px;border-radius:6px;font-family:'Tajawal';font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
 .mbtn.p{background:var(--gold);color:#111;border:none}.mbtn.p:hover{background:var(--gold-l)}
 .mbtn.s{background:transparent;color:var(--sub);border:1px solid var(--border)}.mbtn.s:hover{color:var(--text);border-color:var(--sub)}
-
-/* ── EMOJI GRID ── */
 .emoji-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;padding:2px}
 .emo{width:40px;height:40px;border-radius:7px;border:1px solid var(--border);background:#111;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
 .emo:hover,.emo.sel{border-color:var(--gold);background:var(--gold-bg);transform:scale(1.1)}
-
-/* ── CONTEXT MENU ── */
 .ctx-menu{position:fixed;background:#1e1c18;border:1px solid var(--gold-d);border-radius:8px;padding:4px;min-width:150px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:9999;opacity:0;transform:scale(.95);pointer-events:none;transition:opacity .12s,transform .12s;transform-origin:top right}
 .ctx-menu.open{opacity:1;transform:scale(1);pointer-events:all}
 .ctx-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;color:var(--sub);transition:all .15s;white-space:nowrap}
 .ctx-item:hover{background:var(--gold-bg);color:var(--gold-l)}
 .ctx-item.danger:hover{background:rgba(180,40,40,.15);color:#f77}
 .ctx-item .ctx-icon{font-size:13px;width:16px;text-align:center}
-.ctx-header{padding:5px 12px 3px;font-size:10px;font-weight:900;color:var(--gold-d);letter-spacing:.5px;cursor:default}
 .ctx-sep{height:1px;background:var(--border);margin:3px 6px}
-.footer{text-align:center;padding:7px;font-size:10.5px;color:var(--gold-d);border-top:1px solid var(--border);background:var(--bg-card)}
-
-/* ── TAB RENAME ── */
 .tab-rename-inp{background:#111;border:1px solid var(--gold-d);color:var(--gold);border-radius:4px;padding:2px 7px;font-family:'Tajawal';font-size:12px;font-weight:700;outline:none;width:90px}
+.footer{text-align:center;padding:7px;font-size:10.5px;color:var(--gold-d);border-top:1px solid var(--border);background:var(--bg-card)}
 </style>
 </head>
 <body>
@@ -180,7 +157,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 
 <div class="footer">✦ محمد النمري ✦ المركز الرقمي الموحد ✦</div>
 
-<!-- CARD MODAL -->
 <div class="overlay" id="cardModal">
   <div class="mbox">
     <h3 id="cardModalTitle">➕ إضافة كرت</h3>
@@ -194,7 +170,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- TAB MODAL -->
 <div class="overlay" id="tabModal">
   <div class="mbox">
     <h3>➕ تبويب جديد</h3>
@@ -206,7 +181,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- CONTEXT MENU — يبقى في body دائماً، لا يُنقل -->
 <div id="ctxMenu" class="ctx-menu"></div>
 
 <script>
@@ -230,8 +204,8 @@ async function fetchPrayers() {
     const T = d.data.timings;
     const raw = { fajr:T.Fajr, dhuhr:T.Dhuhr, asr:T.Asr, maghrib:T.Maghrib, isha:T.Isha };
     localStorage.setItem('p_cache', JSON.stringify(raw));
-    const now2 = new Date();
-    localStorage.setItem('p_date', `${now2.getFullYear()}-${now2.getMonth()}-${now2.getDate()}`);
+    const n = new Date();
+    localStorage.setItem('p_date', `${n.getFullYear()}-${n.getMonth()}-${n.getDate()}`);
     applyPrayerData(raw);
   } catch(e) {
     const raw = JSON.parse(localStorage.getItem('p_cache') || 'null');
@@ -240,866 +214,641 @@ async function fetchPrayers() {
 }
 
 function applyPrayerData(raw) {
-  const meta = {
-    fajr:    { name:'الفجر',   nextWindow: 8   },
-    dhuhr:   { name:'الظهر',   nextWindow: 3.3 },
-    asr:     { name:'العصر',   nextWindow: 3.3 },
-    maghrib: { name:'المغرب',  nextWindow: 1.5 },
-    isha:    { name:'العشاء',  nextWindow: 7.6 }
-  };
-  PRAYERS = Object.entries(raw).map(([key, str]) => {
-    const [h, m] = str.split(':').map(Number);
-    return { key, name: meta[key].name, nextWindow: meta[key].nextWindow,
-             h24: str, totalSec: h*3600 + m*60 };
-  }).sort((a,b) => a.totalSec - b.totalSec);
-  const fmt = str => {
+  const meta = { fajr:{name:'الفجر',nextWindow:8}, dhuhr:{name:'الظهر',nextWindow:3.3}, asr:{name:'العصر',nextWindow:3.3}, maghrib:{name:'المغرب',nextWindow:1.5}, isha:{name:'العشاء',nextWindow:7.6} };
+  PRAYERS = Object.entries(raw).map(([key,str]) => {
     const [h,m] = str.split(':').map(Number);
-    const ap = h>=12?'م':'ص'; const h12 = h%12||12;
-    return `${h12<10?'0'+h12:h12}:${m<10?'0'+m:m} ${ap}`;
-  };
-  PRAYERS.forEach(p => {
-    const el = document.getElementById(`pt-${p.key}`);
-    if (el) el.textContent = fmt(p.h24);
-  });
+    return { key, name:meta[key].name, nextWindow:meta[key].nextWindow, h24:str, totalSec:h*3600+m*60 };
+  }).sort((a,b) => a.totalSec - b.totalSec);
+  const fmt = str => { const [h,m]=str.split(':').map(Number); const ap=h>=12?'م':'ص'; const h12=h%12||12; return `${h12<10?'0'+h12:h12}:${m<10?'0'+m:m} ${ap}`; };
+  PRAYERS.forEach(p => { const el=document.getElementById(`pt-${p.key}`); if(el) el.textContent=fmt(p.h24); });
 }
 
 function needsPrayerRefetch() {
-  const now = new Date();
-  return localStorage.getItem('p_date') !== `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  const n = new Date();
+  return localStorage.getItem('p_date') !== `${n.getFullYear()}-${n.getMonth()}-${n.getDate()}`;
 }
 
 // ══════════════════════════════════════════
-//  CLOCK + COUNTDOWN
+//  CLOCK
 // ══════════════════════════════════════════
 function tick() {
   const now = new Date();
-  let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
-  const ap = h>=12?'م':'ص'; h=h%12||12;
-  const p = n => n<10?'0'+n:n;
-  document.getElementById('liveTime').textContent = `${p(h)}:${p(m)}:${p(s)} ${ap}`;
-  document.getElementById('liveDate').textContent = now.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  document.getElementById('liveHijri').textContent = now.toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric',month:'long',day:'numeric'});
+  let h=now.getHours(), m=now.getMinutes(), s=now.getSeconds();
+  const ap=h>=12?'م':'ص'; h=h%12||12;
+  const p=n=>n<10?'0'+n:n;
+  document.getElementById('liveTime').textContent=`${p(h)}:${p(m)}:${p(s)} ${ap}`;
+  document.getElementById('liveDate').textContent=now.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('liveHijri').textContent=now.toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric',month:'long',day:'numeric'});
   if (PRAYERS.length) updateCountdown(now);
 }
 
 function updateCountdown(now) {
-  const nowSec = now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds();
-  document.querySelectorAll('.pi').forEach(el => el.classList.remove('next'));
-  let next = null, diffSec = Infinity;
-  for (const p of PRAYERS) {
-    const d = p.totalSec - nowSec;
-    if (d > 0 && d < diffSec) { diffSec = d; next = p; }
-  }
-  if (!next) { next = PRAYERS[0]; diffSec = (86400 - nowSec) + next.totalSec; }
+  const nowSec=now.getHours()*3600+now.getMinutes()*60+now.getSeconds();
+  document.querySelectorAll('.pi').forEach(el=>el.classList.remove('next'));
+  let next=null, diffSec=Infinity;
+  for (const p of PRAYERS) { const d=p.totalSec-nowSec; if(d>0&&d<diffSec){diffSec=d;next=p;} }
+  if (!next) { next=PRAYERS[0]; diffSec=(86400-nowSec)+next.totalSec; }
   document.getElementById(`pCard-${next.key}`)?.classList.add('next');
-  const hrs  = Math.floor(diffSec / 3600);
-  const mins = Math.floor((diffSec % 3600) / 60);
-  const secs = diffSec % 60;
-  const p2 = n => n < 10 ? '0'+n : n;
-  document.getElementById('cdText').innerHTML =
-    `متبقي على صلاة ${next.name}: <span>${p2(hrs)}:${p2(mins)}:${p2(secs)}</span>`;
-  const idx = PRAYERS.findIndex(p => p.key === next.key);
-  const prevIdx = idx === 0 ? PRAYERS.length - 1 : idx - 1;
-  const prev = PRAYERS[prevIdx];
-  const totalWindowMs = prev.nextWindow * 3600 * 1000;
-  const remainMs = diffSec * 1000;
-  const elapsedMs = totalWindowMs - remainMs;
-  let progress = (elapsedMs / totalWindowMs) * 100;
-  if (progress < 0) progress = 0;
-  if (progress > 100) progress = 100;
-  document.getElementById('barFill').style.width = `${progress}%`;
+  const hrs=Math.floor(diffSec/3600), mins=Math.floor((diffSec%3600)/60), secs=diffSec%60;
+  const p2=n=>n<10?'0'+n:n;
+  document.getElementById('cdText').innerHTML=`متبقي على صلاة ${next.name}: <span>${p2(hrs)}:${p2(mins)}:${p2(secs)}</span>`;
+  const idx=PRAYERS.findIndex(p=>p.key===next.key);
+  const prev=PRAYERS[idx===0?PRAYERS.length-1:idx-1];
+  const totalWindowMs=prev.nextWindow*3600*1000;
+  let progress=((totalWindowMs-diffSec*1000)/totalWindowMs)*100;
+  progress=Math.max(0,Math.min(100,progress));
+  document.getElementById('barFill').style.width=`${progress}%`;
 }
 
 // ══════════════════════════════════════════
 //  SHEETS SYNC
 // ══════════════════════════════════════════
-function setSyncStatus(state, msg) {
-  document.getElementById('syncDot').className = 'sync-dot ' + state;
-  document.getElementById('syncMsg').textContent = msg;
+function setSyncStatus(state,msg) {
+  document.getElementById('syncDot').className='sync-dot '+state;
+  document.getElementById('syncMsg').textContent=msg;
 }
 
 function jsonpFetch(url) {
-  return new Promise((resolve, reject) => {
-    const cbName = '__cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    const script = document.createElement('script');
-    const timer = setTimeout(() => { cleanup(); reject(new Error('JSONP timeout')); }, 12000);
-    window[cbName] = (data) => { cleanup(); resolve(data); };
-    function cleanup() { clearTimeout(timer); delete window[cbName]; script.parentNode && script.parentNode.removeChild(script); }
-    const sep = url.includes('?') ? '&' : '?';
-    script.src = `${url}${sep}callback=${cbName}`;
-    script.onerror = () => { cleanup(); reject(new Error('script load error')); };
+  return new Promise((resolve,reject) => {
+    const cbName='__cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const script=document.createElement('script');
+    const timer=setTimeout(()=>{cleanup();reject(new Error('timeout'));},12000);
+    window[cbName]=(data)=>{cleanup();resolve(data);};
+    function cleanup(){clearTimeout(timer);delete window[cbName];script.parentNode&&script.parentNode.removeChild(script);}
+    script.src=`${url}${url.includes('?')?'&':'?'}callback=${cbName}`;
+    script.onerror=()=>{cleanup();reject(new Error('error'));};
     document.head.appendChild(script);
   });
 }
 
 async function pushToSheets(data) {
   if (!SHEETS_URL) return;
-  setSyncStatus('loading', 'جاري الحفظ...');
+  setSyncStatus('loading','جاري الحفظ...');
   try {
-    await fetch(SHEETS_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'save', payload: data })
-    });
-    setSyncStatus('ok', 'تم الحفظ في Google Sheets ✓');
-    setTimeout(() => setSyncStatus('ok', 'متصل بـ Google Sheets'), 2500);
-  } catch(e) {
-    setSyncStatus('err', 'فشل الحفظ — البيانات محفوظة محلياً');
-  }
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save',payload:data})});
+    setSyncStatus('ok','تم الحفظ في Google Sheets ✓');
+    setTimeout(()=>setSyncStatus('ok','متصل بـ Google Sheets'),2500);
+  } catch(e) { setSyncStatus('err','فشل الحفظ — البيانات محفوظة محلياً'); }
 }
 
 async function pullFromSheets() {
-  if (!SHEETS_URL) { setSyncStatus('', 'غير متصل بـ Sheets'); return null; }
-  setSyncStatus('loading', 'جاري التحميل من Sheets...');
+  if (!SHEETS_URL) { setSyncStatus('','غير متصل بـ Sheets'); return null; }
+  setSyncStatus('loading','جاري التحميل من Sheets...');
   try {
-    const d = await jsonpFetch(SHEETS_URL + '?action=load');
-    setSyncStatus('ok', 'متصل بـ Google Sheets ✓');
+    const d=await jsonpFetch(SHEETS_URL+'?action=load');
+    setSyncStatus('ok','متصل بـ Google Sheets ✓');
     return d;
   } catch(e) {
     try {
-      const res = await fetch(SHEETS_URL + '?action=load');
-      const d = await res.json();
-      setSyncStatus('ok', 'متصل بـ Google Sheets ✓');
+      const res=await fetch(SHEETS_URL+'?action=load');
+      const d=await res.json();
+      setSyncStatus('ok','متصل بـ Google Sheets ✓');
       return d;
-    } catch(e2) {
-      setSyncStatus('err', 'يعمل محلياً — تعذّر الاتصال بـ Sheets');
-      return null;
-    }
+    } catch(e2) { setSyncStatus('err','يعمل محلياً — تعذّر الاتصال بـ Sheets'); return null; }
   }
 }
 
-function buildSavePayload() { return { tabs, tasks }; }
+function buildSavePayload() { return {tabs,tasks}; }
 function triggerSave() { saveTabs(); pushToSheets(buildSavePayload()); }
 
 // ══════════════════════════════════════════
-//  TABS DATA
+//  DATA
 // ══════════════════════════════════════════
-const EMOJIS = ['🌐','📱','💻','🎮','🎵','🎬','📺','🛒','📰','🔗','💡','🏆','📧','🗓️','🔐','💰','📦','🌙','☁️','🔔','🛠️','📡','🎯','🌟','🤖','🔮','✨','▶️','💬','✈️','🌍','🪪','💾','🎨','⚙️','🚀','🧩','📌','🎭','🖼️','✏️','🏠','📊','📅','🏅','🔑','🧠','🗺️','🎪','🌈','⚡','🔥','💎','🏔️','🎸','🎤','🕹️','🧪','🔭','🛸'];
+const EMOJIS=['🌐','📱','💻','🎮','🎵','🎬','📺','🛒','📰','🔗','💡','🏆','📧','🗓️','🔐','💰','📦','🌙','☁️','🔔','🛠️','📡','🎯','🌟','🤖','🔮','✨','▶️','💬','✈️','🌍','🪪','💾','🎨','⚙️','🚀','🧩','📌','🎭','🖼️','✏️','🏠','📊','📅','🏅','🔑','🧠','🗺️','🎪','🌈','⚡','🔥','💎','🏔️','🎸','🎤','🕹️','🧪','🔭','🛸'];
 
-const DEFAULT_TABS = [
-  { id:'work', label:'العمل', cards:[
-    {id:'kababi',name:'كبابجي',emoji:'🏠',url:'https://home-m6kn.vercel.app/'},
-    {id:'zad',name:'داش زاد',emoji:'📊',url:'https://zad-dashboard-v1.vercel.app/'},
-    {id:'github',name:'GitHub',emoji:'⚙️',url:'https://github.com'},
-    {id:'vercel',name:'Vercel',emoji:'🚀',url:'https://vercel.com/'},
-  ]},
-  { id:'personal', label:'شخصي', cards:[
-    {id:'ana',name:'أنا',emoji:'📅',url:'https://yom-lac.vercel.app/'},
-  ]},
-  { id:'ai', label:'الذكاء الاصطناعي', cards:[
-    {id:'chatgpt',name:'ChatGPT',emoji:'🤖',url:'https://chatgpt.com/'},
-    {id:'claude',name:'Claude',emoji:'🔮',url:'https://claude.ai/'},
-    {id:'gemini',name:'Gemini',emoji:'✨',url:'https://gemini.google.com/'},
-  ]},
-  { id:'social', label:'التواصل', cards:[
-    {id:'wa',name:'واتساب',emoji:'💬',url:'https://web.whatsapp.com/'},
-    {id:'tg',name:'تيليجرام',emoji:'✈️',url:'https://web.telegram.org/a/'},
-    {id:'yt',name:'يوتيوب',emoji:'▶️',url:'https://www.youtube.com/'},
-  ]},
-  { id:'tools', label:'أدوات', cards:[
-    {id:'translate',name:'ترجمة',emoji:'🌍',url:'https://translate.google.com/?hl=ar'},
-    {id:'drive',name:'درايف',emoji:'💾',url:'https://drive.google.com'},
-    {id:'absher',name:'أبشر',emoji:'🪪',url:'https://www.absher.sa'},
-    {id:'chrome',name:'إضافات كروم',emoji:'🧩',url:'https://chromewebstore.google.com/category/extensions'},
-  ]},
-  { id:'design', label:'التصميم', cards:[
-    {id:'canva',name:'كانفا',emoji:'🎨',url:'https://www.canva.com/ar_eg/'},
-    {id:'freepik',name:'Freepik',emoji:'🎭',url:'https://www.freepik.com/'},
-    {id:'pinterest',name:'بينترست',emoji:'📌',url:'https://www.pinterest.com/'},
-    {id:'pngwing',name:'PNGWing',emoji:'🖼️',url:'https://www.pngwing.com/'},
-    {id:'vecteezy',name:'Vecteezy',emoji:'✏️',url:'https://www.vecteezy.com'},
-  ]},
+const DEFAULT_TABS=[
+  {id:'work',label:'العمل',cards:[{id:'kababi',name:'كبابجي',emoji:'🏠',url:'https://home-m6kn.vercel.app/'},{id:'zad',name:'داش زاد',emoji:'📊',url:'https://zad-dashboard-v1.vercel.app/'},{id:'github',name:'GitHub',emoji:'⚙️',url:'https://github.com'},{id:'vercel',name:'Vercel',emoji:'🚀',url:'https://vercel.com/'}]},
+  {id:'personal',label:'شخصي',cards:[{id:'ana',name:'أنا',emoji:'📅',url:'https://yom-lac.vercel.app/'}]},
+  {id:'ai',label:'الذكاء الاصطناعي',cards:[{id:'chatgpt',name:'ChatGPT',emoji:'🤖',url:'https://chatgpt.com/'},{id:'claude',name:'Claude',emoji:'🔮',url:'https://claude.ai/'},{id:'gemini',name:'Gemini',emoji:'✨',url:'https://gemini.google.com/'}]},
+  {id:'social',label:'التواصل',cards:[{id:'wa',name:'واتساب',emoji:'💬',url:'https://web.whatsapp.com/'},{id:'tg',name:'تيليجرام',emoji:'✈️',url:'https://web.telegram.org/a/'},{id:'yt',name:'يوتيوب',emoji:'▶️',url:'https://www.youtube.com/'}]},
+  {id:'tools',label:'أدوات',cards:[{id:'translate',name:'ترجمة',emoji:'🌍',url:'https://translate.google.com/?hl=ar'},{id:'drive',name:'درايف',emoji:'💾',url:'https://drive.google.com'},{id:'absher',name:'أبشر',emoji:'🪪',url:'https://www.absher.sa'},{id:'chrome',name:'إضافات كروم',emoji:'🧩',url:'https://chromewebstore.google.com/category/extensions'}]},
+  {id:'design',label:'التصميم',cards:[{id:'canva',name:'كانفا',emoji:'🎨',url:'https://www.canva.com/ar_eg/'},{id:'freepik',name:'Freepik',emoji:'🎭',url:'https://www.freepik.com/'},{id:'pinterest',name:'بينترست',emoji:'📌',url:'https://www.pinterest.com/'},{id:'pngwing',name:'PNGWing',emoji:'🖼️',url:'https://www.pngwing.com/'},{id:'vecteezy',name:'Vecteezy',emoji:'✏️',url:'https://www.vecteezy.com'}]},
 ];
 
-let tabs = [];
-let activeTab = null;
-let currentCardTab = null;
-let currentEditCardId = null;
-let selEmoji = '🌐';
-let dragCardId = null;
-let dragFromTab = null;
-let dragTabId = null;
+let tabs=[];
+let activeTab=null;
+let currentCardTab=null;
+let currentEditCardId=null;
+let selEmoji='🌐';
+let dragCardId=null, dragFromTab=null, dragTabId=null;
 
 function loadTabs() {
-  const saved = localStorage.getItem('mnm_tabs_v4');
-  tabs = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_TABS));
-  if (!saved) saveTabs();
+  const saved=localStorage.getItem('mnm_tabs_v4');
+  tabs=saved?JSON.parse(saved):JSON.parse(JSON.stringify(DEFAULT_TABS));
+  if(!saved) saveTabs();
 }
-function saveTabs() { localStorage.setItem('mnm_tabs_v4', JSON.stringify(tabs)); }
+function saveTabs() { localStorage.setItem('mnm_tabs_v4',JSON.stringify(tabs)); }
 
 // ══════════════════════════════════════════
-//  RENDER TABS — الإصلاح الرئيسي هنا
-//  نبني nav و content مرة واحدة فقط بـ
-//  document fragments بدل innerHTML المتكرر
+//  RENDER NAV ONLY — لا تمس الـ panes
 // ══════════════════════════════════════════
-function renderTabs() {
-  const nav = document.getElementById('tabsNav');
-  const content = document.getElementById('tabsContent');
-  if (!activeTab || !tabs.find(t => t.id === activeTab)) activeTab = tabs[0]?.id;
+function renderNav() {
+  const nav=document.getElementById('tabsNav');
+  const scrollLeft=nav.scrollLeft;
+  nav.innerHTML='';
 
-  // ── بناء NAV ──
-  // احفظ scroll position قبل إعادة الرسم
-  const scrollLeft = nav.scrollLeft;
-
-  nav.innerHTML = '';
   tabs.forEach(tab => {
-    const btn = document.createElement('button');
-    btn.className = 'tab-btn' + (tab.id === activeTab ? ' active' : '');
-    btn.setAttribute('data-tab-id', tab.id);
-    btn.draggable = true;
-    btn.title = 'انقر مرتين لتعديل الاسم';
+    const btn=document.createElement('button');
+    btn.className='tab-btn'+(tab.id===activeTab?' active':'');
+    btn.setAttribute('data-tab-id',tab.id);
+    btn.draggable=true;
 
-    const labelSpan = document.createElement('span');
-    labelSpan.className = 'tab-label-txt';
-    labelSpan.textContent = tab.label;
+    const labelSpan=document.createElement('span');
+    labelSpan.className='tab-label-txt';
+    labelSpan.textContent=tab.label;
     btn.appendChild(labelSpan);
 
-    if (tabs.length > 1) {
-      const delBtn = document.createElement('button');
-      delBtn.className = 'tab-del-btn';
-      delBtn.title = 'حذف القسم';
-      delBtn.textContent = '✕';
-      delBtn.addEventListener('click', e => { e.stopPropagation(); deleteTab(tab.id, e); });
+    if (tabs.length>1) {
+      const delBtn=document.createElement('button');
+      delBtn.className='tab-del-btn';
+      delBtn.style.cssText='background:none;border:none;color:var(--sub);cursor:pointer;font-size:11px;padding:0 0 0 4px;line-height:1';
+      delBtn.textContent='✕';
+      delBtn.addEventListener('click',e=>{e.stopPropagation();deleteTab(tab.id);});
       btn.appendChild(delBtn);
     }
 
-    btn.addEventListener('click', e => {
-      if (e.target.classList.contains('tab-del-btn')) return;
-      if (e.target.classList.contains('tab-rename-inp')) return;
+    btn.addEventListener('click',e=>{
+      if(e.target.tagName==='BUTTON'||e.target.classList.contains('tab-rename-inp')) return;
       switchTab(tab.id);
     });
-    btn.addEventListener('dblclick', e => {
-      if (e.target.classList.contains('tab-del-btn')) return;
-      startRenameTab(tab.id, e);
+    btn.addEventListener('dblclick',e=>{
+      if(e.target.tagName==='BUTTON') return;
+      startRenameTab(tab.id,e);
     });
-    btn.addEventListener('dragstart', e => {
-      dragTabId = tab.id;
+    btn.addEventListener('dragstart',e=>{
+      dragTabId=tab.id;
       btn.classList.add('tab-dragging');
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', 'tab:' + tab.id);
+      e.dataTransfer.effectAllowed='move';
+      e.dataTransfer.setData('text/plain','tab:'+tab.id);
     });
-    btn.addEventListener('dragend', () => {
+    btn.addEventListener('dragend',()=>{
       btn.classList.remove('tab-dragging');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-drag-over'));
-      dragTabId = null;
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('tab-drag-over'));
+      dragTabId=null;
     });
-    btn.addEventListener('dragover', e => {
-      if (!dragTabId || dragTabId === tab.id) return;
+    btn.addEventListener('dragover',e=>{
+      if(!dragTabId||dragTabId===tab.id) return;
       e.preventDefault();
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-drag-over'));
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('tab-drag-over'));
       btn.classList.add('tab-drag-over');
     });
-    btn.addEventListener('drop', e => {
+    btn.addEventListener('drop',e=>{
       e.preventDefault();
       btn.classList.remove('tab-drag-over');
-      if (!dragTabId || dragTabId === tab.id) return;
-      const fromIdx = tabs.findIndex(t => t.id === dragTabId);
-      const toIdx   = tabs.findIndex(t => t.id === tab.id);
-      if (fromIdx < 0 || toIdx < 0) return;
-      const [moved] = tabs.splice(fromIdx, 1);
-      tabs.splice(toIdx, 0, moved);
+      if(!dragTabId||dragTabId===tab.id) return;
+      const fi=tabs.findIndex(t=>t.id===dragTabId);
+      const ti=tabs.findIndex(t=>t.id===tab.id);
+      if(fi<0||ti<0) return;
+      const [moved]=tabs.splice(fi,1);
+      tabs.splice(ti,0,moved);
       triggerSave();
-      renderTabs();
+      renderAll();
     });
-    btn.addEventListener('contextmenu', e => {
+    btn.addEventListener('contextmenu',e=>{
       e.stopPropagation();
-      const items = [
-        { icon:'✎', label:'تعديل الاسم', action:{ type:'renameTab', tabId:tab.id } },
-        { icon:'➕', label:'إضافة كرت',  action:{ type:'addCard',   tabId:tab.id } },
+      const items=[
+        {icon:'✎',label:'تعديل الاسم',action:{type:'renameTab',tabId:tab.id}},
+        {icon:'➕',label:'إضافة كرت',action:{type:'addCard',tabId:tab.id}},
       ];
-      if (tabs.length > 1) {
-        items.push('sep');
-        items.push({ icon:'✕', label:'حذف القسم', action:{ type:'delTab', tabId:tab.id }, danger:true });
-      }
-      showCtx(e, items);
+      if(tabs.length>1){items.push('sep');items.push({icon:'✕',label:'حذف القسم',action:{type:'delTab',tabId:tab.id},danger:true});}
+      showCtx(e,items);
     });
     nav.appendChild(btn);
   });
 
-  const addBtn = document.createElement('button');
-  addBtn.className = 'tab-add';
-  addBtn.title = 'تبويب جديد';
-  addBtn.textContent = '＋';
-  addBtn.onclick = openTabModal;
+  const addBtn=document.createElement('button');
+  addBtn.className='tab-add';
+  addBtn.title='تبويب جديد';
+  addBtn.textContent='＋';
+  addBtn.onclick=openTabModal;
   nav.appendChild(addBtn);
+  nav.scrollLeft=scrollLeft;
+}
 
-  // استعادة scroll position
-  nav.scrollLeft = scrollLeft;
+// ══════════════════════════════════════════
+//  RENDER PANES — تُنشئ pane مرة واحدة فقط لكل tab
+//  ثم تستدعي fillGrid لتحديث الكروت فقط
+// ══════════════════════════════════════════
+function renderPanes() {
+  const content=document.getElementById('tabsContent');
+  const currentIds=new Set(tabs.map(t=>t.id));
 
-  // ── بناء PANES ──
-  // فقط أعد بناء الـ panes التي تغيرت أو غير موجودة
-  // بدلاً من مسح كل شيء دفعة واحدة
-  const existingPanes = new Set([...content.querySelectorAll('.tab-pane')].map(p => p.id));
-  const newPaneIds = new Set(tabs.map(t => `pane-${t.id}`));
-
-  // احذف الـ panes القديمة التي لم تعد موجودة
-  existingPanes.forEach(id => {
-    if (!newPaneIds.has(id)) {
-      document.getElementById(id)?.remove();
-    }
+  // احذف الـ panes التي حُذف تبويبها
+  [...content.querySelectorAll('.tab-pane')].forEach(pane => {
+    const id=pane.getAttribute('data-tab-id');
+    if(!currentIds.has(id)) pane.remove();
   });
 
-  // أضف panes الجديدة فقط
+  // أنشئ pane جديد فقط لمن ليس له pane بعد
   tabs.forEach(t => {
-    let pane = document.getElementById(`pane-${t.id}`);
+    let pane=content.querySelector(`.tab-pane[data-tab-id="${t.id}"]`);
     if (!pane) {
-      pane = document.createElement('div');
-      pane.className = 'tab-pane';
-      pane.id = `pane-${t.id}`;
+      pane=document.createElement('div');
+      pane.className='tab-pane';
+      pane.setAttribute('data-tab-id',t.id);
+      pane.id='pane-'+t.id;
 
-      const pasteZone = document.createElement('div');
-      pasteZone.className = 'paste-zone';
-      pasteZone.id = `paste-zone-${t.id}`;
-      pasteZone.innerHTML = `
-        <span style="font-size:14px;color:var(--gold-d)">⚡</span>
+      // paste zone — يُنشأ مرة واحدة فقط ← هذا كان مصدر التكرار
+      const pz=document.createElement('div');
+      pz.className='paste-zone';
+      pz.id='paste-zone-'+t.id;
+      pz.innerHTML=`<span style="font-size:14px;color:var(--gold-d)">⚡</span>
         <input class="paste-inp" id="paste-inp-${t.id}" placeholder="الصق رابطاً هنا لإضافة كرت سريع..." autocomplete="off" spellcheck="false">
-        <span class="paste-hint">Ctrl+V أو اكتب واضغط Enter</span>`;
+        <span style="font-size:10px;color:#4a4540;white-space:nowrap">Ctrl+V أو اكتب واضغط Enter</span>`;
 
-      const grid = document.createElement('div');
-      grid.className = 'cards-grid';
-      grid.id = `grid-${t.id}`;
-      grid.addEventListener('dragover', e => onGridDragOver(e, t.id));
-      grid.addEventListener('drop', e => onGridDrop(e, t.id));
-      grid.addEventListener('dragleave', e => onGridDragLeave(e, t.id));
+      // grid — يُنشأ مرة واحدة فقط
+      const grid=document.createElement('div');
+      grid.className='cards-grid';
+      grid.id='grid-'+t.id;
+      // drag events على الـ grid — تُضاف مرة واحدة فقط
+      grid.addEventListener('dragover', e=>onGridDragOver(e,t.id));
+      grid.addEventListener('drop',     e=>onGridDrop(e,t.id));
+      grid.addEventListener('dragleave',e=>onGridDragLeave(e,t.id));
 
-      pane.appendChild(pasteZone);
+      pane.appendChild(pz);
       pane.appendChild(grid);
       content.appendChild(pane);
-      setupPasteZone(t.id);
+
+      // paste listeners — تُضاف مرة واحدة فقط
+      const inp=document.getElementById('paste-inp-'+t.id);
+      inp.addEventListener('paste',()=>{
+        setTimeout(()=>{ const v=inp.value.trim(); if(v) quickAddFromPaste(t.id,v,inp); },10);
+      });
+      inp.addEventListener('keydown',e=>{
+        if(e.key==='Enter'){ const v=inp.value.trim(); if(v) quickAddFromPaste(t.id,v,inp); }
+      });
     }
-
-    // تحديث حالة active
-    pane.classList.toggle('active', t.id === activeTab);
-
-    // تحديث الـ grid دائماً
+    // active state
+    pane.classList.toggle('active', t.id===activeTab);
+    // كروت — تُحدَّث دائماً
     fillGrid(t);
   });
 }
 
-// ══════════════════════════════════════════
-//  QUICK PASTE ZONE
-// ══════════════════════════════════════════
-function setupPasteZone(tabId) {
-  const inp = document.getElementById(`paste-inp-${tabId}`);
-  if (!inp) return;
-  inp.addEventListener('paste', e => {
-    setTimeout(() => {
-      const val = inp.value.trim();
-      if (val) quickAddFromPaste(tabId, val, inp);
-    }, 10);
-  });
-  inp.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      const val = inp.value.trim();
-      if (val) quickAddFromPaste(tabId, val, inp);
-    }
-  });
-}
-
-function quickAddFromPaste(tabId, raw, inp) {
-  let url = raw;
-  if (!url.startsWith('http')) url = 'https://' + url;
-  let name = '🔗 رابط جديد';
-  try {
-    const u = new URL(url);
-    name = u.hostname.replace(/^www\./, '');
-  } catch(e) {}
-  const tab = tabs.find(t => t.id === tabId);
-  if (!tab) return;
-  const newCard = { id: Date.now(), name, url, emoji: '🔗' };
-  tab.cards.push(newCard);
-  triggerSave();
-  fillGrid(tab);
-  inp.value = '';
-  const zone = document.getElementById(`paste-zone-${tabId}`);
-  if (zone) {
-    zone.style.borderColor = 'var(--gold)';
-    zone.style.background = 'rgba(212,168,67,0.06)';
-    setTimeout(() => { zone.style.borderColor = ''; zone.style.background = ''; }, 800);
-  }
-  openCardModal(tabId, newCard.id);
+// renderAll = nav + panes
+function renderAll() {
+  if (!activeTab || !tabs.find(t=>t.id===activeTab)) activeTab=tabs[0]?.id;
+  renderNav();
+  renderPanes();
 }
 
 // ══════════════════════════════════════════
-//  FILL GRID
+//  FILL GRID — يمسح ويعيد بناء كروت tab واحد
 // ══════════════════════════════════════════
 function fillGrid(tab) {
-  const grid = document.getElementById(`grid-${tab.id}`);
+  const grid=document.getElementById('grid-'+tab.id);
   if (!grid) return;
-  grid.innerHTML = '';
-  tab.cards.forEach(card => grid.appendChild(createCardEl(card, tab.id)));
-  const btn = document.createElement('button');
-  btn.className = 'add-card';
-  btn.innerHTML = `<span class="plus">＋</span>أضف`;
-  btn.onclick = () => openCardModal(tab.id, null);
+  grid.innerHTML='';
+  tab.cards.forEach(card=>grid.appendChild(createCardEl(card,tab.id)));
+  const btn=document.createElement('button');
+  btn.className='add-card';
+  btn.innerHTML='<span class="plus">＋</span>أضف';
+  btn.onclick=()=>openCardModal(tab.id,null);
   grid.appendChild(btn);
 }
 
-function createCardEl(card, tabId) {
-  const a = document.createElement('a');
-  a.href = card.url;
-  a.target = '_blank';
-  a.className = 'card';
-  a.setAttribute('data-card-id', card.id);
-  a.setAttribute('data-tab-id', tabId);
-  a.draggable = true;
-  a.innerHTML = `
-    <span class="drag-handle">⠿</span>
-    <div class="icon">${card.emoji}</div>
-    <h2>${card.name}</h2>`;
-  a.addEventListener('dragstart', e => {
-    dragCardId = card.id; dragFromTab = tabId;
+function createCardEl(card,tabId) {
+  const a=document.createElement('a');
+  a.href=card.url; a.target='_blank'; a.className='card';
+  a.setAttribute('data-card-id',card.id);
+  a.draggable=true;
+  a.innerHTML=`<span class="drag-handle">⠿</span><div class="icon">${card.emoji}</div><h2>${card.name}</h2>`;
+  a.addEventListener('dragstart',e=>{
+    dragCardId=card.id; dragFromTab=tabId;
     a.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', card.id);
+    e.dataTransfer.effectAllowed='move';
+    e.dataTransfer.setData('text/plain',card.id);
   });
-  a.addEventListener('dragend', () => {
+  a.addEventListener('dragend',()=>{
     a.classList.remove('dragging');
-    document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
-    document.querySelectorAll('.cards-grid').forEach(g => g.classList.remove('drag-over'));
+    document.querySelectorAll('.drop-placeholder').forEach(p=>p.remove());
+    document.querySelectorAll('.cards-grid').forEach(g=>g.classList.remove('drag-over'));
   });
-  a.addEventListener('click', e => { if (a.classList.contains('dragging')) e.preventDefault(); });
-  a.addEventListener('contextmenu', e => {
-    const moveItems = tabs
-      .filter(t => t.id !== tabId)
-      .map(t => ({ icon:'↪', label: t.label, action:{ type:'moveCard', cardId:card.id, fromTabId:tabId, toTabId:t.id } }));
-    const items = [
-      { icon:'✎', label:'تعديل الكرت', action:{ type:'editCard', cardId:card.id, tabId } },
-      { icon:'📂', label:'نقل إلى', submenu: moveItems },
+  a.addEventListener('click',e=>{ if(a.classList.contains('dragging')) e.preventDefault(); });
+  a.addEventListener('contextmenu',e=>{
+    const moveItems=tabs.filter(t=>t.id!==tabId).map(t=>({icon:'↪',label:t.label,action:{type:'moveCard',cardId:card.id,fromTabId:tabId,toTabId:t.id}}));
+    const items=[
+      {icon:'✎',label:'تعديل الكرت',action:{type:'editCard',cardId:card.id,tabId}},
+      {icon:'📂',label:'نقل إلى',submenu:moveItems},
       'sep',
-      { icon:'✕', label:'حذف الكرت', action:{ type:'delCard', cardId:card.id, tabId }, danger:true },
+      {icon:'✕',label:'حذف الكرت',action:{type:'delCard',cardId:card.id,tabId},danger:true},
     ];
-    showCtx(e, items);
+    showCtx(e,items);
   });
   return a;
+}
+
+function quickAddFromPaste(tabId,raw,inp) {
+  let url=raw;
+  if(!url.startsWith('http')) url='https://'+url;
+  let name='رابط جديد';
+  try { name=new URL(url).hostname.replace(/^www\./,''); } catch(e){}
+  const tab=tabs.find(t=>t.id===tabId);
+  if(!tab) return;
+  const newCard={id:Date.now(),name,url,emoji:'🔗'};
+  tab.cards.push(newCard);
+  triggerSave();
+  fillGrid(tab);
+  inp.value='';
+  const zone=document.getElementById('paste-zone-'+tabId);
+  if(zone){zone.style.borderColor='var(--gold)';zone.style.background='rgba(212,168,67,0.06)';setTimeout(()=>{zone.style.borderColor='';zone.style.background='';},800);}
+  openCardModal(tabId,newCard.id);
 }
 
 // ══════════════════════════════════════════
 //  CARD DRAG & DROP
 // ══════════════════════════════════════════
-function onGridDragOver(e, tabId) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  const grid = document.getElementById(`grid-${tabId}`);
+function onGridDragOver(e,tabId) {
+  e.preventDefault(); e.dataTransfer.dropEffect='move';
+  const grid=document.getElementById('grid-'+tabId);
   grid.classList.add('drag-over');
-  const afterEl = getDragAfterElement(grid, e.clientX);
-  const ph = document.querySelector('.drop-placeholder') || (() => {
-    const d = document.createElement('div'); d.className = 'drop-placeholder'; return d;
-  })();
-  if (afterEl == null) grid.insertBefore(ph, grid.querySelector('.add-card'));
-  else grid.insertBefore(ph, afterEl);
+  const afterEl=getDragAfterElement(grid,e.clientX);
+  let ph=document.querySelector('.drop-placeholder');
+  if(!ph){ph=document.createElement('div');ph.className='drop-placeholder';}
+  if(afterEl==null) grid.insertBefore(ph,grid.querySelector('.add-card'));
+  else grid.insertBefore(ph,afterEl);
 }
-
-function onGridDragLeave(e, tabId) {
-  const grid = document.getElementById(`grid-${tabId}`);
-  if (!grid.contains(e.relatedTarget)) {
-    grid.classList.remove('drag-over');
-    document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
-  }
+function onGridDragLeave(e,tabId) {
+  const grid=document.getElementById('grid-'+tabId);
+  if(!grid.contains(e.relatedTarget)){grid.classList.remove('drag-over');document.querySelectorAll('.drop-placeholder').forEach(p=>p.remove());}
 }
-
-function onGridDrop(e, toTabId) {
+function onGridDrop(e,toTabId) {
   e.preventDefault();
-  document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
-  document.querySelectorAll('.cards-grid').forEach(g => g.classList.remove('drag-over'));
-  if (!dragCardId) return;
-  const fromTab = tabs.find(t => t.id === dragFromTab);
-  const toTab = tabs.find(t => t.id === toTabId);
-  if (!fromTab || !toTab) return;
-  const cardIdx = fromTab.cards.findIndex(c => String(c.id) === String(dragCardId));
-  if (cardIdx === -1) return;
-  const [card] = fromTab.cards.splice(cardIdx, 1);
-  const grid = document.getElementById(`grid-${toTabId}`);
-  const afterEl = getDragAfterElement(grid, e.clientX);
-  if (afterEl == null || afterEl.classList.contains('add-card')) {
-    toTab.cards.push(card);
-  } else {
-    const afterIdx = toTab.cards.findIndex(c => String(c.id) === String(afterEl.getAttribute('data-card-id')));
-    toTab.cards.splice(afterIdx, 0, card);
-  }
-  dragCardId = null; dragFromTab = null;
+  document.querySelectorAll('.drop-placeholder').forEach(p=>p.remove());
+  document.querySelectorAll('.cards-grid').forEach(g=>g.classList.remove('drag-over'));
+  if(!dragCardId) return;
+  const fromTab=tabs.find(t=>t.id===dragFromTab);
+  const toTab=tabs.find(t=>t.id===toTabId);
+  if(!fromTab||!toTab) return;
+  const cardIdx=fromTab.cards.findIndex(c=>String(c.id)===String(dragCardId));
+  if(cardIdx===-1) return;
+  const [card]=fromTab.cards.splice(cardIdx,1);
+  const grid=document.getElementById('grid-'+toTabId);
+  const afterEl=getDragAfterElement(grid,e.clientX);
+  if(afterEl==null||afterEl.classList.contains('add-card')) toTab.cards.push(card);
+  else { const ai=toTab.cards.findIndex(c=>String(c.id)===String(afterEl.getAttribute('data-card-id'))); toTab.cards.splice(ai,0,card); }
+  dragCardId=null; dragFromTab=null;
   triggerSave(); fillGrid(fromTab);
-  if (fromTab.id !== toTab.id) fillGrid(toTab);
+  if(fromTab.id!==toTab.id) fillGrid(toTab);
 }
-
-function getDragAfterElement(grid, x) {
-  return [...grid.querySelectorAll('.card:not(.dragging)')].reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = x - box.right + box.width / 2;
-    if (offset < 0 && offset > closest.offset) return { offset, element: child };
+function getDragAfterElement(grid,x) {
+  return [...grid.querySelectorAll('.card:not(.dragging)')].reduce((closest,child)=>{
+    const box=child.getBoundingClientRect();
+    const offset=x-box.right+box.width/2;
+    if(offset<0&&offset>closest.offset) return {offset,element:child};
     return closest;
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
+  },{offset:Number.NEGATIVE_INFINITY}).element;
 }
 
 // ══════════════════════════════════════════
 //  TAB ACTIONS
 // ══════════════════════════════════════════
 function switchTab(id) {
-  activeTab = id;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-tab-id') === id));
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === `pane-${id}`));
+  activeTab=id;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('data-tab-id')===id));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active',p.id==='pane-'+id));
 }
 
-function startRenameTab(tabId, e) {
-  e && e.stopPropagation && e.stopPropagation();
-  const btn = document.querySelector(`.tab-btn[data-tab-id="${tabId}"]`);
-  if (!btn) return;
-  const labelSpan = btn.querySelector('.tab-label-txt');
-  if (!labelSpan) return;
-  const oldName = labelSpan.textContent;
-  const inp = document.createElement('input');
-  inp.className = 'tab-rename-inp';
-  inp.value = oldName;
-  labelSpan.replaceWith(inp);
-  inp.focus(); inp.select();
-  const commit = () => {
-    const newName = inp.value.trim() || oldName;
-    const tab = tabs.find(t => t.id === tabId);
-    if (tab) { tab.label = newName; triggerSave(); }
-    renderTabs();
-  };
-  inp.addEventListener('blur', commit);
-  inp.addEventListener('keydown', e2 => {
-    if (e2.key === 'Enter') inp.blur();
-    if (e2.key === 'Escape') { inp.value = oldName; inp.blur(); }
-    e2.stopPropagation();
-  });
+function startRenameTab(tabId,e) {
+  e&&e.stopPropagation&&e.stopPropagation();
+  const btn=document.querySelector(`.tab-btn[data-tab-id="${tabId}"]`);
+  if(!btn) return;
+  const labelSpan=btn.querySelector('.tab-label-txt');
+  if(!labelSpan) return;
+  const oldName=labelSpan.textContent;
+  const inp=document.createElement('input');
+  inp.className='tab-rename-inp'; inp.value=oldName;
+  labelSpan.replaceWith(inp); inp.focus(); inp.select();
+  const commit=()=>{ const n=inp.value.trim()||oldName; const tab=tabs.find(t=>t.id===tabId); if(tab){tab.label=n;triggerSave();} renderAll(); };
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('keydown',e2=>{ if(e2.key==='Enter') inp.blur(); if(e2.key==='Escape'){inp.value=oldName;inp.blur();} e2.stopPropagation(); });
 }
 
-function deleteTab(tabId, e) {
-  e && e.stopPropagation && e.stopPropagation();
-  const tab = tabs.find(t => t.id === tabId);
-  if (!tab) return;
-  if (!confirm(`حذف قسم "${tab.label}" وجميع كروته؟`)) return;
-  tabs = tabs.filter(t => t.id !== tabId);
-  if (activeTab === tabId) activeTab = tabs[0]?.id || null;
+function deleteTab(tabId) {
+  const tab=tabs.find(t=>t.id===tabId);
+  if(!tab) return;
+  if(!confirm(`حذف قسم "${tab.label}" وجميع كروته؟`)) return;
+  // احذف الـ pane من الـ DOM مباشرة
+  document.getElementById('pane-'+tabId)?.remove();
+  tabs=tabs.filter(t=>t.id!==tabId);
+  if(activeTab===tabId) activeTab=tabs[0]?.id||null;
   triggerSave();
-  renderTabs();
+  renderAll();
 }
 
 // ══════════════════════════════════════════
 //  CARD MODAL
 // ══════════════════════════════════════════
-function openCardModal(tabId, cardId) {
-  currentCardTab = tabId;
-  currentEditCardId = cardId ? String(cardId) : null;
-  selEmoji = '🌐';
-  if (cardId) {
-    document.getElementById('cardModalTitle').textContent = '✎ تعديل الكرت';
-    const tab = tabs.find(t => t.id === tabId);
-    const card = tab?.cards.find(c => String(c.id) === String(cardId));
-    if (card) {
-      document.getElementById('mName').value = card.name;
-      document.getElementById('mUrl').value = card.url;
-      selEmoji = card.emoji || '🌐';
-    }
+function openCardModal(tabId,cardId) {
+  currentCardTab=tabId;
+  currentEditCardId=cardId?String(cardId):null;
+  selEmoji='🌐';
+  if(cardId) {
+    document.getElementById('cardModalTitle').textContent='✎ تعديل الكرت';
+    const card=tabs.find(t=>t.id===tabId)?.cards.find(c=>String(c.id)===String(cardId));
+    if(card){document.getElementById('mName').value=card.name;document.getElementById('mUrl').value=card.url;selEmoji=card.emoji||'🌐';}
   } else {
-    document.getElementById('cardModalTitle').textContent = '➕ إضافة كرت';
-    document.getElementById('mName').value = '';
-    document.getElementById('mUrl').value = '';
-    selEmoji = '🌐';
+    document.getElementById('cardModalTitle').textContent='➕ إضافة كرت';
+    document.getElementById('mName').value='';document.getElementById('mUrl').value='';
   }
   buildEmojiGrid();
   document.getElementById('cardModal').classList.add('on');
-  document.getElementById('mName').focus();
+  setTimeout(()=>document.getElementById('mName').focus(),50);
 }
+function closeCardModal(){document.getElementById('cardModal').classList.remove('on');currentEditCardId=null;}
+document.getElementById('cardModal').addEventListener('click',e=>{if(e.target===document.getElementById('cardModal'))closeCardModal();});
 
-function closeCardModal() {
-  document.getElementById('cardModal').classList.remove('on');
-  currentEditCardId = null;
+function buildEmojiGrid(){
+  document.getElementById('emojiGrid').innerHTML=EMOJIS.map(em=>`<div class="emo ${em===selEmoji?'sel':''}" onclick="pickEmoji('${em}',this)">${em}</div>`).join('');
 }
-document.getElementById('cardModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('cardModal')) closeCardModal();
-});
+function pickEmoji(em,el){selEmoji=em;document.querySelectorAll('.emo').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');}
 
-function buildEmojiGrid() {
-  document.getElementById('emojiGrid').innerHTML = EMOJIS.map(em =>
-    `<div class="emo ${em===selEmoji?'sel':''}" onclick="pickEmoji('${em}',this)">${em}</div>`
-  ).join('');
-}
-function pickEmoji(em, el) {
-  selEmoji = em;
-  document.querySelectorAll('.emo').forEach(e => e.classList.remove('sel'));
-  el.classList.add('sel');
-}
-
-function saveCard() {
-  const name = document.getElementById('mName').value.trim();
-  let url = document.getElementById('mUrl').value.trim();
-  if (!name || !url) { alert('يرجى تعبئة الاسم والرابط'); return; }
-  if (!url.startsWith('http')) url = 'https://' + url;
-  const tab = tabs.find(t => t.id === currentCardTab);
-  if (!tab) return;
-  if (currentEditCardId) {
-    const card = tab.cards.find(c => String(c.id) === currentEditCardId);
-    if (card) { card.name = name; card.url = url; card.emoji = selEmoji; }
+function saveCard(){
+  const name=document.getElementById('mName').value.trim();
+  let url=document.getElementById('mUrl').value.trim();
+  if(!name||!url){alert('يرجى تعبئة الاسم والرابط');return;}
+  if(!url.startsWith('http')) url='https://'+url;
+  const tab=tabs.find(t=>t.id===currentCardTab);
+  if(!tab) return;
+  if(currentEditCardId){
+    const card=tab.cards.find(c=>String(c.id)===currentEditCardId);
+    if(card){card.name=name;card.url=url;card.emoji=selEmoji;}
   } else {
-    tab.cards.push({ id: Date.now(), name, url, emoji: selEmoji });
+    tab.cards.push({id:Date.now(),name,url,emoji:selEmoji});
   }
-  triggerSave(); closeCardModal(); fillGrid(tab);
+  triggerSave();closeCardModal();fillGrid(tab);
 }
 
-function delCard(cardId, tabId, e) {
-  if (e && e.preventDefault) e.preventDefault();
-  if (e && e.stopPropagation) e.stopPropagation();
-  if (!confirm('حذف هذا الكرت؟')) return;
-  const tab = tabs.find(t => t.id === tabId);
-  if (tab) tab.cards = tab.cards.filter(c => String(c.id) !== String(cardId));
-  triggerSave(); fillGrid(tab);
+function delCard(cardId,tabId){
+  if(!confirm('حذف هذا الكرت؟')) return;
+  const tab=tabs.find(t=>t.id===tabId);
+  if(tab) tab.cards=tab.cards.filter(c=>String(c.id)!==String(cardId));
+  triggerSave();fillGrid(tab);
 }
 
 // ══════════════════════════════════════════
 //  TAB MODAL
 // ══════════════════════════════════════════
-function openTabModal() {
-  document.getElementById('tName').value = '';
-  document.getElementById('tabModal').classList.add('on');
-  document.getElementById('tName').focus();
-}
-function closeTabModal() { document.getElementById('tabModal').classList.remove('on'); }
-document.getElementById('tabModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('tabModal')) closeTabModal();
-});
-function saveTab() {
-  const name = document.getElementById('tName').value.trim();
-  if (!name) return;
-  const id = 'tab_' + Date.now();
-  tabs.push({ id, label: name, cards: [] });
-  triggerSave(); closeTabModal(); renderTabs(); switchTab(id);
+function openTabModal(){document.getElementById('tName').value='';document.getElementById('tabModal').classList.add('on');setTimeout(()=>document.getElementById('tName').focus(),50);}
+function closeTabModal(){document.getElementById('tabModal').classList.remove('on');}
+document.getElementById('tabModal').addEventListener('click',e=>{if(e.target===document.getElementById('tabModal'))closeTabModal();});
+function saveTab(){
+  const name=document.getElementById('tName').value.trim();
+  if(!name) return;
+  const id='tab_'+Date.now();
+  tabs.push({id,label:name,cards:[]});
+  triggerSave();closeTabModal();renderAll();switchTab(id);
 }
 
 // ══════════════════════════════════════════
 //  TASKS
 // ══════════════════════════════════════════
-let tasks = JSON.parse(localStorage.getItem('mnm_tasks') || '[]');
-function saveTasks() { localStorage.setItem('mnm_tasks', JSON.stringify(tasks)); }
-function addTask() {
-  const inp = document.getElementById('taskInp');
-  const txt = inp.value.trim();
-  if (!txt) return;
-  tasks.push({ id: Date.now(), text: txt, done: false });
-  inp.value = ''; triggerSave(); renderTasks();
+let tasks=JSON.parse(localStorage.getItem('mnm_tasks')||'[]');
+function saveTasks(){localStorage.setItem('mnm_tasks',JSON.stringify(tasks));}
+function addTask(){
+  const inp=document.getElementById('taskInp');
+  const txt=inp.value.trim(); if(!txt) return;
+  tasks.push({id:Date.now(),text:txt,done:false});
+  inp.value='';triggerSave();renderTasks();
 }
-function toggleTask(id) {
-  tasks = tasks.map(t => t.id===id ? {...t,done:!t.done} : t);
-  saveTasks(); renderTasks();
+function toggleTask(id){tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);saveTasks();renderTasks();}
+function delTask(id){tasks=tasks.filter(t=>t.id!==id);saveTasks();renderTasks();}
+function renderTasks(){
+  const el=document.getElementById('tasksList');
+  if(!el) return;
+  if(!tasks.length){el.innerHTML='<li style="text-align:center;padding:6px;color:var(--sub);font-size:11px;">✦ لا توجد مهام حالياً</li>';return;}
+  el.innerHTML=tasks.map(t=>`<li class="task-li"><div class="task-li-r"><input type="checkbox" class="t-cb" ${t.done?'checked':''} onchange="toggleTask(${t.id})"><span class="t-txt ${t.done?'done':''}">${t.text}</span></div><button class="t-del" onclick="delTask(${t.id})">✕</button></li>`).join('');
 }
-function delTask(id) {
-  tasks = tasks.filter(t => t.id!==id);
-  saveTasks(); renderTasks();
-}
-function renderTasks() {
-  const el = document.getElementById('tasksList');
-  if (!el) return;
-  if (!tasks.length) {
-    el.innerHTML='<li style="text-align:center;padding:6px;color:var(--sub);font-size:11px;">✦ لا توجد مهام حالياً</li>';
-    return;
-  }
-  el.innerHTML = tasks.map(t=>`
-    <li class="task-li">
-      <div class="task-li-r">
-        <input type="checkbox" class="t-cb" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
-        <span class="t-txt ${t.done?'done':''}">${t.text}</span>
-      </div>
-      <button class="t-del" onclick="delTask(${t.id})">✕</button>
-    </li>`).join('');
-}
-document.getElementById('taskInp')?.addEventListener('keypress', e => { if(e.key==='Enter') addTask(); });
+document.getElementById('taskInp').addEventListener('keypress',e=>{if(e.key==='Enter')addTask();});
 
 // ══════════════════════════════════════════
-//  KEYBOARD SHORTCUTS
+//  KEYBOARD
 // ══════════════════════════════════════════
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeCardModal(); closeTabModal(); }
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-    if (document.getElementById('cardModal').classList.contains('on')) saveCard();
-  }
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeCardModal();closeTabModal();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'&&document.getElementById('cardModal').classList.contains('on')) saveCard();
 });
 
 // ══════════════════════════════════════════
-//  CONTEXT MENU — الإصلاح: لا نستخدم appendChild
-//  الـ ctxMenu موجود في body من البداية
+//  CONTEXT MENU
 // ══════════════════════════════════════════
-let _ctxActions = [];
-let _subActions = [];
+let _ctxActions=[], _subActions=[];
 
-function showCtx(e, items) {
-  e.preventDefault();
-  e.stopPropagation();
-  _ctxActions = [];
-
-  // أغلق أي submenu سابق
+function showCtx(e,items) {
+  e.preventDefault(); e.stopPropagation();
+  _ctxActions=[];
   document.getElementById('ctxSubMenu')?.remove();
-
-  const menu = document.getElementById('ctxMenu');
+  const menu=document.getElementById('ctxMenu');
   menu.classList.remove('open');
-
-  menu.innerHTML = items.map(item => {
-    if (item === 'sep') return '<div class="ctx-sep"></div>';
-    if (item.header) return `<div class="ctx-header"><span class="ctx-icon">${item.icon}</span>${item.label}</div>`;
-    if (item.submenu) {
-      const idx = _ctxActions.length;
-      _ctxActions.push({ submenu: item.submenu });
-      return `<div class="ctx-item ctx-has-sub" data-idx="${idx}"><span class="ctx-icon">${item.icon}</span>${item.label}<span style="margin-right:auto;font-size:9px;opacity:.5">◂</span></div>`;
-    }
-    const idx = _ctxActions.length;
-    _ctxActions.push(item.action);
+  menu.innerHTML=items.map(item=>{
+    if(item==='sep') return '<div class="ctx-sep"></div>';
+    if(item.submenu){const idx=_ctxActions.length;_ctxActions.push({submenu:item.submenu});return `<div class="ctx-item ctx-has-sub" data-idx="${idx}"><span class="ctx-icon">${item.icon}</span>${item.label}<span style="margin-right:auto;font-size:9px;opacity:.5">◂</span></div>`;}
+    const idx=_ctxActions.length;_ctxActions.push(item.action);
     return `<div class="ctx-item ${item.danger?'danger':''}" data-idx="${idx}"><span class="ctx-icon">${item.icon}</span>${item.label}</div>`;
   }).join('');
-
-  menu.querySelectorAll('.ctx-item[data-idx]').forEach(el => {
-    el.addEventListener('click', ev => {
-      ev.stopPropagation();
-      const idx = parseInt(el.dataset.idx);
-      const entry = _ctxActions[idx];
-      if (!entry) return;
-      if (entry.submenu) showSubCtx(el, entry.submenu);
-      else ctxAction(entry);
-    });
-    if (el.classList.contains('ctx-has-sub')) {
-      el.addEventListener('mouseenter', () => {
-        const idx = parseInt(el.dataset.idx);
-        const entry = _ctxActions[idx];
-        if (entry && entry.submenu) showSubCtx(el, entry.submenu);
-      });
-    }
+  menu.querySelectorAll('.ctx-item[data-idx]').forEach(el=>{
+    el.addEventListener('click',ev=>{ev.stopPropagation();const entry=_ctxActions[parseInt(el.dataset.idx)];if(!entry) return;if(entry.submenu) showSubCtx(el,entry.submenu);else ctxAction(entry);});
+    if(el.classList.contains('ctx-has-sub')) el.addEventListener('mouseenter',()=>{const entry=_ctxActions[parseInt(el.dataset.idx)];if(entry?.submenu) showSubCtx(el,entry.submenu);});
   });
-
-  // حدد الموضع أولاً بعيداً عن الشاشة ثم احسب
-  menu.style.left = '-9999px';
-  menu.style.top  = '-9999px';
-  menu.classList.add('open');
-
-  const vw = window.innerWidth, vh = window.innerHeight;
-  const mw = menu.offsetWidth, mh = menu.offsetHeight;
-  let x = e.clientX, y = e.clientY;
-  if (x + mw > vw - 8) x = vw - mw - 8;
-  if (y + mh > vh - 8) y = vh - mh - 8;
-  menu.style.left = x + 'px';
-  menu.style.top  = y + 'px';
+  menu.style.left='-9999px'; menu.style.top='-9999px'; menu.classList.add('open');
+  const vw=window.innerWidth,vh=window.innerHeight,mw=menu.offsetWidth,mh=menu.offsetHeight;
+  let x=e.clientX,y=e.clientY;
+  if(x+mw>vw-8) x=vw-mw-8; if(y+mh>vh-8) y=vh-mh-8;
+  menu.style.left=x+'px'; menu.style.top=y+'px';
 }
 
-function showSubCtx(parentEl, subItems) {
+function showSubCtx(parentEl,subItems) {
   document.getElementById('ctxSubMenu')?.remove();
-  _subActions = [];
-  const sub = document.createElement('div');
-  sub.id = 'ctxSubMenu';
-  sub.className = 'ctx-menu';
-  sub.style.position = 'fixed';
-  sub.style.left = '-9999px';
-  sub.style.top  = '-9999px';
-  sub.innerHTML = subItems.map(si => {
-    const idx = _subActions.length;
-    _subActions.push(si.action);
-    return `<div class="ctx-item" data-sub-idx="${idx}"><span class="ctx-icon">${si.icon}</span>${si.label}</div>`;
-  }).join('');
+  _subActions=[];
+  const sub=document.createElement('div');
+  sub.id='ctxSubMenu'; sub.className='ctx-menu';
+  sub.style.cssText='position:fixed;left:-9999px;top:-9999px;';
+  sub.innerHTML=subItems.map(si=>{const idx=_subActions.length;_subActions.push(si.action);return `<div class="ctx-item" data-sub-idx="${idx}"><span class="ctx-icon">${si.icon}</span>${si.label}</div>`;}).join('');
   document.body.appendChild(sub);
   sub.classList.add('open');
-  sub.querySelectorAll('.ctx-item[data-sub-idx]').forEach(el => {
-    el.addEventListener('click', ev => {
-      ev.stopPropagation();
-      const idx = parseInt(el.dataset.subIdx);
-      const action = _subActions[idx];
-      if (action) { hideCtx(); ctxAction(action); }
-    });
+  sub.querySelectorAll('.ctx-item[data-sub-idx]').forEach(el=>{
+    el.addEventListener('click',ev=>{ev.stopPropagation();const action=_subActions[parseInt(el.dataset.subIdx)];if(action){hideCtx();ctxAction(action);}});
   });
-  const r = parentEl.getBoundingClientRect();
-  const vw = window.innerWidth, vh = window.innerHeight;
-  let sx = r.left - sub.offsetWidth - 4;
-  if (sx < 4) sx = r.right + 4;
-  let sy = r.top;
-  if (sy + sub.offsetHeight > vh - 8) sy = vh - sub.offsetHeight - 8;
-  sub.style.left = sx + 'px';
-  sub.style.top  = sy + 'px';
+  const r=parentEl.getBoundingClientRect(),vw=window.innerWidth,vh=window.innerHeight;
+  let sx=r.left-sub.offsetWidth-4; if(sx<4) sx=r.right+4;
+  let sy=r.top; if(sy+sub.offsetHeight>vh-8) sy=vh-sub.offsetHeight-8;
+  sub.style.left=sx+'px'; sub.style.top=sy+'px';
 }
 
-function hideCtx() {
-  document.getElementById('ctxMenu').classList.remove('open');
-  document.getElementById('ctxSubMenu')?.remove();
-}
+function hideCtx(){document.getElementById('ctxMenu').classList.remove('open');document.getElementById('ctxSubMenu')?.remove();}
 
 function ctxAction(action) {
   hideCtx();
-  const { type, tabId, fromTabId, toTabId } = action;
-  const cardId = action.cardId !== undefined ? String(action.cardId) : null;
-  if (type === 'editCard')  openCardModal(tabId, cardId);
-  if (type === 'delCard')   delCard(cardId, tabId, {});
-  if (type === 'renameTab') startRenameTab(tabId, null);
-  if (type === 'delTab')    deleteTab(tabId, null);
-  if (type === 'addCard')   openCardModal(tabId, null);
-  if (type === 'moveCard') {
-    const from = tabs.find(t => t.id === fromTabId);
-    const to   = tabs.find(t => t.id === toTabId);
-    if (!from || !to) return;
-    const idx = from.cards.findIndex(cd => String(cd.id) === cardId);
-    if (idx === -1) return;
-    const [card] = from.cards.splice(idx, 1);
+  const {type,tabId,fromTabId,toTabId}=action;
+  const cardId=action.cardId!==undefined?String(action.cardId):null;
+  if(type==='editCard') openCardModal(tabId,cardId);
+  if(type==='delCard')  delCard(cardId,tabId);
+  if(type==='renameTab') startRenameTab(tabId,null);
+  if(type==='delTab')    deleteTab(tabId);
+  if(type==='addCard')   openCardModal(tabId,null);
+  if(type==='moveCard'){
+    const from=tabs.find(t=>t.id===fromTabId);
+    const to=tabs.find(t=>t.id===toTabId);
+    if(!from||!to) return;
+    const idx=from.cards.findIndex(c=>String(c.id)===cardId);
+    if(idx===-1) return;
+    const [card]=from.cards.splice(idx,1);
     to.cards.push(card);
-    triggerSave();
-    fillGrid(from);
-    fillGrid(to);
+    triggerSave(); fillGrid(from); fillGrid(to);
   }
 }
 
-document.addEventListener('click', e => {
-  const menu = document.getElementById('ctxMenu');
-  const sub  = document.getElementById('ctxSubMenu');
-  if (!menu.contains(e.target) && (!sub || !sub.contains(e.target))) hideCtx();
+document.addEventListener('click',e=>{
+  const menu=document.getElementById('ctxMenu');
+  const sub=document.getElementById('ctxSubMenu');
+  if(!menu.contains(e.target)&&(!sub||!sub.contains(e.target))) hideCtx();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') hideCtx(); });
+document.addEventListener('keydown',e=>{if(e.key==='Escape') hideCtx();});
 
 // ══════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════
-setInterval(tick, 1000);
+setInterval(tick,1000);
 
-window.addEventListener('DOMContentLoaded', async () => {
+window.addEventListener('DOMContentLoaded',async()=>{
   tick();
-
   loadTabs();
-  renderTabs();
+  renderAll();
   renderTasks();
 
-  const cachedPrayers = JSON.parse(localStorage.getItem('p_cache') || 'null');
-  if (cachedPrayers) applyPrayerData(cachedPrayers);
+  const cachedPrayers=JSON.parse(localStorage.getItem('p_cache')||'null');
+  if(cachedPrayers) applyPrayerData(cachedPrayers);
 
-  (async () => {
-    if (needsPrayerRefetch()) await fetchPrayers();
-
-    if (SHEETS_URL) {
-      const remote = await pullFromSheets();
-      if (remote) {
-        let changed = false;
-        if (remote.tabs && remote.tabs.length > 0) {
-          const localStr  = localStorage.getItem('mnm_tabs_v4') || '[]';
-          const remoteStr = JSON.stringify(remote.tabs);
-          if (localStr !== remoteStr) {
-            tabs = remote.tabs;
+  (async()=>{
+    if(needsPrayerRefetch()) await fetchPrayers();
+    if(SHEETS_URL){
+      const remote=await pullFromSheets();
+      if(remote){
+        let changed=false;
+        if(remote.tabs&&remote.tabs.length>0){
+          const localStr=localStorage.getItem('mnm_tabs_v4')||'[]';
+          if(localStr!==JSON.stringify(remote.tabs)){
+            tabs=remote.tabs;
             saveTabs();
-            // ← الإصلاح: نحدّث activeTab فقط إن لم يكن موجوداً في البيانات الجديدة
-            if (!tabs.find(t => t.id === activeTab)) activeTab = tabs[0]?.id;
-            renderTabs();
-            changed = true;
+            if(!tabs.find(t=>t.id===activeTab)) activeTab=tabs[0]?.id;
+            // امسح كل الـ panes القديمة وأعد البناء من صفر بعد تغيير البيانات من Sheets
+            document.getElementById('tabsContent').innerHTML='';
+            renderAll();
+            changed=true;
           }
         }
-        if (remote.tasks) {
-          const localStr  = localStorage.getItem('mnm_tasks') || '[]';
-          const remoteStr = JSON.stringify(remote.tasks);
-          if (localStr !== remoteStr) {
-            tasks = remote.tasks;
-            saveTasks();
-            renderTasks();
-            changed = true;
+        if(remote.tasks){
+          if((localStorage.getItem('mnm_tasks')||'[]')!==JSON.stringify(remote.tasks)){
+            tasks=remote.tasks; saveTasks(); renderTasks(); changed=true;
           }
         }
-        if (changed) setSyncStatus('ok', 'تم التحديث من Google Sheets ✓');
+        if(changed) setSyncStatus('ok','تم التحديث من Google Sheets ✓');
       }
     }
   })();
 
-  const now = new Date();
-  const msToMidnight = new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,1,0) - now;
-  setTimeout(async () => { await fetchPrayers(); }, msToMidnight);
+  const now=new Date();
+  setTimeout(async()=>await fetchPrayers(), new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,1,0)-now);
 });
 </script>
 </body>
