@@ -326,14 +326,81 @@ function buildSavePayload() { return {tabs,tasks}; }
 function triggerSave() { saveTabs(); pushToSheets(buildSavePayload()); }
 
 // ══════════════════════════════════════════
+//  AUTOMATIC DEDUPLICATION CODE (تصفية التكرار)
+// ══════════════════════════════════════════
+function cleanDuplicates(inputTabs) {
+  if (!Array.isArray(inputTabs)) return [];
+  const seenTabIds = new Set();
+  const cleanedTabs = [];
+
+  inputTabs.forEach(tab => {
+    if (!tab || !tab.id) return;
+    
+    // إذا كان التبويب مكرر، نتخطاه
+    if (seenTabIds.has(tab.id)) return;
+    seenTabIds.add(tab.id);
+
+    const cleanedCards = [];
+    const seenCardIds = new Set();
+    const seenCardUrls = new Set();
+
+    if (Array.isArray(tab.cards)) {
+      tab.cards.forEach(card => {
+        if (!card || !card.id || !card.url) return;
+        
+        // التحقق من تكرار معرّف الكرت أو الرابط الخاص به داخل نفس القسم
+        const normalizedUrl = card.url.trim().replace(/\/$/, "");
+        if (!seenCardIds.has(card.id) && !seenCardUrls.has(normalizedUrl)) {
+          seenCardIds.add(card.id);
+          seenCardUrls.add(normalizedUrl);
+          cleanedCards.push(card);
+        }
+      });
+    }
+
+    cleanedTabs.push({
+      ...tab,
+      cards: cleanedCards
+    });
+  });
+
+  return cleanedTabs;
+}
+
+function cleanDuplicateTasks(inputTasks) {
+  if (!Array.isArray(inputTasks)) return [];
+  const seenTaskTexts = new Set();
+  const cleanedTasks = [];
+  
+  inputTasks.forEach(t => {
+    if(!t || !t.text) return;
+    const normalizedText = t.text.trim();
+    if(!seenTaskTexts.has(normalizedText)) {
+      seenTaskTexts.add(normalizedText);
+      cleanedTasks.push(t);
+    }
+  });
+  return cleanedTasks;
+}
+
+// ══════════════════════════════════════════
 //  DATA MANAGEMENT
 // ══════════════════════════════════════════
 function loadTabs() {
   const saved=localStorage.getItem('mnm_tabs_v4');
-  tabs=saved?JSON.parse(saved):JSON.parse(JSON.stringify(DEFAULT_TABS));
-  if(!saved) saveTabs();
+  let rawTabs = saved?JSON.parse(saved):JSON.parse(JSON.stringify(DEFAULT_TABS));
+  
+  // تصفية تلقائية فورية محلياً عند التشغيل
+  tabs = cleanDuplicates(rawTabs);
+  if(JSON.stringify(rawTabs) !== JSON.stringify(tabs)) {
+    saveTabs();
+  }
 }
-function saveTabs() { localStorage.setItem('mnm_tabs_v4',JSON.stringify(tabs)); }
+
+function saveTabs() { 
+  tabs = cleanDuplicates(tabs); // تصفية نهائية قبل الحفظ لضمان نظافة البيانات
+  localStorage.setItem('mnm_tabs_v4',JSON.stringify(tabs)); 
+}
 
 // ══════════════════════════════════════════
 //  RENDER TABS & PANES
@@ -354,8 +421,6 @@ function renderNav() {
     labelSpan.className='tab-label-txt';
     labelSpan.textContent=tab.label;
     btn.appendChild(labelSpan);
-
-    // [تم تعديله]: إزالة زر إغلاق الـ X نهائياً من هنا لجمالية ونظافة الأقسام
 
     btn.addEventListener('click',e=>{
       if(e.target.tagName==='BUTTON'||e.target.classList.contains('tab-rename-inp')) return;
@@ -461,7 +526,6 @@ function renderPanes() {
     
     pane.classList.toggle('active', t.id===activeTab);
     
-    // [تم الإصلاح المباشر لمنع التكرار]: نقوم بتنظيف الـ Grid وإعادة بنائها بدقة دون نسخ متبقية
     if(t.id === activeTab) {
       fillGrid(t);
     }
@@ -762,8 +826,11 @@ function saveCard() {
 // ══════════════════════════════════════════
 //  TASKS
 // ══════════════════════════════════════════
-let tasks = JSON.parse(localStorage.getItem('mnm_tasks') || '[]');
-function saveTasks() { localStorage.setItem('mnm_tasks', JSON.stringify(tasks)); }
+let tasks = cleanDuplicateTasks(JSON.parse(localStorage.getItem('mnm_tasks') || '[]'));
+function saveTasks() { 
+  tasks = cleanDuplicateTasks(tasks);
+  localStorage.setItem('mnm_tasks', JSON.stringify(tasks)); 
+}
 function addTask() {
   const inp = document.getElementById('taskInp');
   const txt = inp.value.trim();
@@ -804,12 +871,10 @@ setInterval(tick, 1000);
 window.addEventListener('DOMContentLoaded', async () => {
   tick();
   
-  // [1] التحميل المحلي السريع أولاً
   loadTabs();
   renderAll();
   renderTasks();
 
-  // معالجة مواقيت الصلاة من الذاكرة المحلية أو الـ API
   if (needsPrayerRefetch()) {
     await fetchPrayers();
   } else {
@@ -817,24 +882,41 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (raw) applyPrayerData(raw);
   }
 
-  // [2] جلب التحديثات من السيرفر في الخلفية بشكل صامت دون تجميد العرض
+  // معالجة البيانات القادمة من السيرفر وتنظيفها قبل عرضها
   if (SHEETS_URL) {
     pullFromSheets().then(remote => {
       if (remote) {
-        let structuralChanged = false;
+        let updateNeeded = false;
+        
         if (remote.tabs && remote.tabs.length > 0) {
-          tabs = remote.tabs;
+          // فحص وتنظيف التكرار من قاعدة البيانات بشكل كامل فور استقبالها
+          const cleanedRemoteTabs = cleanDuplicates(remote.tabs);
+          
+          // إذا تم اكتشاف مكررات على السيرفر، نرفع له النسخة النظيفة فوراً لتصحيح الـ Database
+          if (JSON.stringify(remote.tabs) !== JSON.stringify(cleanedRemoteTabs)) {
+            updateNeeded = true;
+          }
+          
+          tabs = cleanedRemoteTabs;
           saveTabs();
-          structuralChanged = true;
         }
+        
         if (remote.tasks) {
-          tasks = remote.tasks;
+          const cleanedRemoteTasks = cleanDuplicateTasks(remote.tasks);
+          if (JSON.stringify(remote.tasks) !== JSON.stringify(cleanedRemoteTasks)) {
+            updateNeeded = true;
+          }
+          tasks = cleanedRemoteTasks;
           saveTasks();
           renderTasks();
         }
-        if (structuralChanged) {
-          renderAll(); // تحديث صامت سلس في الخلفية بمجرد اكتمال البيانات القادمة من Sheets
+        
+        if (updateNeeded) {
+          // مزامنة تلقائية عكسية لتنظيف التكرار من الـ Google Sheets تلقائياً في الخلفية
+          pushToSheets(buildSavePayload());
         }
+        
+        renderAll();
       }
     }).catch(err => {
       setSyncStatus('err', 'يعمل محلياً — تعذّر الاتصال بـ Sheets');
