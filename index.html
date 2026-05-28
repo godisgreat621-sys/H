@@ -636,9 +636,7 @@ function createCardEl(card, tabId) {
       .map(t => ({ icon:'↪', label: t.label, action:{ type:'moveCard', cardId:card.id, fromTabId:tabId, toTabId:t.id } }));
     const items = [
       { icon:'✎', label:'تعديل الكرت', action:{ type:'editCard', cardId:card.id, tabId } },
-      'sep',
-      { icon:'📂', label:'نقل إلى:', header:true },
-      ...moveItems,
+      { icon:'📂', label:'نقل إلى', submenu: moveItems },
       'sep',
       { icon:'✕', label:'حذف الكرت', action:{ type:'delCard', cardId:card.id, tabId }, danger:true },
     ];
@@ -971,21 +969,54 @@ window.addEventListener('DOMContentLoaded', async () => {
 // ══════════════════════════════════════════
 let ctxTarget = null;
 
+// Store pending actions by index to avoid JSON-in-attribute issues
+let _ctxActions = [];
+
 function showCtx(e, items) {
   e.preventDefault();
   e.stopPropagation();
+  _ctxActions = [];
   const menu = document.getElementById('ctxMenu');
+
   menu.innerHTML = items.map(item => {
     if (item === 'sep') return '<div class="ctx-sep"></div>';
     if (item.header) return `<div class="ctx-header"><span class="ctx-icon">${item.icon}</span>${item.label}</div>`;
-    return `<div class="ctx-item ${item.danger?'danger':''}" onclick="ctxAction(${JSON.stringify(item.action)})">`
-      + `<span class="ctx-icon">${item.icon}</span>${item.label}</div>`;
+    if (item.submenu) {
+      const idx = _ctxActions.length;
+      _ctxActions.push({ submenu: item.submenu });
+      return `<div class="ctx-item ctx-has-sub" data-idx="${idx}"><span class="ctx-icon">${item.icon}</span>${item.label}<span style="margin-right:auto;font-size:9px;opacity:.5">◂</span></div>`;
+    }
+    const idx = _ctxActions.length;
+    _ctxActions.push(item.action);
+    return `<div class="ctx-item ${item.danger?'danger':''}" data-idx="${idx}"><span class="ctx-icon">${item.icon}</span>${item.label}</div>`;
   }).join('');
+
+  // Attach click listeners
+  menu.querySelectorAll('.ctx-item[data-idx]').forEach(el => {
+    el.addEventListener('click', ev => {
+      ev.stopPropagation();
+      const idx = parseInt(el.dataset.idx);
+      const entry = _ctxActions[idx];
+      if (!entry) return;
+      if (entry.submenu) {
+        showSubCtx(el, entry.submenu);
+      } else {
+        ctxAction(entry);
+      }
+    });
+    // hover submenu
+    if (el.classList.contains('ctx-has-sub')) {
+      el.addEventListener('mouseenter', () => {
+        const idx = parseInt(el.dataset.idx);
+        const entry = _ctxActions[idx];
+        if (entry && entry.submenu) showSubCtx(el, entry.submenu);
+      });
+    }
+  });
 
   menu.classList.remove('open');
   document.body.appendChild(menu);
 
-  // Position
   const vw = window.innerWidth, vh = window.innerHeight;
   let x = e.clientX, y = e.clientY;
   menu.style.left = '0'; menu.style.top = '0';
@@ -997,8 +1028,41 @@ function showCtx(e, items) {
   menu.style.top  = y + 'px';
 }
 
+let _subActions = [];
+function showSubCtx(parentEl, subItems) {
+  document.getElementById('ctxSubMenu') && document.getElementById('ctxSubMenu').remove();
+  _subActions = [];
+  const sub = document.createElement('div');
+  sub.id = 'ctxSubMenu';
+  sub.className = 'ctx-menu open';
+  sub.style.position = 'fixed';
+  sub.innerHTML = subItems.map(si => {
+    const idx = _subActions.length;
+    _subActions.push(si.action);
+    return `<div class="ctx-item" data-sub-idx="${idx}"><span class="ctx-icon">${si.icon}</span>${si.label}</div>`;
+  }).join('');
+  document.body.appendChild(sub);
+  sub.querySelectorAll('.ctx-item[data-sub-idx]').forEach(el => {
+    el.addEventListener('click', ev => {
+      ev.stopPropagation();
+      const idx = parseInt(el.dataset.subIdx);
+      const action = _subActions[idx];
+      if (action) { hideCtx(); ctxAction(action); }
+    });
+  });
+  const r = parentEl.getBoundingClientRect();
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let sx = r.left - sub.offsetWidth - 4;
+  if (sx < 4) sx = r.right + 4;
+  let sy = r.top;
+  if (sy + sub.offsetHeight > vh - 8) sy = vh - sub.offsetHeight - 8;
+  sub.style.left = sx + 'px';
+  sub.style.top  = sy + 'px';
+}
+
 function hideCtx() {
   document.getElementById('ctxMenu').classList.remove('open');
+  document.getElementById('ctxSubMenu') && document.getElementById('ctxSubMenu').remove();
   ctxTarget = null;
 }
 
