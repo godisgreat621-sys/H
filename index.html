@@ -53,10 +53,9 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .tab-btn.tab-dragging{opacity:.4}
 .tab-btn.tab-drag-over{border-right:2px solid var(--gold);background:var(--gold-bg)}
 /* rename + delete on hover */
-.tab-rename-btn,.tab-del-btn{display:none;background:none;border:none;cursor:pointer;font-size:10px;padding:1px 3px;border-radius:3px;line-height:1;color:var(--sub);transition:all .15s}
-.tab-rename-btn:hover{color:var(--gold)}
+.tab-del-btn{display:none;background:none;border:none;cursor:pointer;font-size:10px;padding:1px 3px;border-radius:3px;line-height:1;color:var(--sub);transition:all .15s}
 .tab-del-btn:hover{color:#c0392b}
-.tab-btn:hover .tab-rename-btn,.tab-btn:hover .tab-del-btn{display:inline-flex}
+.tab-btn:hover .tab-del-btn{display:inline-flex}
 .tab-add{background:none;border:none;color:var(--gold-d);font-size:18px;cursor:pointer;padding:2px 8px;margin-bottom:-1px;transition:color .2s;line-height:1}
 .tab-add:hover{color:var(--gold)}
 .tab-pane{display:none}
@@ -439,15 +438,19 @@ function renderTabs() {
     btn.className = 'tab-btn' + (tab.id === activeTab ? ' active' : '');
     btn.setAttribute('data-tab-id', tab.id);
     btn.draggable = true;
+    btn.title = 'انقر مرتين لتعديل الاسم';
     btn.innerHTML = `
       <span class="tab-label-txt">${tab.label}</span>
-      <button class="tab-rename-btn" title="تعديل الاسم" onclick="startRenameTab('${tab.id}',event)">✎</button>
       ${tabs.length > 1 ? `<button class="tab-del-btn" title="حذف القسم" onclick="deleteTab('${tab.id}',event)">✕</button>` : ''}
     `;
     btn.addEventListener('click', e => {
-      if (e.target.classList.contains('tab-rename-btn') || e.target.classList.contains('tab-del-btn')) return;
+      if (e.target.classList.contains('tab-del-btn')) return;
       if (e.target.classList.contains('tab-rename-inp')) return;
       switchTab(tab.id);
+    });
+    btn.addEventListener('dblclick', e => {
+      if (e.target.classList.contains('tab-del-btn')) return;
+      startRenameTab(tab.id, e);
     });
     // tab drag events
     btn.addEventListener('dragstart', e => {
