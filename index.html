@@ -229,10 +229,18 @@ async function fetchPrayers() {
 }
 
 function applyPrayerData(raw) {
-  const names = { fajr:'الفجر', dhuhr:'الظهر', asr:'العصر', maghrib:'المغرب', isha:'العشاء' };
+  // nextWindow = approximate hours until NEXT prayer (used for progress bar)
+  const meta = {
+    fajr:    { name:'الفجر',   nextWindow: 8   },
+    dhuhr:   { name:'الظهر',   nextWindow: 3.3 },
+    asr:     { name:'العصر',   nextWindow: 3.3 },
+    maghrib: { name:'المغرب',  nextWindow: 1.5 },
+    isha:    { name:'العشاء',  nextWindow: 7.6 }
+  };
   PRAYERS = Object.entries(raw).map(([key, str]) => {
     const [h, m] = str.split(':').map(Number);
-    return { key, name:names[key], h24:str, totalSec:h*3600+m*60 };
+    return { key, name: meta[key].name, nextWindow: meta[key].nextWindow,
+             h24: str, totalSec: h*3600 + m*60 };
   }).sort((a,b) => a.totalSec - b.totalSec);
 
   const fmt = str => {
@@ -275,45 +283,36 @@ function updateCountdown(now) {
     const d = p.totalSec - nowSec;
     if (d > 0 && d < diffSec) { diffSec = d; next = p; }
   }
-  // After Isha → Fajr tomorrow
+  // After Isha → next is Fajr tomorrow
   if (!next) {
-    next = PRAYERS[0];
+    next = PRAYERS[0]; // fajr
     diffSec = (86400 - nowSec) + next.totalSec;
   }
 
   document.getElementById(`pCard-${next.key}`)?.classList.add('next');
 
-  const hrs = Math.floor(diffSec/3600);
-  const mins = Math.floor((diffSec%3600)/60);
-  const secs = diffSec%60;
-  const p2 = n => n<10?'0'+n:n;
+  const hrs  = Math.floor(diffSec / 3600);
+  const mins = Math.floor((diffSec % 3600) / 60);
+  const secs = diffSec % 60;
+  const p2 = n => n < 10 ? '0'+n : n;
   document.getElementById('cdText').innerHTML =
     `متبقي على صلاة ${next.name}: <span>${p2(hrs)}:${p2(mins)}:${p2(secs)}</span>`;
 
-  // ── PROGRESS BAR (accurate window) ──
+  // ── PROGRESS BAR ──
+  // Use nextWindow of the PREVIOUS prayer = total window leading to this prayer
   const idx = PRAYERS.findIndex(p => p.key === next.key);
-  let windowSec, elapsedSec;
+  const prevIdx = idx === 0 ? PRAYERS.length - 1 : idx - 1;
+  const prev = PRAYERS[prevIdx];
 
-  if (idx === 0) {
-    // Between Isha (yesterday) and Fajr (today)
-    const isha = PRAYERS[PRAYERS.length - 1];
-    // window = from Isha to midnight + from midnight to Fajr
-    windowSec = (86400 - isha.totalSec) + next.totalSec;
-    // elapsed = how far we are into this window
-    // If nowSec < fajr, we're past midnight: elapsed = (86400 - isha.totalSec) + nowSec
-    // If nowSec >= isha, we haven't crossed midnight yet: elapsed = nowSec - isha.totalSec
-    if (nowSec < next.totalSec) {
-      elapsedSec = (86400 - isha.totalSec) + nowSec;
-    } else {
-      elapsedSec = nowSec - isha.totalSec;
-    }
-  } else {
-    const prev = PRAYERS[idx - 1];
-    windowSec = next.totalSec - prev.totalSec;
-    elapsedSec = nowSec - prev.totalSec;
-  }
+  // Total window in ms (nextWindow of the PREV prayer = how long we wait after it)
+  const totalWindowMs = prev.nextWindow * 3600 * 1000;
+  const remainMs = diffSec * 1000;
+  const elapsedMs = totalWindowMs - remainMs;
 
-  const progress = Math.min(100, Math.max(0, (elapsedSec / windowSec) * 100));
+  let progress = (elapsedMs / totalWindowMs) * 100;
+  if (progress < 0) progress = 0;
+  if (progress > 100) progress = 100;
+
   document.getElementById('barFill').style.width = `${progress}%`;
 }
 
