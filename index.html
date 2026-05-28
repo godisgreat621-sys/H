@@ -185,15 +185,31 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 
 <script>
 // ══════════════════════════════════════════
-//  CONFIG
+//  CONFIG & UTILS
 // ══════════════════════════════════════════
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx_T6TYQhyk20h7YwS1sfvvZ0d1AR0RUY32pohhfDwaGL8SAcLMzRjnorheZBWsOpM/exec';
+const EMOJIS=['🌐','📱','💻','🎮','🎵','🎬','📺','🛒','📰','🔗','💡','🏆','📧','🗓️','🔐','💰','📦','🌙','☁️','🔔','🛠️','📡','🎯','🌟','🤖','🔮','✨','▶️','💬','✈️','🌍','🪪','💾','🎨','⚙️','🚀','🧩','📌','🎭','🖼️','✏️','🏠','📊','📅','🏅','🔑','🧠','🗺️','🎪','🌈','⚡','🔥','💎','🏔️','🎸','🎤','🕹️','🧪','🔭','🛸'];
 
-// ══════════════════════════════════════════
-//  PRAYER TIMES
-// ══════════════════════════════════════════
+const DEFAULT_TABS=[
+  {id:'work',label:'العمل',cards:[{id:'kababi',name:'كبابجي',emoji:'🏠',url:'https://home-m6kn.vercel.app/'},{id:'zad',name:'داش زاد',emoji:'📊',url:'https://zad-dashboard-v1.vercel.app/'},{id:'github',name:'GitHub',emoji:'⚙️',url:'https://github.com'},{id:'vercel',name:'Vercel',emoji:'🚀',url:'https://vercel.com/'}]},
+  {id:'personal',label:'شخصي',cards:[{id:'ana',name:'أنا',emoji:'📅',url:'https://yom-lac.vercel.app/'}]},
+  {id:'ai',label:'الذكاء الاصطناعي',cards:[{id:'chatgpt',name:'ChatGPT',emoji:'🤖',url:'https://chatgpt.com/'},{id:'claude',name:'Claude',emoji:'🔮',url:'https://claude.ai/'},{id:'gemini',name:'Gemini',emoji:'✨',url:'https://gemini.google.com/'}]},
+  {id:'social',label:'التواصل',cards:[{id:'wa',name:'واتساب',emoji:'💬',url:'https://web.whatsapp.com/'},{id:'tg',name:'تيليجرام',emoji:'✈️',url:'https://web.telegram.org/a/'},{id:'yt',name:'يوتيوب',emoji:'▶️',url:'https://www.youtube.com/'}]},
+  {id:'tools',label:'أدوات',cards:[{id:'translate',name:'ترجمة',emoji:'🌍',url:'https://translate.google.com/?hl=ar'},{id:'drive',name:'درايف',emoji:'💾',url:'https://drive.google.com'},{id:'absher',name:'أبشر',emoji:'🪪',url:'https://www.absher.sa'},{id:'chrome',name:'إضافات كروم',emoji:'🧩',url:'https://chromewebstore.google.com/category/extensions'}]},
+  {id:'design',label:'التصميم',cards:[{id:'canva',name:'كانفا',emoji:'🎨',url:'https://www.canva.com/ar_eg/'},{id:'freepik',name:'Freepik',emoji:'🎭',url:'https://www.freepik.com/'},{id:'pinterest',name:'بينترست',emoji:'📌',url:'https://www.pinterest.com/'},{id:'pngwing',name:'PNGWing',emoji:'🖼️',url:'https://www.pngwing.com/'},{id:'vecteezy',name:'Vecteezy',emoji:'✏️',url:'https://www.vecteezy.com'}]},
+];
+
 let PRAYERS = [];
+let tabs=[];
+let activeTab=null;
+let currentCardTab=null;
+let currentEditCardId=null;
+let selEmoji='🌐';
+let dragCardId=null, dragFromTab=null, dragTabId=null;
 
+// ══════════════════════════════════════════
+//  CLOCK & PRAYERS
+// ══════════════════════════════════════════
 async function fetchPrayers() {
   try {
     const now = new Date();
@@ -204,8 +220,7 @@ async function fetchPrayers() {
     const T = d.data.timings;
     const raw = { fajr:T.Fajr, dhuhr:T.Dhuhr, asr:T.Asr, maghrib:T.Maghrib, isha:T.Isha };
     localStorage.setItem('p_cache', JSON.stringify(raw));
-    const n = new Date();
-    localStorage.setItem('p_date', `${n.getFullYear()}-${n.getMonth()}-${n.getDate()}`);
+    localStorage.setItem('p_date', `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`);
     applyPrayerData(raw);
   } catch(e) {
     const raw = JSON.parse(localStorage.getItem('p_cache') || 'null');
@@ -228,9 +243,6 @@ function needsPrayerRefetch() {
   return localStorage.getItem('p_date') !== `${n.getFullYear()}-${n.getMonth()}-${n.getDate()}`;
 }
 
-// ══════════════════════════════════════════
-//  CLOCK
-// ══════════════════════════════════════════
 function tick() {
   const now = new Date();
   let h=now.getHours(), m=now.getMinutes(), s=now.getSeconds();
@@ -295,7 +307,7 @@ async function pushToSheets(data) {
 
 async function pullFromSheets() {
   if (!SHEETS_URL) { setSyncStatus('','غير متصل بـ Sheets'); return null; }
-  setSyncStatus('loading','جاري التحميل من Sheets...');
+  setSyncStatus('loading','جاري جلب تحديثات البيانات...');
   try {
     const d=await jsonpFetch(SHEETS_URL+'?action=load');
     setSyncStatus('ok','متصل بـ Google Sheets ✓');
@@ -314,26 +326,8 @@ function buildSavePayload() { return {tabs,tasks}; }
 function triggerSave() { saveTabs(); pushToSheets(buildSavePayload()); }
 
 // ══════════════════════════════════════════
-//  DATA
+//  DATA MANAGEMENT
 // ══════════════════════════════════════════
-const EMOJIS=['🌐','📱','💻','🎮','🎵','🎬','📺','🛒','📰','🔗','💡','🏆','📧','🗓️','🔐','💰','📦','🌙','☁️','🔔','🛠️','📡','🎯','🌟','🤖','🔮','✨','▶️','💬','✈️','🌍','🪪','💾','🎨','⚙️','🚀','🧩','📌','🎭','🖼️','✏️','🏠','📊','📅','🏅','🔑','🧠','🗺️','🎪','🌈','⚡','🔥','💎','🏔️','🎸','🎤','🕹️','🧪','🔭','🛸'];
-
-const DEFAULT_TABS=[
-  {id:'work',label:'العمل',cards:[{id:'kababi',name:'كبابجي',emoji:'🏠',url:'https://home-m6kn.vercel.app/'},{id:'zad',name:'داش زاد',emoji:'📊',url:'https://zad-dashboard-v1.vercel.app/'},{id:'github',name:'GitHub',emoji:'⚙️',url:'https://github.com'},{id:'vercel',name:'Vercel',emoji:'🚀',url:'https://vercel.com/'}]},
-  {id:'personal',label:'شخصي',cards:[{id:'ana',name:'أنا',emoji:'📅',url:'https://yom-lac.vercel.app/'}]},
-  {id:'ai',label:'الذكاء الاصطناعي',cards:[{id:'chatgpt',name:'ChatGPT',emoji:'🤖',url:'https://chatgpt.com/'},{id:'claude',name:'Claude',emoji:'🔮',url:'https://claude.ai/'},{id:'gemini',name:'Gemini',emoji:'✨',url:'https://gemini.google.com/'}]},
-  {id:'social',label:'التواصل',cards:[{id:'wa',name:'واتساب',emoji:'💬',url:'https://web.whatsapp.com/'},{id:'tg',name:'تيليجرام',emoji:'✈️',url:'https://web.telegram.org/a/'},{id:'yt',name:'يوتيوب',emoji:'▶️',url:'https://www.youtube.com/'}]},
-  {id:'tools',label:'أدوات',cards:[{id:'translate',name:'ترجمة',emoji:'🌍',url:'https://translate.google.com/?hl=ar'},{id:'drive',name:'درايف',emoji:'💾',url:'https://drive.google.com'},{id:'absher',name:'أبشر',emoji:'🪪',url:'https://www.absher.sa'},{id:'chrome',name:'إضافات كروم',emoji:'🧩',url:'https://chromewebstore.google.com/category/extensions'}]},
-  {id:'design',label:'التصميم',cards:[{id:'canva',name:'كانفا',emoji:'🎨',url:'https://www.canva.com/ar_eg/'},{id:'freepik',name:'Freepik',emoji:'🎭',url:'https://www.freepik.com/'},{id:'pinterest',name:'بينترست',emoji:'📌',url:'https://www.pinterest.com/'},{id:'pngwing',name:'PNGWing',emoji:'🖼️',url:'https://www.pngwing.com/'},{id:'vecteezy',name:'Vecteezy',emoji:'✏️',url:'https://www.vecteezy.com'}]},
-];
-
-let tabs=[];
-let activeTab=null;
-let currentCardTab=null;
-let currentEditCardId=null;
-let selEmoji='🌐';
-let dragCardId=null, dragFromTab=null, dragTabId=null;
-
 function loadTabs() {
   const saved=localStorage.getItem('mnm_tabs_v4');
   tabs=saved?JSON.parse(saved):JSON.parse(JSON.stringify(DEFAULT_TABS));
@@ -342,7 +336,7 @@ function loadTabs() {
 function saveTabs() { localStorage.setItem('mnm_tabs_v4',JSON.stringify(tabs)); }
 
 // ══════════════════════════════════════════
-//  RENDER NAV
+//  RENDER TABS & PANES
 // ══════════════════════════════════════════
 function renderNav() {
   const nav=document.getElementById('tabsNav');
@@ -361,14 +355,7 @@ function renderNav() {
     labelSpan.textContent=tab.label;
     btn.appendChild(labelSpan);
 
-    if (tabs.length>1) {
-      const delBtn=document.createElement('button');
-      delBtn.className='tab-del-btn';
-      delBtn.style.cssText='background:none;border:none;color:var(--sub);cursor:pointer;font-size:11px;padding:0 0 0 4px;line-height:1';
-      delBtn.textContent='✕';
-      delBtn.addEventListener('click',e=>{e.stopPropagation();deleteTab(tab.id);});
-      btn.appendChild(delBtn);
-    }
+    // [تم تعديله]: إزالة زر إغلاق الـ X نهائياً من هنا لجمالية ونظافة الأقسام
 
     btn.addEventListener('click',e=>{
       if(e.target.tagName==='BUTTON'||e.target.classList.contains('tab-rename-inp')) return;
@@ -403,6 +390,15 @@ function renderNav() {
       triggerSave();
       renderAll();
     });
+    btn.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const items = [
+        {icon:'✎', label:'تعديل اسم القسم', action:{type:'renameTab', tabId:tab.id}},
+        {icon:'✕', label:'حذف هذا القسم بالكامل', action:{type:'delTab', tabId:tab.id}, danger:true}
+      ];
+      showCtx(e, items);
+    });
     nav.appendChild(btn);
   });
 
@@ -415,21 +411,16 @@ function renderNav() {
   nav.scrollLeft=scrollLeft;
 }
 
-// ══════════════════════════════════════════
-//  RENDER PANES — تم إصلاح التكرار القاتل هنا ✓
-// ══════════════════════════════════════════
 function renderPanes() {
   const content=document.getElementById('tabsContent');
   if(!content) return;
   const currentIds=new Set(tabs.map(t=>t.id));
 
-  // احذف الـ panes التي حُذف تبويبها
   [...content.querySelectorAll('.tab-pane')].forEach(pane => {
     const id=pane.getAttribute('data-tab-id');
     if(!currentIds.has(id)) pane.remove();
   });
 
-  // أنشئ pane جديد فقط لمن ليس له pane بعد
   tabs.forEach(t => {
     let pane=content.querySelector(`.tab-pane[data-tab-id="${t.id}"]`);
     if (!pane) {
@@ -438,7 +429,6 @@ function renderPanes() {
       pane.setAttribute('data-tab-id',t.id);
       pane.id='pane-'+t.id;
 
-      // paste zone
       const pz=document.createElement('div');
       pz.className='paste-zone';
       pz.id='paste-zone-'+t.id;
@@ -446,7 +436,6 @@ function renderPanes() {
         <input class="paste-inp" id="paste-inp-${t.id}" placeholder="الصق رابطاً هنا لإضافة كرت سريع..." autocomplete="off" spellcheck="false">
         <span style="font-size:10px;color:#4a4540;white-space:nowrap">Ctrl+V أو اكتب واضغط Enter</span>`;
 
-      // grid
       const grid=document.createElement('div');
       grid.className='cards-grid';
       grid.id='grid-'+t.id;
@@ -459,7 +448,6 @@ function renderPanes() {
       pane.appendChild(grid);
       content.appendChild(pane);
 
-      // paste listeners
       const inp=document.getElementById('paste-inp-'+t.id);
       if(inp) {
         inp.addEventListener('paste',()=>{
@@ -471,10 +459,9 @@ function renderPanes() {
       }
     }
     
-    // إظهار القسم النشط فقط
     pane.classList.toggle('active', t.id===activeTab);
     
-    // التعبئة تتم فقط للقسم النشط منعا لعمليات الـ DOM غير الضرورية
+    // [تم الإصلاح المباشر لمنع التكرار]: نقوم بتنظيف الـ Grid وإعادة بنائها بدقة دون نسخ متبقية
     if(t.id === activeTab) {
       fillGrid(t);
     }
@@ -492,9 +479,6 @@ function switchTab(id) {
   renderAll();
 }
 
-// ══════════════════════════════════════════
-//  FILL GRID 
-// ══════════════════════════════════════════
 function fillGrid(tab) {
   const grid=document.getElementById('grid-'+tab.id);
   if (!grid) return;
@@ -528,6 +512,21 @@ function createCardEl(card,tabId) {
   });
   a.addEventListener('click',e=>{ if(a.classList.contains('dragging')) e.preventDefault(); });
   
+  a.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const moveItems = tabs.filter(t=>t.id!==tabId).map(t=>({
+      icon:'↪', label:t.label, action:{type:'moveCard', cardId:card.id, fromTabId:tabId, toTabId:t.id}
+    }));
+    const items = [
+      {icon:'✎', label:'تعديل الكرت', action:{type:'editCard', cardId:card.id, tabId}},
+      {icon:'📂', label:'نقل إلى قسم آخر', submenu:moveItems},
+      'sep',
+      {icon:'✕', label:'حذف الكرت', action:{type:'delCard', cardId:card.id, tabId}, danger:true}
+    ];
+    showCtx(e, items);
+  });
+  
   return a;
 }
 
@@ -548,7 +547,7 @@ function quickAddFromPaste(tabId,raw,inp) {
 }
 
 // ══════════════════════════════════════════
-//  CARD DRAG & DROP — دوال متكاملة ومغلقة
+//  DRAG & DROP CONTROL
 // ══════════════════════════════════════════
 function onGridDragOver(e,tabId) {
   e.preventDefault(); e.dataTransfer.dropEffect='move';
@@ -608,6 +607,92 @@ function getDragAfterElement(grid, x) {
 }
 
 // ══════════════════════════════════════════
+//  CONTEXT MENU (الزر الأيمن)
+// ══════════════════════════════════════════
+function showCtx(e, items) {
+  const menu = document.getElementById('ctxMenu');
+  if(!menu) return;
+  menu.innerHTML = '';
+  
+  const buildMenu = (targetContainer, menuItems) => {
+    menuItems.forEach(item => {
+      if(item === 'sep') {
+        const sep = document.createElement('div');
+        sep.className = 'ctx-sep';
+        targetContainer.appendChild(sep);
+        return;
+      }
+      const div = document.createElement('div');
+      div.className = 'ctx-item' + (item.danger ? ' danger' : '');
+      div.innerHTML = `<span class="ctx-icon">${item.icon}</span><span>${item.label}</span>`;
+      
+      if(item.submenu) {
+        div.style.position = 'relative';
+        const subSub = document.createElement('div');
+        subSub.className = 'ctx-menu';
+        subSub.style.position = 'absolute';
+        subSub.style.right = '100%';
+        subSub.style.top = '0';
+        subSub.style.display = 'none';
+        buildMenu(subSub, item.submenu);
+        div.appendChild(subSub);
+        
+        div.addEventListener('mouseenter', () => subSub.style.display = 'block');
+        div.addEventListener('mouseleave', () => subSub.style.display = 'none');
+      } else if(item.action) {
+        div.onclick = () => { handleCtxAction(item.action); hideCtx(); };
+      }
+      targetContainer.appendChild(div);
+    });
+  };
+
+  buildMenu(menu, items);
+  menu.style.left = e.clientX + 'px';
+  menu.style.top = e.clientY + 'px';
+  menu.classList.add('open');
+  
+  const closeFn = () => { hideCtx(); document.removeEventListener('click', closeFn); };
+  setTimeout(() => document.addEventListener('click', closeFn), 50);
+}
+
+function hideCtx() { document.getElementById('ctxMenu')?.classList.remove('open'); }
+
+function handleCtxAction(act) {
+  if(act.type === 'delCard') {
+    const t = tabs.find(tab => tab.id === act.tabId);
+    if(t) t.cards = t.cards.filter(c => c.id !== act.cardId);
+    triggerSave(); renderAll();
+  } else if(act.type === 'editCard') {
+    const t = tabs.find(tab => tab.id === act.tabId);
+    const card = t?.cards.find(c => c.id === act.cardId);
+    if(card) {
+      openCardModal(act.tabId, act.cardId);
+      document.getElementById('mName').value = card.name;
+      document.getElementById('mUrl').value = card.url;
+      selEmoji = card.emoji;
+      buildEmojiGrid();
+    }
+  } else if(act.type === 'moveCard') {
+    const from = tabs.find(t => t.id === act.fromTabId);
+    const to = tabs.find(t => t.id === act.toTabId);
+    const idx = from?.cards.findIndex(c => c.id === act.cardId);
+    if(idx !== -1 && to) {
+      const [c] = from.cards.splice(idx, 1);
+      to.cards.push(c);
+      triggerSave(); renderAll();
+    }
+  } else if(act.type === 'renameTab') {
+    const t = tabs.find(tab => tab.id === act.tabId);
+    if(t) {
+      const n = prompt('أدخل الاسم الجديد للقسم:', t.label);
+      if(n && n.trim()) { t.label = n.trim(); triggerSave(); renderAll(); }
+    }
+  } else if(act.type === 'delTab') {
+    deleteTab(act.tabId);
+  }
+}
+
+// ══════════════════════════════════════════
 //  MODALS & TABS MANAGEMENT
 // ══════════════════════════════════════════
 function openTabModal() {
@@ -624,7 +709,7 @@ function saveTab() {
   triggerSave(); closeTabModal(); activeTab = id; renderAll();
 }
 function deleteTab(tabId) {
-  if(!confirm('هل أنت متأكد من حذف هذا القسم بالكامل؟')) return;
+  if(!confirm('هل أنت متأكد من حذف هذا القسم بالكامل بما يحتويه؟')) return;
   tabs = tabs.filter(t => t.id !== tabId);
   if(activeTab === tabId) activeTab = tabs[0]?.id;
   triggerSave(); renderAll();
@@ -633,9 +718,14 @@ function deleteTab(tabId) {
 function openCardModal(tabId, cardId) {
   currentCardTab = tabId;
   currentEditCardId = cardId;
-  selEmoji = '🌐';
-  document.getElementById('mName').value = '';
-  document.getElementById('mUrl').value = '';
+  if(!cardId) {
+    selEmoji = '🌐';
+    document.getElementById('mName').value = '';
+    document.getElementById('mUrl').value = '';
+    document.getElementById('cardModalTitle').textContent = '➕ إضافة كرت';
+  } else {
+    document.getElementById('cardModalTitle').textContent = '✎ تعديل كرت';
+  }
   buildEmojiGrid();
   document.getElementById('cardModal').classList.add('on');
   document.getElementById('mName').focus();
@@ -656,9 +746,15 @@ function saveCard() {
   let url = document.getElementById('mUrl').value.trim();
   if (!name || !url) { alert('يرجى تعبئة الاسم والرابط'); return; }
   if (!url.startsWith('http')) url = 'https://' + url;
+  
   const tab = tabs.find(t => t.id === currentCardTab);
   if (tab) {
-    tab.cards.push({ id: Date.now(), name, url, emoji: selEmoji });
+    if(!currentEditCardId) {
+      tab.cards.push({ id: Date.now(), name, url, emoji: selEmoji });
+    } else {
+      const card = tab.cards.find(c => c.id === currentEditCardId);
+      if(card) { card.name = name; card.url = url; card.emoji = selEmoji; }
+    }
   }
   triggerSave(); closeCardModal(); renderAll();
 }
@@ -677,11 +773,11 @@ function addTask() {
 }
 function toggleTask(id) {
   tasks = tasks.map(t => t.id===id ? {...t,done:!t.done} : t);
-  saveTasks(); renderTasks();
+  saveTasks(); pushToSheets(buildSavePayload()); renderTasks();
 }
 function delTask(id) {
   tasks = tasks.filter(t => t.id!==id);
-  saveTasks(); renderTasks();
+  saveTasks(); pushToSheets(buildSavePayload()); renderTasks();
 }
 function renderTasks() {
   const el = document.getElementById('tasksList');
@@ -707,28 +803,42 @@ setInterval(tick, 1000);
 
 window.addEventListener('DOMContentLoaded', async () => {
   tick();
+  
+  // [1] التحميل المحلي السريع أولاً
   loadTabs();
-
-  if (SHEETS_URL) {
-    const remote = await pullFromSheets();
-    if (remote && remote.tabs && remote.tabs.length > 0) {
-      tabs = remote.tabs;
-      saveTabs();
-    }
-    if (remote && remote.tasks) {
-      tasks = remote.tasks;
-      saveTasks();
-    }
-  }
-
   renderAll();
   renderTasks();
 
+  // معالجة مواقيت الصلاة من الذاكرة المحلية أو الـ API
   if (needsPrayerRefetch()) {
     await fetchPrayers();
   } else {
     const raw = JSON.parse(localStorage.getItem('p_cache') || 'null');
     if (raw) applyPrayerData(raw);
+  }
+
+  // [2] جلب التحديثات من السيرفر في الخلفية بشكل صامت دون تجميد العرض
+  if (SHEETS_URL) {
+    pullFromSheets().then(remote => {
+      if (remote) {
+        let structuralChanged = false;
+        if (remote.tabs && remote.tabs.length > 0) {
+          tabs = remote.tabs;
+          saveTabs();
+          structuralChanged = true;
+        }
+        if (remote.tasks) {
+          tasks = remote.tasks;
+          saveTasks();
+          renderTasks();
+        }
+        if (structuralChanged) {
+          renderAll(); // تحديث صامت سلس في الخلفية بمجرد اكتمال البيانات القادمة من Sheets
+        }
+      }
+    }).catch(err => {
+      setSyncStatus('err', 'يعمل محلياً — تعذّر الاتصال بـ Sheets');
+    });
   }
 
   const now = new Date();
