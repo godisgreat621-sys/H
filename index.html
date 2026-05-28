@@ -52,7 +52,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-btn.tab-dragging{opacity:.4}
 .tab-btn.tab-drag-over{border-right:2px solid var(--gold);background:var(--gold-bg)}
-/* rename + delete on hover */
 .tab-del-btn{display:none}
 .tab-add{background:none;border:none;color:var(--gold-d);font-size:18px;cursor:pointer;padding:2px 8px;margin-bottom:-1px;transition:color .2s;line-height:1}
 .tab-add:hover{color:var(--gold)}
@@ -67,7 +66,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .card:hover{border-color:var(--gold-d);box-shadow:0 0 20px rgba(212,168,67,.15)}
 .card:hover::before{opacity:1}
 .card.dragging{opacity:.4;cursor:grabbing;transform:scale(.97)}
-/* action buttons on card */
 .card-actions{display:none}
 .icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:#222;border:1px solid var(--border)}
 .card h2{font-size:11px;font-weight:900;color:var(--gold-l)}
@@ -117,11 +115,10 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .mbtn.p{background:var(--gold);color:#111;border:none}.mbtn.p:hover{background:var(--gold-l)}
 .mbtn.s{background:transparent;color:var(--sub);border:1px solid var(--border)}.mbtn.s:hover{color:var(--text);border-color:var(--sub)}
 
-/* ── EMOJI GRID – bigger ── */
+/* ── EMOJI GRID ── */
 .emoji-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;padding:2px}
 .emo{width:40px;height:40px;border-radius:7px;border:1px solid var(--border);background:#111;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
 .emo:hover,.emo.sel{border-color:var(--gold);background:var(--gold-bg);transform:scale(1.1)}
-
 
 /* ── CONTEXT MENU ── */
 .ctx-menu{position:fixed;background:#1e1c18;border:1px solid var(--gold-d);border-radius:8px;padding:4px;min-width:150px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:9999;opacity:0;transform:scale(.95);pointer-events:none;transition:opacity .12s,transform .12s;transform-origin:top right}
@@ -134,7 +131,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .ctx-sep{height:1px;background:var(--border);margin:3px 6px}
 .footer{text-align:center;padding:7px;font-size:10.5px;color:var(--gold-d);border-top:1px solid var(--border);background:var(--bg-card)}
 
-/* ── TAB RENAME INLINE INPUT ── */
+/* ── TAB RENAME ── */
 .tab-rename-inp{background:#111;border:1px solid var(--gold-d);color:var(--gold);border-radius:4px;padding:2px 7px;font-family:'Tajawal';font-size:12px;font-weight:700;outline:none;width:90px}
 </style>
 </head>
@@ -183,7 +180,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 
 <div class="footer">✦ محمد النمري ✦ المركز الرقمي الموحد ✦</div>
 
-<!-- CARD MODAL (add + edit) -->
+<!-- CARD MODAL -->
 <div class="overlay" id="cardModal">
   <div class="mbox">
     <h3 id="cardModalTitle">➕ إضافة كرت</h3>
@@ -208,6 +205,9 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 </div>
+
+<!-- CONTEXT MENU — يبقى في body دائماً، لا يُنقل -->
+<div id="ctxMenu" class="ctx-menu"></div>
 
 <script>
 // ══════════════════════════════════════════
@@ -414,11 +414,10 @@ const DEFAULT_TABS = [
 let tabs = [];
 let activeTab = null;
 let currentCardTab = null;
-let currentEditCardId = null; // null = add mode, string = edit mode
+let currentEditCardId = null;
 let selEmoji = '🌐';
 let dragCardId = null;
 let dragFromTab = null;
-// tab drag state
 let dragTabId = null;
 
 function loadTabs() {
@@ -429,12 +428,18 @@ function loadTabs() {
 function saveTabs() { localStorage.setItem('mnm_tabs_v4', JSON.stringify(tabs)); }
 
 // ══════════════════════════════════════════
-//  RENDER TABS
+//  RENDER TABS — الإصلاح الرئيسي هنا
+//  نبني nav و content مرة واحدة فقط بـ
+//  document fragments بدل innerHTML المتكرر
 // ══════════════════════════════════════════
 function renderTabs() {
   const nav = document.getElementById('tabsNav');
   const content = document.getElementById('tabsContent');
   if (!activeTab || !tabs.find(t => t.id === activeTab)) activeTab = tabs[0]?.id;
+
+  // ── بناء NAV ──
+  // احفظ scroll position قبل إعادة الرسم
+  const scrollLeft = nav.scrollLeft;
 
   nav.innerHTML = '';
   tabs.forEach(tab => {
@@ -443,10 +448,21 @@ function renderTabs() {
     btn.setAttribute('data-tab-id', tab.id);
     btn.draggable = true;
     btn.title = 'انقر مرتين لتعديل الاسم';
-    btn.innerHTML = `
-      <span class="tab-label-txt">${tab.label}</span>
-      ${tabs.length > 1 ? `<button class="tab-del-btn" title="حذف القسم" onclick="deleteTab('${tab.id}',event)">✕</button>` : ''}
-    `;
+
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'tab-label-txt';
+    labelSpan.textContent = tab.label;
+    btn.appendChild(labelSpan);
+
+    if (tabs.length > 1) {
+      const delBtn = document.createElement('button');
+      delBtn.className = 'tab-del-btn';
+      delBtn.title = 'حذف القسم';
+      delBtn.textContent = '✕';
+      delBtn.addEventListener('click', e => { e.stopPropagation(); deleteTab(tab.id, e); });
+      btn.appendChild(delBtn);
+    }
+
     btn.addEventListener('click', e => {
       if (e.target.classList.contains('tab-del-btn')) return;
       if (e.target.classList.contains('tab-rename-inp')) return;
@@ -456,7 +472,6 @@ function renderTabs() {
       if (e.target.classList.contains('tab-del-btn')) return;
       startRenameTab(tab.id, e);
     });
-    // tab drag events
     btn.addEventListener('dragstart', e => {
       dragTabId = tab.id;
       btn.classList.add('tab-dragging');
@@ -508,24 +523,56 @@ function renderTabs() {
   addBtn.onclick = openTabModal;
   nav.appendChild(addBtn);
 
-  // Render panes
-  content.innerHTML = tabs.map(t =>
-    `<div class="tab-pane ${t.id===activeTab?'active':''}" id="pane-${t.id}">
-       <div class="paste-zone" id="paste-zone-${t.id}">
-         <span style="font-size:14px;color:var(--gold-d)">⚡</span>
-         <input class="paste-inp" id="paste-inp-${t.id}" placeholder="الصق رابطاً هنا لإضافة كرت سريع..." autocomplete="off" spellcheck="false">
-         <span class="paste-hint">Ctrl+V أو اكتب واضغط Enter</span>
-       </div>
-       <div class="cards-grid" id="grid-${t.id}"
-         ondragover="onGridDragOver(event,'${t.id}')"
-         ondrop="onGridDrop(event,'${t.id}')"
-         ondragleave="onGridDragLeave(event,'${t.id}')"></div>
-     </div>`
-  ).join('');
+  // استعادة scroll position
+  nav.scrollLeft = scrollLeft;
 
+  // ── بناء PANES ──
+  // فقط أعد بناء الـ panes التي تغيرت أو غير موجودة
+  // بدلاً من مسح كل شيء دفعة واحدة
+  const existingPanes = new Set([...content.querySelectorAll('.tab-pane')].map(p => p.id));
+  const newPaneIds = new Set(tabs.map(t => `pane-${t.id}`));
+
+  // احذف الـ panes القديمة التي لم تعد موجودة
+  existingPanes.forEach(id => {
+    if (!newPaneIds.has(id)) {
+      document.getElementById(id)?.remove();
+    }
+  });
+
+  // أضف panes الجديدة فقط
   tabs.forEach(t => {
+    let pane = document.getElementById(`pane-${t.id}`);
+    if (!pane) {
+      pane = document.createElement('div');
+      pane.className = 'tab-pane';
+      pane.id = `pane-${t.id}`;
+
+      const pasteZone = document.createElement('div');
+      pasteZone.className = 'paste-zone';
+      pasteZone.id = `paste-zone-${t.id}`;
+      pasteZone.innerHTML = `
+        <span style="font-size:14px;color:var(--gold-d)">⚡</span>
+        <input class="paste-inp" id="paste-inp-${t.id}" placeholder="الصق رابطاً هنا لإضافة كرت سريع..." autocomplete="off" spellcheck="false">
+        <span class="paste-hint">Ctrl+V أو اكتب واضغط Enter</span>`;
+
+      const grid = document.createElement('div');
+      grid.className = 'cards-grid';
+      grid.id = `grid-${t.id}`;
+      grid.addEventListener('dragover', e => onGridDragOver(e, t.id));
+      grid.addEventListener('drop', e => onGridDrop(e, t.id));
+      grid.addEventListener('dragleave', e => onGridDragLeave(e, t.id));
+
+      pane.appendChild(pasteZone);
+      pane.appendChild(grid);
+      content.appendChild(pane);
+      setupPasteZone(t.id);
+    }
+
+    // تحديث حالة active
+    pane.classList.toggle('active', t.id === activeTab);
+
+    // تحديث الـ grid دائماً
     fillGrid(t);
-    setupPasteZone(t.id);
   });
 }
 
@@ -535,15 +582,12 @@ function renderTabs() {
 function setupPasteZone(tabId) {
   const inp = document.getElementById(`paste-inp-${tabId}`);
   if (!inp) return;
-
-  // Detect paste event
   inp.addEventListener('paste', e => {
     setTimeout(() => {
       const val = inp.value.trim();
       if (val) quickAddFromPaste(tabId, val, inp);
     }, 10);
   });
-
   inp.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       const val = inp.value.trim();
@@ -555,15 +599,11 @@ function setupPasteZone(tabId) {
 function quickAddFromPaste(tabId, raw, inp) {
   let url = raw;
   if (!url.startsWith('http')) url = 'https://' + url;
-
-  // Try to extract a readable name from URL
   let name = '🔗 رابط جديد';
   try {
     const u = new URL(url);
     name = u.hostname.replace(/^www\./, '');
   } catch(e) {}
-
-  // Add card immediately with auto-detected name
   const tab = tabs.find(t => t.id === tabId);
   if (!tab) return;
   const newCard = { id: Date.now(), name, url, emoji: '🔗' };
@@ -571,19 +611,12 @@ function quickAddFromPaste(tabId, raw, inp) {
   triggerSave();
   fillGrid(tab);
   inp.value = '';
-
-  // Flash feedback
   const zone = document.getElementById(`paste-zone-${tabId}`);
   if (zone) {
     zone.style.borderColor = 'var(--gold)';
     zone.style.background = 'rgba(212,168,67,0.06)';
-    setTimeout(() => {
-      zone.style.borderColor = '';
-      zone.style.background = '';
-    }, 800);
+    setTimeout(() => { zone.style.borderColor = ''; zone.style.background = ''; }, 800);
   }
-
-  // Immediately open edit modal for the new card so user can refine name+emoji
   openCardModal(tabId, newCard.id);
 }
 
@@ -612,10 +645,6 @@ function createCardEl(card, tabId) {
   a.draggable = true;
   a.innerHTML = `
     <span class="drag-handle">⠿</span>
-    <div class="card-actions">
-      <button class="card-act-btn edit" title="تعديل" onclick="editCard('${card.id}','${tabId}',event)">✎</button>
-      <button class="card-act-btn del" title="حذف" onclick="delCard('${card.id}','${tabId}',event)">✕</button>
-    </div>
     <div class="icon">${card.emoji}</div>
     <h2>${card.name}</h2>`;
   a.addEventListener('dragstart', e => {
@@ -707,25 +736,22 @@ function getDragAfterElement(grid, x) {
 // ══════════════════════════════════════════
 function switchTab(id) {
   activeTab = id;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  const btn = document.querySelector(`.tab-btn[data-tab-id="${id}"]`);
-  if (btn) btn.classList.add('active');
-  document.getElementById(`pane-${id}`)?.classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-tab-id') === id));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === `pane-${id}`));
 }
 
 function startRenameTab(tabId, e) {
-  e.stopPropagation();
+  e && e.stopPropagation && e.stopPropagation();
   const btn = document.querySelector(`.tab-btn[data-tab-id="${tabId}"]`);
   if (!btn) return;
   const labelSpan = btn.querySelector('.tab-label-txt');
+  if (!labelSpan) return;
   const oldName = labelSpan.textContent;
   const inp = document.createElement('input');
   inp.className = 'tab-rename-inp';
   inp.value = oldName;
   labelSpan.replaceWith(inp);
   inp.focus(); inp.select();
-
   const commit = () => {
     const newName = inp.value.trim() || oldName;
     const tab = tabs.find(t => t.id === tabId);
@@ -734,14 +760,14 @@ function startRenameTab(tabId, e) {
   };
   inp.addEventListener('blur', commit);
   inp.addEventListener('keydown', e2 => {
-    if (e2.key === 'Enter') { inp.blur(); }
+    if (e2.key === 'Enter') inp.blur();
     if (e2.key === 'Escape') { inp.value = oldName; inp.blur(); }
     e2.stopPropagation();
   });
 }
 
 function deleteTab(tabId, e) {
-  e.stopPropagation();
+  e && e.stopPropagation && e.stopPropagation();
   const tab = tabs.find(t => t.id === tabId);
   if (!tab) return;
   if (!confirm(`حذف قسم "${tab.label}" وجميع كروته؟`)) return;
@@ -752,15 +778,13 @@ function deleteTab(tabId, e) {
 }
 
 // ══════════════════════════════════════════
-//  CARD MODAL — ADD + EDIT
+//  CARD MODAL
 // ══════════════════════════════════════════
 function openCardModal(tabId, cardId) {
   currentCardTab = tabId;
-  currentEditCardId = cardId || null;
+  currentEditCardId = cardId ? String(cardId) : null;
   selEmoji = '🌐';
-
   if (cardId) {
-    // EDIT MODE
     document.getElementById('cardModalTitle').textContent = '✎ تعديل الكرت';
     const tab = tabs.find(t => t.id === tabId);
     const card = tab?.cards.find(c => String(c.id) === String(cardId));
@@ -770,21 +794,14 @@ function openCardModal(tabId, cardId) {
       selEmoji = card.emoji || '🌐';
     }
   } else {
-    // ADD MODE
     document.getElementById('cardModalTitle').textContent = '➕ إضافة كرت';
     document.getElementById('mName').value = '';
     document.getElementById('mUrl').value = '';
     selEmoji = '🌐';
   }
-
   buildEmojiGrid();
   document.getElementById('cardModal').classList.add('on');
   document.getElementById('mName').focus();
-}
-
-function editCard(cardId, tabId, e) {
-  e.preventDefault(); e.stopPropagation();
-  openCardModal(tabId, cardId);
 }
 
 function closeCardModal() {
@@ -813,21 +830,18 @@ function saveCard() {
   if (!url.startsWith('http')) url = 'https://' + url;
   const tab = tabs.find(t => t.id === currentCardTab);
   if (!tab) return;
-
   if (currentEditCardId) {
-    // UPDATE existing
-    const card = tab.cards.find(c => String(c.id) === String(currentEditCardId));
+    const card = tab.cards.find(c => String(c.id) === currentEditCardId);
     if (card) { card.name = name; card.url = url; card.emoji = selEmoji; }
   } else {
-    // NEW card
     tab.cards.push({ id: Date.now(), name, url, emoji: selEmoji });
   }
-
   triggerSave(); closeCardModal(); fillGrid(tab);
 }
 
 function delCard(cardId, tabId, e) {
-  e.preventDefault(); e.stopPropagation();
+  if (e && e.preventDefault) e.preventDefault();
+  if (e && e.stopPropagation) e.stopPropagation();
   if (!confirm('حذف هذا الكرت؟')) return;
   const tab = tabs.find(t => t.id === tabId);
   if (tab) tab.cards = tab.cards.filter(c => String(c.id) !== String(cardId));
@@ -896,87 +910,29 @@ document.getElementById('taskInp')?.addEventListener('keypress', e => { if(e.key
 //  KEYBOARD SHORTCUTS
 // ══════════════════════════════════════════
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeCardModal();
-    closeTabModal();
-  }
+  if (e.key === 'Escape') { closeCardModal(); closeTabModal(); }
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-    // If card modal is open, save it
     if (document.getElementById('cardModal').classList.contains('on')) saveCard();
   }
 });
 
 // ══════════════════════════════════════════
-//  INIT
+//  CONTEXT MENU — الإصلاح: لا نستخدم appendChild
+//  الـ ctxMenu موجود في body من البداية
 // ══════════════════════════════════════════
-setInterval(tick, 1000);
-
-window.addEventListener('DOMContentLoaded', async () => {
-  tick();
-
-  // ── الخطوة 1: عرض البيانات المحلية فوراً بدون انتظار ──
-  loadTabs();
-  renderTabs();
-  renderTasks();
-
-  // ── الخطوة 2: أوقات الصلاة من الكاش فوراً ──
-  const cachedPrayers = JSON.parse(localStorage.getItem('p_cache') || 'null');
-  if (cachedPrayers) applyPrayerData(cachedPrayers);
-
-  // ── الخطوة 3: تحديث كل شيء في الخلفية بصمت ──
-  (async () => {
-    // تحديث أوقات الصلاة إن لزم
-    if (needsPrayerRefetch()) await fetchPrayers();
-
-    // جلب بيانات Sheets في الخلفية وتحديث الواجهة إن تغير شيء
-    if (SHEETS_URL) {
-      const remote = await pullFromSheets();
-      if (remote) {
-        let changed = false;
-        if (remote.tabs && remote.tabs.length > 0) {
-          const localStr  = localStorage.getItem('mnm_tabs_v4') || '[]';
-          const remoteStr = JSON.stringify(remote.tabs);
-          if (localStr !== remoteStr) {
-            tabs = remote.tabs;
-            saveTabs();
-            renderTabs();
-            changed = true;
-          }
-        }
-        if (remote.tasks) {
-          const localStr  = localStorage.getItem('mnm_tasks') || '[]';
-          const remoteStr = JSON.stringify(remote.tasks);
-          if (localStr !== remoteStr) {
-            tasks = remote.tasks;
-            saveTasks();
-            renderTasks();
-            changed = true;
-          }
-        }
-        if (changed) setSyncStatus('ok', 'تم التحديث من Google Sheets ✓');
-      }
-    }
-  })();
-
-  // ── الخطوة 4: جدولة تحديث أوقات الصلاة عند منتصف الليل ──
-  const now = new Date();
-  const msToMidnight = new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,1,0) - now;
-  setTimeout(async () => { await fetchPrayers(); }, msToMidnight);
-});
-
-// ══════════════════════════════════════════
-//  CONTEXT MENU
-// ══════════════════════════════════════════
-let ctxTarget = null;
-
-// Store pending actions by index to avoid JSON-in-attribute issues
 let _ctxActions = [];
+let _subActions = [];
 
 function showCtx(e, items) {
   e.preventDefault();
   e.stopPropagation();
   _ctxActions = [];
+
+  // أغلق أي submenu سابق
+  document.getElementById('ctxSubMenu')?.remove();
+
   const menu = document.getElementById('ctxMenu');
+  menu.classList.remove('open');
 
   menu.innerHTML = items.map(item => {
     if (item === 'sep') return '<div class="ctx-sep"></div>';
@@ -991,20 +947,15 @@ function showCtx(e, items) {
     return `<div class="ctx-item ${item.danger?'danger':''}" data-idx="${idx}"><span class="ctx-icon">${item.icon}</span>${item.label}</div>`;
   }).join('');
 
-  // Attach click listeners
   menu.querySelectorAll('.ctx-item[data-idx]').forEach(el => {
     el.addEventListener('click', ev => {
       ev.stopPropagation();
       const idx = parseInt(el.dataset.idx);
       const entry = _ctxActions[idx];
       if (!entry) return;
-      if (entry.submenu) {
-        showSubCtx(el, entry.submenu);
-      } else {
-        ctxAction(entry);
-      }
+      if (entry.submenu) showSubCtx(el, entry.submenu);
+      else ctxAction(entry);
     });
-    // hover submenu
     if (el.classList.contains('ctx-has-sub')) {
       el.addEventListener('mouseenter', () => {
         const idx = parseInt(el.dataset.idx);
@@ -1014,34 +965,36 @@ function showCtx(e, items) {
     }
   });
 
-  menu.classList.remove('open');
-  document.body.appendChild(menu);
+  // حدد الموضع أولاً بعيداً عن الشاشة ثم احسب
+  menu.style.left = '-9999px';
+  menu.style.top  = '-9999px';
+  menu.classList.add('open');
 
   const vw = window.innerWidth, vh = window.innerHeight;
-  let x = e.clientX, y = e.clientY;
-  menu.style.left = '0'; menu.style.top = '0';
-  menu.classList.add('open');
   const mw = menu.offsetWidth, mh = menu.offsetHeight;
+  let x = e.clientX, y = e.clientY;
   if (x + mw > vw - 8) x = vw - mw - 8;
   if (y + mh > vh - 8) y = vh - mh - 8;
   menu.style.left = x + 'px';
   menu.style.top  = y + 'px';
 }
 
-let _subActions = [];
 function showSubCtx(parentEl, subItems) {
-  document.getElementById('ctxSubMenu') && document.getElementById('ctxSubMenu').remove();
+  document.getElementById('ctxSubMenu')?.remove();
   _subActions = [];
   const sub = document.createElement('div');
   sub.id = 'ctxSubMenu';
-  sub.className = 'ctx-menu open';
+  sub.className = 'ctx-menu';
   sub.style.position = 'fixed';
+  sub.style.left = '-9999px';
+  sub.style.top  = '-9999px';
   sub.innerHTML = subItems.map(si => {
     const idx = _subActions.length;
     _subActions.push(si.action);
     return `<div class="ctx-item" data-sub-idx="${idx}"><span class="ctx-icon">${si.icon}</span>${si.label}</div>`;
   }).join('');
   document.body.appendChild(sub);
+  sub.classList.add('open');
   sub.querySelectorAll('.ctx-item[data-sub-idx]').forEach(el => {
     el.addEventListener('click', ev => {
       ev.stopPropagation();
@@ -1062,19 +1015,18 @@ function showSubCtx(parentEl, subItems) {
 
 function hideCtx() {
   document.getElementById('ctxMenu').classList.remove('open');
-  document.getElementById('ctxSubMenu') && document.getElementById('ctxSubMenu').remove();
-  ctxTarget = null;
+  document.getElementById('ctxSubMenu')?.remove();
 }
 
 function ctxAction(action) {
   hideCtx();
   const { type, tabId, fromTabId, toTabId } = action;
   const cardId = action.cardId !== undefined ? String(action.cardId) : null;
-  if (type === 'editCard')   openCardModal(tabId, cardId);
-  if (type === 'delCard')    delCard(cardId, tabId, { preventDefault(){}, stopPropagation(){} });
-  if (type === 'renameTab')  startRenameTab(tabId, { stopPropagation(){} });
-  if (type === 'delTab')     deleteTab(tabId, { stopPropagation(){} });
-  if (type === 'addCard')    openCardModal(tabId, null);
+  if (type === 'editCard')  openCardModal(tabId, cardId);
+  if (type === 'delCard')   delCard(cardId, tabId, {});
+  if (type === 'renameTab') startRenameTab(tabId, null);
+  if (type === 'delTab')    deleteTab(tabId, null);
+  if (type === 'addCard')   openCardModal(tabId, null);
   if (type === 'moveCard') {
     const from = tabs.find(t => t.id === fromTabId);
     const to   = tabs.find(t => t.id === toTabId);
@@ -1090,14 +1042,65 @@ function ctxAction(action) {
 }
 
 document.addEventListener('click', e => {
-  if (!document.getElementById('ctxMenu').contains(e.target)) hideCtx();
+  const menu = document.getElementById('ctxMenu');
+  const sub  = document.getElementById('ctxSubMenu');
+  if (!menu.contains(e.target) && (!sub || !sub.contains(e.target))) hideCtx();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') hideCtx(); });
 
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+setInterval(tick, 1000);
+
+window.addEventListener('DOMContentLoaded', async () => {
+  tick();
+
+  loadTabs();
+  renderTabs();
+  renderTasks();
+
+  const cachedPrayers = JSON.parse(localStorage.getItem('p_cache') || 'null');
+  if (cachedPrayers) applyPrayerData(cachedPrayers);
+
+  (async () => {
+    if (needsPrayerRefetch()) await fetchPrayers();
+
+    if (SHEETS_URL) {
+      const remote = await pullFromSheets();
+      if (remote) {
+        let changed = false;
+        if (remote.tabs && remote.tabs.length > 0) {
+          const localStr  = localStorage.getItem('mnm_tabs_v4') || '[]';
+          const remoteStr = JSON.stringify(remote.tabs);
+          if (localStr !== remoteStr) {
+            tabs = remote.tabs;
+            saveTabs();
+            // ← الإصلاح: نحدّث activeTab فقط إن لم يكن موجوداً في البيانات الجديدة
+            if (!tabs.find(t => t.id === activeTab)) activeTab = tabs[0]?.id;
+            renderTabs();
+            changed = true;
+          }
+        }
+        if (remote.tasks) {
+          const localStr  = localStorage.getItem('mnm_tasks') || '[]';
+          const remoteStr = JSON.stringify(remote.tasks);
+          if (localStr !== remoteStr) {
+            tasks = remote.tasks;
+            saveTasks();
+            renderTasks();
+            changed = true;
+          }
+        }
+        if (changed) setSyncStatus('ok', 'تم التحديث من Google Sheets ✓');
+      }
+    }
+  })();
+
+  const now = new Date();
+  const msToMidnight = new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,1,0) - now;
+  setTimeout(async () => { await fetchPrayers(); }, msToMidnight);
+});
 </script>
-
-<!-- CONTEXT MENU -->
-<div id="ctxMenu" class="ctx-menu"></div>
-
 </body>
 </html>
