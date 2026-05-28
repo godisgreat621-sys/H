@@ -912,30 +912,52 @@ setInterval(tick, 1000);
 
 window.addEventListener('DOMContentLoaded', async () => {
   tick();
+
+  // ── الخطوة 1: عرض البيانات المحلية فوراً بدون انتظار ──
   loadTabs();
-
-  if (SHEETS_URL) {
-    const remote = await pullFromSheets();
-    if (remote && remote.tabs && remote.tabs.length > 0) {
-      tabs = remote.tabs;
-      saveTabs();
-    }
-    if (remote && remote.tasks) {
-      tasks = remote.tasks;
-      saveTasks();
-    }
-  }
-
   renderTabs();
   renderTasks();
 
-  if (needsPrayerRefetch()) {
-    await fetchPrayers();
-  } else {
-    const raw = JSON.parse(localStorage.getItem('p_cache') || 'null');
-    if (raw) applyPrayerData(raw);
-  }
+  // ── الخطوة 2: أوقات الصلاة من الكاش فوراً ──
+  const cachedPrayers = JSON.parse(localStorage.getItem('p_cache') || 'null');
+  if (cachedPrayers) applyPrayerData(cachedPrayers);
 
+  // ── الخطوة 3: تحديث كل شيء في الخلفية بصمت ──
+  (async () => {
+    // تحديث أوقات الصلاة إن لزم
+    if (needsPrayerRefetch()) await fetchPrayers();
+
+    // جلب بيانات Sheets في الخلفية وتحديث الواجهة إن تغير شيء
+    if (SHEETS_URL) {
+      const remote = await pullFromSheets();
+      if (remote) {
+        let changed = false;
+        if (remote.tabs && remote.tabs.length > 0) {
+          const localStr  = localStorage.getItem('mnm_tabs_v4') || '[]';
+          const remoteStr = JSON.stringify(remote.tabs);
+          if (localStr !== remoteStr) {
+            tabs = remote.tabs;
+            saveTabs();
+            renderTabs();
+            changed = true;
+          }
+        }
+        if (remote.tasks) {
+          const localStr  = localStorage.getItem('mnm_tasks') || '[]';
+          const remoteStr = JSON.stringify(remote.tasks);
+          if (localStr !== remoteStr) {
+            tasks = remote.tasks;
+            saveTasks();
+            renderTasks();
+            changed = true;
+          }
+        }
+        if (changed) setSyncStatus('ok', 'تم التحديث من Google Sheets ✓');
+      }
+    }
+  })();
+
+  // ── الخطوة 4: جدولة تحديث أوقات الصلاة عند منتصف الليل ──
   const now = new Date();
   const msToMidnight = new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,1,0) - now;
   setTimeout(async () => { await fetchPrayers(); }, msToMidnight);
