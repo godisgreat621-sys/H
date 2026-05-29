@@ -576,14 +576,17 @@ function createCardEl(card,tabId) {
   });
   a.addEventListener('click',e=>{ if(a.classList.contains('dragging')) e.preventDefault(); });
   
- a.addEventListener('contextmenu', e => {
+  a.addEventListener('contextmenu', e => {
     e.preventDefault();
     e.stopPropagation();
     const moveItems = tabs.filter(t=>t.id!==tabId).map(t=>({
       icon:'↪', label:t.label, action:{type:'moveCard', cardId:card.id, fromTabId:tabId, toTabId:t.id}
     }));
     const items = [
-      {icon:'📂', label:'نقل إلى', submenu:moveItems}
+      {icon:'✎', label:'تعديل الكرت', action:{type:'editCard', cardId:card.id, tabId}},
+      {icon:'📂', label:'نقل إلى قسم آخر', submenu:moveItems},
+      'sep',
+      {icon:'✕', label:'حذف الكرت', action:{type:'delCard', cardId:card.id, tabId}, danger:true}
     ];
     showCtx(e, items);
   });
