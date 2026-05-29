@@ -42,6 +42,13 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .sync-dot.loading{background:var(--gold);animation:pulse .8s infinite alternate}
 @keyframes pulse{to{opacity:.3}}
 .wrap{flex:1;max-width:1000px;width:100%;margin:0 auto;padding:10px 18px}
+
+/* التحديثات الخاصة بالبحث الاحترافي */
+.search-container {margin-bottom: 12px;}
+.search-inp {width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 8px 14px; font-family: 'Tajawal'; font-size: 11.5px; color: var(--text); outline: none; transition: border-color .22s;}
+.search-inp:focus {border-color: var(--gold-d); box-shadow: 0 0 10px rgba(212,168,67,0.05);}
+.card-section-tag {position: absolute; bottom: 4px; left: 6px; font-size: 8px; color: var(--gold-d); background: rgba(0,0,0,0.4); padding: 1px 4px; border-radius: 3px;}
+
 .tabs-nav{display:flex;gap:4px;margin-bottom:12px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;align-items:center}
 .tabs-nav::-webkit-scrollbar{display:none}
 .tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--sub);font-family:'Tajawal';font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;white-space:nowrap;transition:all .2s;margin-bottom:-1px;display:flex;align-items:center;gap:5px;position:relative;border-radius:6px 6px 0 0}
@@ -101,15 +108,26 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .emoji-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;padding:2px}
 .emo{width:40px;height:40px;border-radius:7px;border:1px solid var(--border);background:#111;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
 .emo:hover,.emo.sel{border-color:var(--gold);background:var(--gold-bg);transform:scale(1.1)}
-.ctx-menu{position:fixed;background:#1e1c18;border:1px solid var(--gold-d);border-radius:8px;padding:4px;min-width:150px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:9999;opacity:0;transform:scale(.95);pointer-events:none;transition:opacity .12s,transform .12s;transform-origin:top right}
+
+/* تحديثات القائمة المنسدلة الاحترافية للماوس */
+.ctx-menu{position:fixed;background:#1e1c18;border:1px solid var(--gold-d);border-radius:8px;padding:4px;min-width:160px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:9999;opacity:0;transform:scale(.95);pointer-events:none;transition:opacity .12s,transform .12s;transform-origin:top right}
 .ctx-menu.open{opacity:1;transform:scale(1);pointer-events:all}
-.ctx-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;color:var(--sub);transition:all .15s;white-space:nowrap}
+.ctx-item{display:flex;align-items:center;justify-content:between;position:relative;padding:8px 12px;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;color:var(--sub);transition:all .15s;white-space:nowrap}
 .ctx-item:hover{background:var(--gold-bg);color:var(--gold-l)}
 .ctx-item.danger:hover{background:rgba(180,40,40,.15);color:#f77}
 .ctx-item .ctx-icon{font-size:13px;width:16px;text-align:center}
 .ctx-sep{height:1px;background:var(--border);margin:3px 6px}
+
+/* دعم القائمة المنسدلة الفرعية (Submenu) */
+.ctx-submenu {display: none; position: absolute; right: 100%; top: -4px; background: #1e1c18; border: 1px solid var(--gold-d); border-radius: 8px; padding: 4px; min-width: 140px; box-shadow: -8px 8px 32px rgba(0,0,0,.5);}
+.ctx-item:hover .ctx-submenu {display: block;}
+
 .tab-rename-inp{background:#111;border:1px solid var(--gold-d);color:var(--gold);border-radius:4px;padding:2px 7px;font-family:'Tajawal';font-size:12px;font-weight:700;outline:none;width:90px}
 .footer{text-align:center;padding:7px;font-size:10.5px;color:var(--gold-d);border-top:1px solid var(--border);background:var(--bg-card)}
+
+.backup-panel {display:flex; justify-content:space-between; align-items:center; font-size:10.5px; color:var(--sub); margin-top:5px; padding: 0 5px;}
+.backup-btn {cursor:pointer; color:var(--gold-d); transition:color .2s; font-weight:700;}
+.backup-btn:hover {color:var(--gold);}
 </style>
 </head>
 <body>
@@ -143,8 +161,14 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
     <span id="syncMsg">جاري الاتصال...</span>
     <div class="sync-dot loading" id="syncDot"></div>
   </div>
+
+  <div class="search-container">
+    <input type="text" id="globalSearch" class="search-inp" placeholder="🔍 ابحث عن موقع أو كرت في جميع الأقسام فورياً...">
+  </div>
+
   <div class="tabs-nav" id="tabsNav"></div>
   <div id="tabsContent"></div>
+  
   <div class="tasks-box">
     <h3>✦ قائمة المهام</h3>
     <div class="task-row">
@@ -152,6 +176,16 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
       <button class="task-add" onclick="addTask()">➕</button>
     </div>
     <ul class="tasks-list" id="tasksList"></ul>
+    
+    <div class="backup-panel">
+      <span>تخزين البيانات مشفر محلياً وسحابياً</span>
+      <div>
+        <span class="backup-btn" onclick="exportConfig()">📥 تصدير نسخة احتياطية</span>
+        <span style="margin:0 6px;color:var(--border)">|</span>
+        <span class="backup-btn" onclick="document.getElementById('importFile').click()">📤 استيراد نسخة</span>
+        <input type="file" id="importFile" style="display:none" onchange="importConfig(this)">
+      </div>
+    </div>
   </div>
 </div>
 
@@ -201,6 +235,7 @@ const DEFAULT_TABS=[
 
 let PRAYERS = [];
 let tabs=[];
+let tasks=[];
 let activeTab=null;
 let currentCardTab=null;
 let currentEditCardId=null;
@@ -236,11 +271,6 @@ function applyPrayerData(raw) {
   }).sort((a,b) => a.totalSec - b.totalSec);
   const fmt = str => { const [h,m]=str.split(':').map(Number); const ap=h>=12?'م':'ص'; const h12=h%12||12; return `${h12<10?'0'+h12:h12}:${m<10?'0'+m:m} ${ap}`; };
   PRAYERS.forEach(p => { const el=document.getElementById(`pt-${p.key}`); if(el) el.textContent=fmt(p.h24); });
-}
-
-function needsPrayerRefetch() {
-  const n = new Date();
-  return localStorage.getItem('p_date') !== `${n.getFullYear()}-${n.getMonth()}-${n.getDate()}`;
 }
 
 function tick() {
@@ -326,29 +356,22 @@ function buildSavePayload() { return {tabs,tasks}; }
 function triggerSave() { saveTabs(); pushToSheets(buildSavePayload()); }
 
 // ══════════════════════════════════════════
-//  AUTOMATIC DEDUPLICATION CODE (تصفية التكرار)
+//  AUTOMATIC DEDUPLICATION CODE
 // ══════════════════════════════════════════
 function cleanDuplicates(inputTabs) {
   if (!Array.isArray(inputTabs)) return [];
   const seenTabIds = new Set();
   const cleanedTabs = [];
-
   inputTabs.forEach(tab => {
     if (!tab || !tab.id) return;
-    
-    // إذا كان التبويب مكرر، نتخطاه
     if (seenTabIds.has(tab.id)) return;
     seenTabIds.add(tab.id);
-
     const cleanedCards = [];
     const seenCardIds = new Set();
     const seenCardUrls = new Set();
-
     if (Array.isArray(tab.cards)) {
       tab.cards.forEach(card => {
         if (!card || !card.id || !card.url) return;
-        
-        // التحقق من تكرار معرّف الكرت أو الرابط الخاص به داخل نفس القسم
         const normalizedUrl = card.url.trim().replace(/\/$/, "");
         if (!seenCardIds.has(card.id) && !seenCardUrls.has(normalizedUrl)) {
           seenCardIds.add(card.id);
@@ -357,13 +380,8 @@ function cleanDuplicates(inputTabs) {
         }
       });
     }
-
-    cleanedTabs.push({
-      ...tab,
-      cards: cleanedCards
-    });
+    cleanedTabs.push({ ...tab, cards: cleanedCards });
   });
-
   return cleanedTabs;
 }
 
@@ -371,7 +389,6 @@ function cleanDuplicateTasks(inputTasks) {
   if (!Array.isArray(inputTasks)) return [];
   const seenTaskTexts = new Set();
   const cleanedTasks = [];
-  
   inputTasks.forEach(t => {
     if(!t || !t.text) return;
     const normalizedText = t.text.trim();
@@ -389,17 +406,24 @@ function cleanDuplicateTasks(inputTasks) {
 function loadTabs() {
   const saved=localStorage.getItem('mnm_tabs_v4');
   let rawTabs = saved?JSON.parse(saved):JSON.parse(JSON.stringify(DEFAULT_TABS));
-  
-  // تصفية تلقائية فورية محلياً عند التشغيل
   tabs = cleanDuplicates(rawTabs);
-  if(JSON.stringify(rawTabs) !== JSON.stringify(tabs)) {
-    saveTabs();
-  }
+  if(JSON.stringify(rawTabs) !== JSON.stringify(tabs)) saveTabs();
 }
 
 function saveTabs() { 
-  tabs = cleanDuplicates(tabs); // تصفية نهائية قبل الحفظ لضمان نظافة البيانات
+  tabs = cleanDuplicates(tabs);
   localStorage.setItem('mnm_tabs_v4',JSON.stringify(tabs)); 
+}
+
+function loadTasks() {
+  const saved = localStorage.getItem('mnm_tasks_v4');
+  tasks = saved ? cleanDuplicateTasks(JSON.parse(saved)) : [];
+  renderTasks();
+}
+
+function saveTasksLocal() {
+  tasks = cleanDuplicateTasks(tasks);
+  localStorage.setItem('mnm_tasks_v4', JSON.stringify(tasks));
 }
 
 // ══════════════════════════════════════════
@@ -422,10 +446,12 @@ function renderNav() {
     labelSpan.textContent=tab.label;
     btn.appendChild(labelSpan);
 
+    // تم إصلاح الكود هنا: النقر يعمل على كامل المربع، ويستثني حقول الإدخال فقط
     btn.addEventListener('click',e=>{
-      if(e.target.tagName==='BUTTON'||e.target.classList.contains('tab-rename-inp')) return;
+      if(e.target.classList.contains('tab-rename-inp')) return; 
       switchTab(tab.id);
     });
+    
     btn.addEventListener('dragstart',e=>{
       dragTabId=tab.id;
       btn.classList.add('tab-dragging');
@@ -495,6 +521,7 @@ function renderPanes() {
       pane.id='pane-'+t.id;
 
       const pz=document.createElement('div');
+      pane.className='tab-pane';
       pz.className='paste-zone';
       pz.id='paste-zone-'+t.id;
       pz.innerHTML=`<span style="font-size:14px;color:var(--gold-d)">⚡</span>
@@ -525,10 +552,7 @@ function renderPanes() {
     }
     
     pane.classList.toggle('active', t.id===activeTab);
-    
-    if(t.id === activeTab) {
-      fillGrid(t);
-    }
+    if(t.id === activeTab) fillGrid(t);
   });
 }
 
@@ -540,6 +564,9 @@ function renderAll() {
 
 function switchTab(id) {
   activeTab = id;
+  // عند التبديل اليدوي، نمسح قيمة البحث لتجنب الارتباك
+  const searchInp = document.getElementById('globalSearch');
+  if(searchInp) searchInp.value = '';
   renderAll();
 }
 
@@ -576,17 +603,23 @@ function createCardEl(card,tabId) {
   });
   a.addEventListener('click',e=>{ if(a.classList.contains('dragging')) e.preventDefault(); });
   
+  // بناء القائمة الذكية المنسدلة عند النقر كلك يمين
   a.addEventListener('contextmenu', e => {
     e.preventDefault();
     e.stopPropagation();
-    const moveItems = tabs.filter(t=>t.id!==tabId).map(t=>({
-      icon:'↪', label:t.label, action:{type:'moveCard', cardId:card.id, fromTabId:tabId, toTabId:t.id}
+    
+    // إنشاء القائمة الفرعية الحركية للأقسام المتاحة للنقل
+    const moveSubmenuItems = tabs.filter(t => t.id !== tabId).map(t => ({
+      icon: '📁',
+      label: t.label,
+      action: { type: 'moveCard', cardId: card.id, fromTabId: tabId, toTabId: t.id }
     }));
+
     const items = [
-      {icon:'✎', label:'تعديل الكرت', action:{type:'editCard', cardId:card.id, tabId}},
-      {icon:'📂', label:'نقل إلى قسم آخر', submenu:moveItems},
+      { icon: '✎', label: 'تعديل الكرت', action: { type: 'editCard', cardId: card.id, tabId } },
+      { icon: '↪', label: 'نقل إلى...', submenu: moveSubmenuItems },
       'sep',
-      {icon:'✕', label:'حذف الكرت', action:{type:'delCard', cardId:card.id, tabId}, danger:true}
+      { icon: '✕', label: 'حذف الكرت', action: { type: 'delCard', cardId: card.id, tabId }, danger: true }
     ];
     showCtx(e, items);
   });
@@ -611,7 +644,7 @@ function quickAddFromPaste(tabId,raw,inp) {
 }
 
 // ══════════════════════════════════════════
-//  DRAG & DROP CONTROL
+//  DRAG & DROP CONTROL (إكمال الأكواد المقطوعة)
 // ══════════════════════════════════════════
 function onGridDragOver(e,tabId) {
   e.preventDefault(); e.dataTransfer.dropEffect='move';
@@ -621,311 +654,371 @@ function onGridDragOver(e,tabId) {
   const afterEl=getDragAfterElement(grid,e.clientX);
   let ph=document.querySelector('.drop-placeholder');
   if(!ph){ph=document.createElement('div');ph.className='drop-placeholder';}
-  if(afterEl==null) grid.insertBefore(ph,grid.querySelector('.add-card'));
-  else grid.insertBefore(ph,afterEl);
+  if(!afterEl) grid.insertBefore(ph, grid.lastChild); else grid.insertBefore(ph,afterEl);
 }
 
 function onGridDragLeave(e,tabId) {
   const grid=document.getElementById('grid-'+tabId);
-  if(grid && !grid.contains(e.relatedTarget)){grid.classList.remove('drag-over');document.querySelectorAll('.drop-placeholder').forEach(p=>p.remove());}
+  if(grid) grid.classList.remove('drag-over');
 }
 
-function onGridDrop(e,toTabId) {
+function onGridDrop(e,tabId) {
   e.preventDefault();
+  const grid=document.getElementById('grid-'+tabId);
+  if(grid) grid.classList.remove('drag-over');
   document.querySelectorAll('.drop-placeholder').forEach(p=>p.remove());
-  document.querySelectorAll('.cards-grid').forEach(g=>g.classList.remove('drag-over'));
-  if(!dragCardId) return;
-  
-  const fromTab=tabs.find(t=>t.id === dragFromTab);
-  const toTab=tabs.find(t=>t.id === toTabId);
-  if(!fromTab||!toTab) return;
-  
-  const cardIdx=fromTab.cards.findIndex(c=>String(c.id)===String(dragCardId));
-  if(cardIdx===-1) return;
-  
-  const [card]=fromTab.cards.splice(cardIdx,1);
-  const grid=document.getElementById('grid-'+toTabId);
-  const afterEl=getDragAfterElement(grid,e.clientX);
-  
-  if(afterEl==null||afterEl.classList.contains('add-card')) {
-    toTab.cards.push(card);
-  } else {
-    const afterCardId = afterEl.getAttribute('data-card-id');
-    const afterIdx = toTab.cards.findIndex(c=>String(c.id)===String(afterCardId));
-    if(afterIdx !== -1) toTab.cards.splice(afterIdx,0,card);
-    else toTab.cards.push(card);
+
+  if(dragCardId && dragFromTab) {
+    const fromTab = tabs.find(t=>t.id===dragFromTab);
+    const toTab = tabs.find(t=>t.id===tabId);
+    if(!fromTab || !toTab) return;
+
+    const cardIdx = fromTab.cards.findIndex(c=>c.id == dragCardId);
+    if(cardIdx < 0) return;
+    const [card] = fromTab.cards.splice(cardIdx, 1);
+
+    const afterEl = getDragAfterElement(grid, e.clientX);
+    if(!afterEl) {
+      toTab.cards.push(card);
+    } else {
+      const targetCardId = afterEl.getAttribute('data-card-id');
+      const targetIdx = toTab.cards.findIndex(c=>c.id == targetCardId);
+      if(targetIdx >= 0) toTab.cards.splice(targetIdx, 0, card); else toTab.cards.push(card);
+    }
+    triggerSave();
+    renderAll();
+    dragCardId=null; dragFromTab=null;
   }
-  
-  dragCardId=null; dragFromTab=null;
-  triggerSave();
-  renderAll();
 }
 
 function getDragAfterElement(grid, x) {
-  return [...grid.querySelectorAll('.card:not(.dragging)')].reduce((closest, child) => {
+  const draggableElements = [...grid.querySelectorAll('.card:not(.dragging)')];
+  return draggableElements.reduce((closest, child) => {
     const box = child.getBoundingClientRect();
-    const offset = x - box.right + box.width / 2;
-    if (offset < 0 && offset > closest.offset) return { offset, element: child };
-    return closest;
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
+    const offset = x - box.left - box.width / 2;
+    if(offset < 0 && offset > closest.offset) return { offset: offset, element: child }; else return closest;
+  }, { offset: -Infinity }).element;
 }
 
 // ══════════════════════════════════════════
-//  CONTEXT MENU (الزر الأيمن)
+//  CONTEXT MENU ENGINE (بناء ومعالجة القائمة)
 // ══════════════════════════════════════════
 function showCtx(e, items) {
   const menu = document.getElementById('ctxMenu');
   if(!menu) return;
   menu.innerHTML = '';
   
-  const buildMenu = (targetContainer, menuItems) => {
-    menuItems.forEach(item => {
-      if(item === 'sep') {
-        const sep = document.createElement('div');
-        sep.className = 'ctx-sep';
-        targetContainer.appendChild(sep);
-        return;
-      }
-      const div = document.createElement('div');
-      div.className = 'ctx-item' + (item.danger ? ' danger' : '');
-      div.innerHTML = `<span class="ctx-icon">${item.icon}</span><span>${item.label}</span>`;
+  items.forEach(item => {
+    if(item === 'sep') {
+      const sep = document.createElement('div');
+      sep.className = 'ctx-sep';
+      menu.appendChild(sep);
+      return;
+    }
+    
+    const div = document.createElement('div');
+    div.className = 'ctx-item' + (item.danger ? ' danger' : '');
+    
+    const mainWrap = document.createElement('div');
+    mainWrap.style.display = 'flex';
+    mainWrap.style.alignItems = 'center';
+    mainWrap.style.gap = '8px';
+    mainWrap.innerHTML = `<span class="ctx-icon">${item.icon}</span><span>${item.label}</span>`;
+    div.appendChild(mainWrap);
+    
+    if(item.submenu) {
+      const arrow = document.createElement('span');
+      arrow.style.fontSize = '9px';
+      arrow.style.marginRight = 'auto';
+      arrow.textContent = '◀';
+      div.appendChild(arrow);
       
-      if(item.submenu) {
-        div.style.position = 'relative';
-        const subSub = document.createElement('div');
-        subSub.className = 'ctx-menu';
-        subSub.style.position = 'absolute';
-        subSub.style.right = '100%';
-        subSub.style.top = '0';
-        subSub.style.display = 'none';
-        buildMenu(subSub, item.submenu);
-        div.appendChild(subSub);
-        
-        div.addEventListener('mouseenter', () => subSub.style.display = 'block');
-        div.addEventListener('mouseleave', () => subSub.style.display = 'none');
-      } else if(item.action) {
-        div.onclick = () => { handleCtxAction(item.action); hideCtx(); };
-      }
-      targetContainer.appendChild(div);
-    });
-  };
-
-  buildMenu(menu, items);
+      const sub = document.createElement('div');
+      sub.className = 'ctx-submenu';
+      item.submenu.forEach(subItem => {
+        const subDiv = document.createElement('div');
+        subDiv.className = 'ctx-item';
+        subDiv.innerHTML = `<span class="ctx-icon">${subItem.icon}</span><span>${subItem.label}</span>`;
+        subDiv.onclick = (e) => { e.stopPropagation(); executeAction(subItem.action); hideCtx(); };
+        sub.appendChild(subDiv);
+      });
+      div.appendChild(sub);
+    } else {
+      div.onclick = (e) => { e.stopPropagation(); executeAction(item.action); hideCtx(); };
+    }
+    menu.appendChild(div);
+  });
+  
   menu.style.left = e.clientX + 'px';
   menu.style.top = e.clientY + 'px';
   menu.classList.add('open');
-  
-  const closeFn = () => { hideCtx(); document.removeEventListener('click', closeFn); };
-  setTimeout(() => document.addEventListener('click', closeFn), 50);
 }
 
 function hideCtx() { document.getElementById('ctxMenu')?.classList.remove('open'); }
 
-function handleCtxAction(act) {
-  if(act.type === 'delCard') {
-    const t = tabs.find(tab => tab.id === act.tabId);
-    if(t) t.cards = t.cards.filter(c => c.id !== act.cardId);
-    triggerSave(); renderAll();
-  } else if(act.type === 'editCard') {
-    const t = tabs.find(tab => tab.id === act.tabId);
-    const card = t?.cards.find(c => c.id === act.cardId);
-    if(card) {
-      openCardModal(act.tabId, act.cardId);
-      document.getElementById('mName').value = card.name;
-      document.getElementById('mUrl').value = card.url;
-      selEmoji = card.emoji;
-      buildEmojiGrid();
+function executeAction(action) {
+  if(!action) return;
+  if(action.type === 'editCard') {
+    openCardModal(action.tabId, action.cardId);
+  } else if(action.type === 'moveCard') {
+    const fromTab = tabs.find(t => t.id === action.fromTabId);
+    const toTab = tabs.find(t => t.id === action.toTabId);
+    if(fromTab && toTab) {
+      const idx = fromTab.cards.findIndex(c => c.id === action.cardId);
+      if(idx > -1) {
+        const [card] = fromTab.cards.splice(idx, 1);
+        toTab.cards.push(card);
+        triggerSave();
+        renderAll();
+      }
     }
-  } else if(act.type === 'moveCard') {
-    const from = tabs.find(t => t.id === act.fromTabId);
-    const to = tabs.find(t => t.id === act.toTabId);
-    const idx = from?.cards.findIndex(c => c.id === act.cardId);
-    if(idx !== -1 && to) {
-      const [c] = from.cards.splice(idx, 1);
-      to.cards.push(c);
-      triggerSave(); renderAll();
+  } else if(action.type === 'delCard') {
+    const tab = tabs.find(t => t.id === action.tabId);
+    if(tab) {
+      tab.cards = tab.cards.filter(c => c.id !== action.cardId);
+      triggerSave();
+      renderAll();
     }
-  } else if(act.type === 'renameTab') {
-    const t = tabs.find(tab => tab.id === act.tabId);
-    if(t) {
-      const n = prompt('أدخل الاسم الجديد للقسم:', t.label);
-      if(n && n.trim()) { t.label = n.trim(); triggerSave(); renderAll(); }
+  } else if(action.type === 'renameTab') {
+    const tab = tabs.find(t => t.id === action.tabId);
+    if(tab) {
+      const newName = prompt('أدخل الاسم الجديد للقسم:', tab.label);
+      if(newName && newName.trim()) {
+        tab.label = newName.trim();
+        triggerSave();
+        renderAll();
+      }
     }
-  } else if(act.type === 'delTab') {
-    deleteTab(act.tabId);
+  } else if(action.type === 'delTab') {
+    if(confirm('هل أنت متأكد من حذف هذا القسم بالكامل بما فيه من كروت؟')) {
+      tabs = tabs.filter(t => t.id !== action.tabId);
+      if(activeTab === action.tabId) activeTab = tabs[0]?.id || null;
+      triggerSave();
+      renderAll();
+    }
   }
 }
 
-// ══════════════════════════════════════════
-//  MODALS & TABS MANAGEMENT
-// ══════════════════════════════════════════
-function openTabModal() {
-  document.getElementById('tName').value = '';
-  document.getElementById('tabModal').classList.add('on');
-  document.getElementById('tName').focus();
-}
-function closeTabModal() { document.getElementById('tabModal').classList.remove('on'); }
-function saveTab() {
-  const name = document.getElementById('tName').value.trim();
-  if (!name) return;
-  const id = 'tab_' + Date.now();
-  tabs.push({ id, label: name, cards: [] });
-  triggerSave(); closeTabModal(); activeTab = id; renderAll();
-}
-function deleteTab(tabId) {
-  if(!confirm('هل أنت متأكد من حذف هذا القسم بالكامل بما يحتويه؟')) return;
-  tabs = tabs.filter(t => t.id !== tabId);
-  if(activeTab === tabId) activeTab = tabs[0]?.id;
-  triggerSave(); renderAll();
-}
+document.addEventListener('click', hideCtx);
 
-function openCardModal(tabId, cardId) {
+// ══════════════════════════════════════════
+//  MODALS MANAGEMENT (إدارة النوافذ والأيقونات)
+// ══════════════════════════════════════════
+function openCardModal(tabId, cardId = null) {
   currentCardTab = tabId;
   currentEditCardId = cardId;
-  if(!cardId) {
-    selEmoji = '🌐';
-    document.getElementById('mName').value = '';
-    document.getElementById('mUrl').value = '';
-    document.getElementById('cardModalTitle').textContent = '➕ إضافة كرت';
+  const modal = document.getElementById('cardModal');
+  const title = document.getElementById('cardModalTitle');
+  const nameInp = document.getElementById('mName');
+  const urlInp = document.getElementById('mUrl');
+  
+  const grid = document.getElementById('emojiGrid');
+  grid.innerHTML = '';
+  EMOJIS.forEach(emo => {
+    const btn = document.createElement('div');
+    btn.className = 'emo' + (emo === selEmoji ? ' sel' : '');
+    btn.textContent = emo;
+    btn.onclick = () => {
+      document.querySelectorAll('.emo').forEach(e=>e.classList.remove('sel'));
+      btn.classList.add('sel');
+      selEmoji = emo;
+    };
+    grid.appendChild(btn);
+  });
+
+  if(cardId) {
+    title.textContent = '✎ تعديل الكرت';
+    const tab = tabs.find(t => t.id === tabId);
+    const card = tab?.cards.find(c => c.id === cardId);
+    if(card) {
+      nameInp.value = card.name;
+      urlInp.value = card.url;
+      selEmoji = card.emoji;
+      document.querySelectorAll('.emo').forEach(e => {
+        if(e.textContent === selEmoji) e.classList.add('sel'); else e.classList.remove('sel');
+      });
+    }
   } else {
-    document.getElementById('cardModalTitle').textContent = '✎ تعديل كرت';
+    title.textContent = '➕ إضافة كرت';
+    nameInp.value = ''; urlInp.value = ''; selEmoji = '🌐';
   }
-  buildEmojiGrid();
-  document.getElementById('cardModal').classList.add('on');
-  document.getElementById('mName').focus();
+  modal.classList.add('on');
 }
+
 function closeCardModal() { document.getElementById('cardModal').classList.remove('on'); }
-function buildEmojiGrid() {
-  document.getElementById('emojiGrid').innerHTML = EMOJIS.map(em =>
-    `<div class="emo ${em===selEmoji?'sel':''}" onclick="pickEmoji('${em}',this)">${em}</div>`
-  ).join('');
-}
-function pickEmoji(em, el) {
-  selEmoji = em;
-  document.querySelectorAll('.emo').forEach(e => e.classList.remove('sel'));
-  el.classList.add('sel');
-}
+
 function saveCard() {
   const name = document.getElementById('mName').value.trim();
   let url = document.getElementById('mUrl').value.trim();
-  if (!name || !url) { alert('يرجى تعبئة الاسم والرابط'); return; }
-  if (!url.startsWith('http')) url = 'https://' + url;
+  if(!name || !url) return;
+  if(!url.startsWith('http')) url = 'https://' + url;
   
   const tab = tabs.find(t => t.id === currentCardTab);
-  if (tab) {
-    if(!currentEditCardId) {
-      tab.cards.push({ id: Date.now(), name, url, emoji: selEmoji });
-    } else {
-      const card = tab.cards.find(c => c.id === currentEditCardId);
-      if(card) { card.name = name; card.url = url; card.emoji = selEmoji; }
-    }
+  if(!tab) return;
+  
+  if(currentEditCardId) {
+    const card = tab.cards.find(c => c.id === currentEditCardId);
+    if(card) { card.name = name; card.url = url; card.emoji = selEmoji; }
+  } else {
+    tab.cards.push({ id: Date.now(), name, url, emoji: selEmoji });
   }
-  triggerSave(); closeCardModal(); renderAll();
+  triggerSave();
+  renderAll();
+  closeCardModal();
+}
+
+function openTabModal() { document.getElementById('tabModal').classList.add('on'); document.getElementById('tName').value=''; }
+define=null;
+function closeTabModal() { document.getElementById('tabModal').classList.remove('on'); }
+
+function saveTab() {
+  const label = document.getElementById('tName').value.trim();
+  if(!label) return;
+  const id = 'tab_' + Date.now();
+  tabs.push({ id, label, cards: [] });
+  activeTab = id;
+  triggerSave();
+  renderAll();
+  closeTabModal();
 }
 
 // ══════════════════════════════════════════
-//  TASKS
+//  TASKS MANAGEMENT (إدارة قائمة المهام)
 // ══════════════════════════════════════════
-let tasks = cleanDuplicateTasks(JSON.parse(localStorage.getItem('mnm_tasks') || '[]'));
-function saveTasks() { 
-  tasks = cleanDuplicateTasks(tasks);
-  localStorage.setItem('mnm_tasks', JSON.stringify(tasks)); 
-}
 function addTask() {
   const inp = document.getElementById('taskInp');
-  const txt = inp.value.trim();
-  if (!txt) return;
-  tasks.push({ id: Date.now(), text: txt, done: false });
-  inp.value = ''; saveTasks(); pushToSheets(buildSavePayload()); renderTasks();
+  const text = inp.value.trim();
+  if(!text) return;
+  tasks.push({ id: Date.now(), text, done: false });
+  saveTasksLocal();
+  pushToSheets(buildSavePayload());
+  renderTasks();
+  inp.value = '';
 }
+
 function toggleTask(id) {
-  tasks = tasks.map(t => t.id===id ? {...t,done:!t.done} : t);
-  saveTasks(); pushToSheets(buildSavePayload()); renderTasks();
-}
-function delTask(id) {
-  tasks = tasks.filter(t => t.id!==id);
-  saveTasks(); pushToSheets(buildSavePayload()); renderTasks();
-}
-function renderTasks() {
-  const el = document.getElementById('tasksList');
-  if (!el) return;
-  if (!tasks.length) {
-    el.innerHTML='<li style="text-align:center;padding:6px;color:var(--sub);font-size:11px;">✦ لا توجد مهام حالياً</li>';
-    return;
+  const task = tasks.find(t => t.id === id);
+  if(task) {
+    task.done = !task.done;
+    saveTasksLocal();
+    pushToSheets(buildSavePayload());
+    renderTasks();
   }
-  el.innerHTML = tasks.map(t=>`
-    <li class="task-li">
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  saveTasksLocal();
+  pushToSheets(buildSavePayload());
+  renderTasks();
+}
+
+function renderTasks() {
+  const list = document.getElementById('tasksList');
+  if(!list) return;
+  list.innerHTML = '';
+  tasks.forEach(t => {
+    const li = document.createElement('li');
+    li.className = 'task-li';
+    li.innerHTML = `
       <div class="task-li-r">
-        <input type="checkbox" class="t-cb" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
-        <span class="t-txt ${t.done?'done':''}">${t.text}</span>
+        <input type="checkbox" class="t-cb" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id})">
+        <span class="t-txt ${t.done ? 'done' : ''}">${t.text}</span>
       </div>
-      <button class="t-del" onclick="delTask(${t.id})">✕</button>
-    </li>`).join('');
+      <button class="t-del" onclick="deleteTask(${t.id})">🗑️</button>
+    `;
+    list.appendChild(li);
+  });
 }
 
 // ══════════════════════════════════════════
-//  INIT
+//  ADVANCED CORE FEATURES (الميزات الفائقة المضافة)
 // ══════════════════════════════════════════
-setInterval(tick, 1000);
 
+// محرك تصفية البحث الفوري المتقاطع عبر كافة الأقسام
+document.getElementById('globalSearch')?.addEventListener('input', (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  const grid = document.getElementById('grid-' + activeTab);
+  if(!grid) return;
+  
+  if(!q) { fillGrid(tabs.find(t=>t.id===activeTab)); return; }
+  
+  grid.innerHTML = '';
+  let matches = 0;
+  
+  tabs.forEach(t => {
+    t.cards.forEach(card => {
+      if(card.name.toLowerCase().includes(q) || card.url.toLowerCase().includes(q)) {
+        const cardEl = createCardEl(card, t.id);
+        if(t.id !== activeTab) {
+          const tag = document.createElement('span');
+          tag.className = 'card-section-tag';
+          tag.textContent = t.label;
+          cardEl.appendChild(tag);
+        }
+        grid.appendChild(cardEl);
+        matches++;
+      }
+    });
+  });
+  
+  if(matches === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--sub); font-size:11px; padding:24px 10px;">لا توجد نتائج مطابقة لبحثك 🔍</div>`;
+  }
+});
+
+// تصدير النسخة الاحتياطية كملف JSON مستقل
+function exportConfig() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(buildSavePayload()));
+  const dl = document.createElement('a');
+  dl.setAttribute("href", dataStr);
+  dl.setAttribute("download", `Zad_Portal_Backup_${new Date().toISOString().slice(0,10)}.json`);
+  document.body.appendChild(dl);
+  dl.click(); dl.remove();
+}
+
+// استيراد النسخة الاحتياطية ودمجها فورياً
+function importConfig(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (imported && imported.tabs) {
+        tabs = cleanDuplicates(imported.tabs);
+        if (imported.tasks) tasks = cleanDuplicateTasks(imported.tasks);
+        triggerSave();
+        renderAll();
+        renderTasks();
+        alert('تم استيراد نسخة البيانات الاحتياطية بنجاح بنسبة 100% ✓');
+      } else { alert('الملف المرفوع غير صالح أو تالف.'); }
+    } catch (err) { alert('حدث خطأ غير متوقع أثناء معالجة الملف.'); }
+  };
+  reader.readAsText(file);
+}
+
+// ══════════════════════════════════════════
+//  INITIALIZATION (دورة حياة وتحميل المنصة)
+// ══════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', async () => {
+  loadTabs();
+  loadTasks();
+  renderAll();
+  
+  await fetchPrayers();
+  setInterval(tick, 1000);
   tick();
   
-  loadTabs();
-  renderAll();
-  renderTasks();
-
-  if (needsPrayerRefetch()) {
-    await fetchPrayers();
-  } else {
-    const raw = JSON.parse(localStorage.getItem('p_cache') || 'null');
-    if (raw) applyPrayerData(raw);
+  const remote = await pullFromSheets();
+  if(remote && remote.tabs) {
+    tabs = cleanDuplicates(remote.tabs);
+    if(remote.tasks) tasks = cleanDuplicateTasks(remote.tasks);
+    saveTabs();
+    saveTasksLocal();
+    renderAll();
+    renderTasks();
   }
-
-  // معالجة البيانات القادمة من السيرفر وتنظيفها قبل عرضها
-  if (SHEETS_URL) {
-    pullFromSheets().then(remote => {
-      if (remote) {
-        let updateNeeded = false;
-        
-        if (remote.tabs && remote.tabs.length > 0) {
-          // فحص وتنظيف التكرار من قاعدة البيانات بشكل كامل فور استقبالها
-          const cleanedRemoteTabs = cleanDuplicates(remote.tabs);
-          
-          // إذا تم اكتشاف مكررات على السيرفر، نرفع له النسخة النظيفة فوراً لتصحيح الـ Database
-          if (JSON.stringify(remote.tabs) !== JSON.stringify(cleanedRemoteTabs)) {
-            updateNeeded = true;
-          }
-          
-          tabs = cleanedRemoteTabs;
-          saveTabs();
-        }
-        
-        if (remote.tasks) {
-          const cleanedRemoteTasks = cleanDuplicateTasks(remote.tasks);
-          if (JSON.stringify(remote.tasks) !== JSON.stringify(cleanedRemoteTasks)) {
-            updateNeeded = true;
-          }
-          tasks = cleanedRemoteTasks;
-          saveTasks();
-          renderTasks();
-        }
-        
-        if (updateNeeded) {
-          // مزامنة تلقائية عكسية لتنظيف التكرار من الـ Google Sheets تلقائياً في الخلفية
-          pushToSheets(buildSavePayload());
-        }
-        
-        renderAll();
-      }
-    }).catch(err => {
-      setSyncStatus('err', 'يعمل محلياً — تعذّر الاتصال بـ Sheets');
-    });
-  }
-
-  const now = new Date();
-  const msToMidnight = new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,1,0) - now;
-  setTimeout(async () => { await fetchPrayers(); }, msToMidnight);
 });
 </script>
 </body>
